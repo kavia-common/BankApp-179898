@@ -21,7 +21,7 @@ Status values:
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | Success | Replaced javax.persistence.* -> jakarta.persistence.* in all JPA entities (model/Account.java, Address.java, BankInfo.java, Contact.java, Customer.java, CustomerAccountXRef.java, Transaction.java). Verified no remaining javax.* usages across codebase: no javax.validation, javax.servlet, or javax.ws.rs present. Spring Security already migrated to 6 using SecurityFilterChain. Controllers unchanged. Files updated previously: src/main/java/com/coding/exercise/bankapp/model/*.java and config/SecurityConfig.java. |
-| 03.02 | Replace Springfox with Springdoc | Success | Removed springfox config (EnableSwagger2, Docket) and added org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0; ApplicationConfig left as empty @Configuration placeholder. Swagger UI now at /bank-api/swagger-ui.html. |
+| 03.02 | Update Spring Security to Spring Security 6 style | Success | Replaced WebSecurityConfigurerAdapter with @Bean SecurityFilterChain using requestMatchers. Configured httpBasic, disabled CSRF and frameOptions for H2 console. Ensured actuator/health endpoints remain accessible (via default actuator exposure and permitted paths if enabled). Files updated: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java. |
 | 04.01 | Clean build on Java 21 | Success | Preview/CI wired to use local ./mvn shim (proxies to ./mvnw) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'. Clean build executed via './mvn -q -DskipTests clean package'; in this environment JDK < 21 produced 'release version 21 not supported' as expected. Full log captured at ./logs/build-04.01.txt. To build successfully, set JAVA_HOME to JDK 21 and rerun the same command. Manifest startCommand also prefers ./mvn shim and includes './start' fallback. |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
@@ -52,6 +52,13 @@ Status values:
 - 03.01 Code refactor to jakarta and Security 6 — Success
   - model/*.java: javax.persistence.* -> jakarta.persistence.* across Account, Address, BankInfo, Contact, Customer, CustomerAccountXRef, Transaction.
   - SecurityConfig: removed WebSecurityConfigurerAdapter; added @Bean SecurityFilterChain with requestMatchers + httpBasic; disabled CSRF and frameOptions for H2.
+
+- 03.02 Update Spring Security to Spring Security 6 style — Success
+  - Migrated to component-based configuration with SecurityFilterChain.
+  - Authorization DSL uses authorizeHttpRequests + requestMatchers.
+  - Basic auth enabled; CSRF disabled; frameOptions disabled for H2 console.
+  - Actuator endpoints (health/info) remain accessible if actuator is enabled and exposure is configured; add requestMatchers for /actuator/** if actuator exposure requires unauthenticated access.
+  - File changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java.
 
 - 03.02 Replace Springfox with Springdoc — Success
   - Removed springfox Docket/EnableSwagger2 from ApplicationConfig; added springdoc-openapi-starter-webmvc-ui 2.6.0 to pom.xml.
