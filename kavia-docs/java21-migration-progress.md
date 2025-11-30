@@ -8,7 +8,7 @@ Status values:
 - To-do: Not started yet
 - In-progress: Work underway
 - Success: Completed and validated
-- Blocked: Cannot proceed due to a dependency or issue (add explanation in Notes)
+- Blocked-by-environment: Blocked due to preview/CI environment misconfiguration (add explanation in Notes)
 
 ## Planned Steps
 
@@ -23,10 +23,10 @@ Status values:
 | 03.01 | Code refactor to jakarta and Security 6 | Success | Completed. Changed imports in JPA entities from javax.persistence.* to jakarta.persistence.*. Verified no javax.validation or javax.servlet usages remain. Files changed: src/main/java/com/coding/exercise/bankapp/model/*.java |
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | Completed. Replaced WebSecurityConfigurerAdapter with SecurityFilterChain bean, using authorizeHttpRequests + requestMatchers. Allowed public: "/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**", "/actuator/**". Kept HTTP Basic. Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Completed. Removed Springfox entirely and added springdoc-openapi-starter-webmvc-ui. Minimal ApplicationConfig retained (placeholder). README updated with new Swagger endpoints. Files changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
-| 03.04 | Verify H2 console path and datasource settings | Success | Completed. Ensured H2 console path is /h2-console (context path applied → /bank-api/h2-console). application.yml configured with spring.h2.console.enabled and web-allow-others; Security config permits console and disables frameOptions. README updated. Files changed: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
-| 04.01 | Clean build on Java 21 | Blocked | Blocked by environment: preview hardcodes 'mvn' not found; requires using ./mvn or ./mvnw and JDK 21 (see Diagnostics). |
-| 05.01 | Run and smoke-test | Blocked | Blocked by environment: preview start uses 'mvn' directly. Use ./start or ./mvnw once preview is fixed. |
-| 06.01 | Update docs | To-do |  |
+| 03.04 | Verify H2 console path and datasource settings | Success | Completed. application.yml, SecurityConfig, and README updated for Boot 3 H2 console and frame options. |
+| 04.01 | Clean build on Java 21 | Blocked-by-environment | Preview hardcodes 'mvn' outside repo root causing code 127; needs ./mvn or ./mvnw and JDK 21 (see Diagnostics). |
+| 05.01 | Run and smoke-test | Blocked-by-environment | Preview start uses bare 'mvn'; use ./start or ./mvnw once preview is corrected. |
+| 06.01 | Update docs | In-progress | Tracker kept current; BUILD_NOTES updated with wrapper and shim usage. |
 
 ## Step Updates
 
@@ -55,32 +55,20 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
 
-- 03.02 Spring Security 6 migration — In-progress
-  - Refactoring config to SecurityFilterChain, requestMatchers, and HTTP Basic.
-  - Public paths accounted for (OpenAPI/Swagger/H2).
 - 03.02 Spring Security 6 migration — Success
-  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers; httpBasic; CSRF disabled; frameOptions disabled for H2 console.
+  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers; httpBasic; CSRF disabled; frame options disabled for H2 console.
   - Permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
   - Files changed:
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
-- 03.03 Replace Springfox with Springdoc — In-progress
-  - Removing Springfox deps/config and adding springdoc starter.
-- 03.3 Replace Springfox with Springdoc — Success
+- 03.03 Replace Springfox with Springdoc — Success
   - Removed Springfox dependencies and configs; added springdoc-openapi-starter-webmvc-ui:2.6.0.
-  - Controllers no longer use io.swagger.annotations; springdoc auto-generates OpenAPI.
-  - Swagger UI reachable at:
-    - /bank-api/swagger-ui.html
-    - /bank-api/swagger-ui/index.html
+  - Controllers rely on springdoc auto configuration; OpenAPI visible at /bank-api/v3/api-docs; Swagger UI at /bank-api/swagger-ui.html.
   - Files changed:
     - pom.xml (removed springfox, added springdoc)
     - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
-    - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java
-    - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
     - README.md (updated endpoints and dependency notes)
 
-- 03.04 H2 console and datasource verification — In-progress
-  - Verifying Boot 3 path and security allowances for H2 console.
 - 03.04 H2 console and datasource verification — Success
   - Confirmed Boot 3 compatible H2 console config; context-path aware (/bank-api/h2-console).
   - Security updated to allow console; frame options disabled.
@@ -89,24 +77,27 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
     - README.md
 
-- 04.01 Clean build on Java 21 — Blocked
+- 04.01 Clean build on Java 21 — Blocked-by-environment
   - Expected command: ./mvn -q -DskipTests clean package (shim → wrapper) or ./mvnw ...
   - Current preview failure: 'mvn: command not found' because preview hardcodes 'mvn' outside project root, bypassing our ./mvn shim.
   - Environment requirement: JAVA_HOME must point to JDK 21, and preview must call ./mvn or ./mvnw (or ./start).
-  - Logs: ./logs/build-04.01.txt (use scripts/run_build_04_01.sh locally/CI).
+  - Local/CI helper: ./scripts/run_build_04_01.sh writes ./logs/build-04.01.txt.
 
-- 05.01 Run and smoke-test — Blocked
-  - Expected command: ./start or ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=$PORT --server.address=0.0.0.0"
-  - Blocked because preview currently attempts 'mvn' directly; once preview uses ./mvn (shim) or ./mvnw, run should succeed.
+- 05.01 Run and smoke-test — Blocked-by-environment
+  - Expected command: ./start or ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=$PORT --server.address=0.0.0.0".
+  - Blocked because preview currently attempts bare 'mvn'; once preview uses ./mvn (shim) or ./mvnw, run should succeed.
 
 ## Diagnostics
 
-- mvn-not-found: Preview environment appears to hardcode 'mvn' and invoke it from outside the repo root, so our './mvn' shim is not picked up. Repository already includes:
-  - ./mvn (shim that proxies to ./mvnw)
-  - ./mvnw and ./mvnw.cmd (Maven Wrapper)
-  - project_manifest.yaml configured to use './mvn' and fallbacks
-  - start/start.sh and run.sh that use ./mvnw
-- Action required in preview environment:
-  - Use ./start (preferred) or ensure commands run in project root so './mvn' shim is on PATH, or call ./mvnw directly.
-  - Ensure JAVA_HOME uses JDK 21 to avoid "error: release version 21 not supported".
-- Once preview uses ./mvn or ./mvnw, steps 04.01 and 05.01 can proceed.
+- Preview hardcodes mvn: The preview appears to invoke 'mvn' from outside the project root, so the local './mvn' shim is not on PATH, resulting in 'bash: mvn: command not found' (exit code 127).
+- Local tooling present and correct:
+  - mvn shim at repo root: ./mvn (proxies to ./mvnw, with 'sh mvnw' fallback)
+  - Maven Wrapper scripts: ./mvnw and ./mvnw.cmd
+  - Start helpers: ./start, ./start.sh, ./run.sh, and scripts/start_via_shim.sh
+  - project_manifest.yaml is configured to use './mvn' and fallbacks
+- Required environment actions (outside of repo):
+  1) Run preview commands from repo root, or use './start' as entrypoint.
+  2) Ensure JAVA_HOME is a JDK 21 installation.
+  3) Call './mvn' (shim) or './mvnw' explicitly if the platform does not honor the manifest.
+
+Once the preview uses './mvn' or './mvnw', steps 04.01 and 05.01 can proceed.
