@@ -47,8 +47,9 @@ Verification (clean package):
   ./mvn  -q -DskipTests clean package
 
 Note on Java versions:
-- The project targets Java 8 bytecode but can be built on newer JDKs (e.g., 17).
-- To avoid module access issues with annotation processing on JDK 17+, the necessary --add-opens flags are provided via .mvn/jvm.config.
+- Migrated to target Java 21 and Spring Boot 3.3.x. Build requires JDK 21 in the environment.
+- If you see 'error: release version 21 not supported', your JDK is older than 21; upgrade JAVA_HOME to JDK 21 and rebuild.
+- Previous note for Java 8 has been superseded by the Java 21 migration.
 
 Wrapper usage in previews:
 - The preview manifest (project_manifest.yaml) uses './mvnw' with a fallback to 'sh mvnw'.

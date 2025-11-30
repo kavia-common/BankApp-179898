@@ -7,29 +7,9 @@ framework: springboot
 # If execution permission is stripped in the environment, the runner can switch to 'sh mvn ...'.
 # Placeholders <port> and <host> will be substituted by the preview system.
 preview:
-  installCommand: |
-    if [ -x "./mvn" ]; then
-      ./mvn install
-    else
-      sh mvn install
-    fi
-  buildCommand: |
-    if [ -x "./mvn" ]; then
-      ./mvn clean install
-    else
-      sh mvn clean install
-    fi
-  testCommand: |
-    if [ -x "./mvn" ]; then
-      ./mvn test
-    else
-      sh mvn test
-    fi
-  startCommand: |
-    if [ -x "./mvn" ]; then
-      ./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
-    else
-      sh mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
-    fi
+  installCommand: "./mvn -q -DskipTests install || sh mvn -q -DskipTests install"
+  buildCommand: "./mvn -q -DskipTests clean package || sh mvn -q -DskipTests clean package"
+  testCommand: "./mvn -q test || sh mvn -q test"
+  startCommand: "./mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\""
 
 # Preserve any future fields by keeping the manifest minimal and additive.
