@@ -24,9 +24,9 @@ Status values:
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | Completed (03.02). Replaced WebSecurityConfigurerAdapter with SecurityFilterChain using authorizeHttpRequests/requestMatchers; permit OpenAPI/Swagger/H2/actuator; HTTP Basic; CSRF disabled; frameOptions disabled for H2. File: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Completed (03.03). Removed Springfox; added springdoc-openapi-starter-webmvc-ui with minimal config; updated docs. Files: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
 | 03.04 | Verify H2 console path and datasource settings | Success | Completed (03.04). Confirmed H2 console at /bank-api/h2-console; Security permits /h2-console/**; frame options disabled; datasource defaults OK for Boot 3. Files: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
-| 04.01 | Clean build on Java 21 | Blocked-by-environment | Error: bash: mvn: command not found. The preview hardcodes 'mvn' outside the project root (bypassing the repo's ./mvn shim and ./mvnw). Repo already includes mvn shim and mvnw. |
-| 05.01 | Run and smoke-test | Blocked-by-environment | Error: bash: mvn: command not found. The preview start uses bare 'mvn'. Repo already includes mvn shim and mvnw; use ./start or ./mvnw once preview commands are updated. |
-| 06.01 | Update docs | In-progress | Tracker kept current; BUILD_NOTES updated with wrapper and shim usage. |
+| 04.01 | Clean build on Java 21 | Blocked-by-environment | Exact error: bash: mvn: command not found. The preview hardcodes 'mvn' from outside the project root, bypassing the repo's ./mvn shim and ./mvnw. Local mvn shim and mvnw are present. |
+| 05.01 | Run and smoke-test | Blocked-by-environment | Exact error: bash: mvn: command not found. The preview start uses bare 'mvn'. Local mvn shim and mvnw are present; use ./start or ./mvnw once preview commands are updated. |
+| 06.01 | Update docs | Success | Tracker updated; BUILD_NOTES documents wrapper and shim usage. |
 
 ## Step Updates
 
@@ -80,12 +80,12 @@ Status values:
 - 04.01 Clean build on Java 21 — Blocked-by-environment
   - Exact error: bash: mvn: command not found
   - Cause: Preview hardcodes 'mvn' and invokes it from outside the project root, bypassing the repo's './mvn' shim and './mvnw'.
-  - Note: The repository already includes an mvn shim and mvnw. No further preview attempts will be made until preview commands are updated to use ./mvn or ./mvnw (or ./start).
+  - Note: The repository already includes an mvn shim and mvnw. Per instructions, we will not attempt to rerun the preview until commands are updated.
 
 - 05.01 Run and smoke-test — Blocked-by-environment
   - Exact error: bash: mvn: command not found
   - Cause: Preview start uses bare 'mvn'; it must be updated to use './mvn' (shim) or './mvnw', or './start'.
-  - Note: The repository already includes an mvn shim and mvnw. No further preview attempts will be made until preview commands are updated.
+  - Note: The repository already includes an mvn shim and mvnw. Per instructions, we will not attempt to rerun the preview until commands are updated.
 
 ## Diagnostics
 
@@ -101,4 +101,4 @@ Status values:
   - Update preview entry to call './mvn' or './mvnw' (or './start') from the project root, and ensure JAVA_HOME is JDK 21.
 
 - Next actions:
-  - Per user guidance, no changes will be made to preview/startup now. We will resume Steps 04.01 and 05.01 once the preview commands are updated to use the wrapper/shim.
+  - No preview/startup changes will be made now. Steps 04.01 and 05.01 remain Blocked-by-environment until preview commands are updated to use the wrapper/shim.
