@@ -107,6 +107,13 @@ The API documentation is provided by springdoc-openapi (Springfox removed). Acce
 
 Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
 
+Allowed without authentication (Boot 3/Security 6):
+- /bank-api/v3/api-docs/**
+- /bank-api/swagger-ui/**
+- /bank-api/swagger-ui.html
+- /bank-api/h2-console/**
+- /bank-api/actuator/** (if actuator is enabled)
+
 ## H2 In-Memory Database
 
 The H2 console is enabled and reachable at:

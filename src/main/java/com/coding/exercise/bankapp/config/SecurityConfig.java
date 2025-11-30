@@ -11,11 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 /**
  * Spring Security 6 configuration using SecurityFilterChain.
  * Summary:
- * - Uses authorizeHttpRequests with requestMatchers (replaces antMatchers).
+ * - Uses authorizeHttpRequests with requestMatchers (replaces deprecated antMatchers).
  * - Permits unauthenticated access to:
  *   "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
- * - Disables CSRF and frame options to allow H2 console rendering.
- * - Enables HTTP Basic for other endpoints.
+ * - Disables CSRF and disables frame options (required for H2 console).
+ * - Enables HTTP Basic for protected endpoints.
  */
 @Configuration
 @EnableWebSecurity
