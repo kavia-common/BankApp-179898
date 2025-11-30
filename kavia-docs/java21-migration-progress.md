@@ -20,10 +20,10 @@ Status values:
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | Success | springdoc-openapi starter added; Boot-managed H2/Security versions applied. |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
-| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence across all entities; Security config modernized; no javax.validation or javax.servlet usages found. |
-| 03.02 | Update Spring Security to Spring Security 6 style | Success | SecurityFilterChain with requestMatchers; httpBasic; CSRF/frameOptions disabled for H2. |
-| 03.03 | Replace Springfox with springdoc-openapi | Success | Springfox removed; springdoc starter added; controllers cleaned of io.swagger.annotations. |
-| 03.04 | Verify H2 console path and datasource settings | Success | application.yml verified for Boot 3; /h2-console permitted in security. |
+| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence applied to all JPA entities; confirmed no javax.validation or javax.servlet in codebase. Files changed: model/*.java. |
+| 03.02 | Update Spring Security to Spring Security 6 style | Success | SecurityFilterChain using authorizeHttpRequests + requestMatchers; httpBasic; CSRF and frameOptions disabled for H2 console. Files changed: src/main/java/.../config/SecurityConfig.java. |
+| 03.03 | Replace Springfox with springdoc-openapi | Success | Removed Springfox (pom deps/config); added org.springdoc:springdoc-openapi-starter-webmvc-ui. Controllers use Spring Web only; springdoc auto-configures Swagger UI. Files changed: pom.xml, config/ApplicationConfig.java, controller/*.java, README.md. |
+| 03.04 | Verify H2 console path and datasource settings | Success | application.yml uses Boot 3 properties; H2 console enabled and permitted at /bank-api/h2-console; frameOptions disabled in security. Files verified/updated: application.yml, config/SecurityConfig.java, README.md. |
 | 04.01 | Clean build on Java 21 | Blocked | Blocked by environment: preview hardcodes 'mvn' not found; requires using ./mvn or ./mvnw and JDK 21 (see Diagnostics). |
 | 05.01 | Run and smoke-test | Blocked | Blocked by environment: preview start uses 'mvn' directly. Use ./start or ./mvnw once preview is fixed. |
 | 06.01 | Update docs | To-do |  |

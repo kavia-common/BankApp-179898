@@ -101,24 +101,31 @@ spring-security-test
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi. Access via:
-```
-http://localhost:8989/bank-api/swagger-ui.html
-# or:
-http://localhost:8989/bank-api/swagger-ui/index.html
-```
+- http://localhost:8989/bank-api/swagger-ui.html
+- http://localhost:8989/bank-api/swagger-ui/index.html
+
 Security configuration permits these paths without authentication.
 
 ## H2 In-Memory Database
 
 The H2 console is enabled and reachable at:
+- http://localhost:8989/bank-api/h2-console/
+
+Security configuration permits the console and disables frame options. Default in-memory JDBC URL (Boot 3 managed):
+- jdbc:h2:mem:testdb
+
+If using a custom database name, add datasource settings in application.yml, for example:
 ```
-http://localhost:8989/bank-api/h2-console/
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
 ```
-Security configuration permits the console and disables frame options. Default in-memory JDBC URL:
-```
-jdbc:h2:mem:testdb
-```
-If using a custom database name, configure datasource properties in application.yml accordingly (Spring Boot 3).
 
 ## Testing the Bank APP Rest Api
 
