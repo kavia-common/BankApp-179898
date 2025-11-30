@@ -15,7 +15,7 @@ Status values:
 | Step ID | Description | Status | Notes/Links to diffs |
 |---|---|---|---|
 | 01.01 | Create tracker | To-do |  |
-| 02.01 | Update Java version/toolchain | To-do |  |
+| 02.01 | Update Java version/toolchain | In-progress | Begin updating pom.xml to target Java 21; adjust compiler and add toolchains plugin. No Spring Boot version changes in this step. |
 | 02.02 | Upgrade Spring Boot | To-do |  |
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | To-do |  |
 | 02.04 | Update Maven Wrapper | To-do |  |
@@ -34,3 +34,11 @@ Status values:
   - Any follow-up tasks or blockers discovered
 - If a step is Blocked, include the reason and a link to the relevant issue or log, and optionally add a follow-up subtask to this list.
 
+## Step Updates
+
+- 02.01 Update Java version/toolchain — Success
+  - pom.xml: set <java.version>21</java.version>.
+  - maven-compiler-plugin: configured <release>21</release> (version 3.11.0).
+  - Removed legacy Java 8 settings (<maven.compiler.source>, <maven.compiler.target>, <maven.compiler.release>8).
+  - Added maven-toolchains-plugin targeting JDK [21,) with vendor any.
+  - Kept Spring Boot version unchanged (2.1.4.RELEASE) as instructed for this step.
