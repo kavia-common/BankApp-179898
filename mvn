@@ -4,6 +4,7 @@
 # This ensures environments that call 'mvn' directly will work even if system Maven is not installed.
 # Usage:
 #   mvn <args...>   -> equivalent to ./mvnw <args...>
+# If this script is not executable in your environment, run: sh mvn <args...>
 
 set -e
 

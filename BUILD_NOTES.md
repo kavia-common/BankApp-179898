@@ -11,21 +11,21 @@
 Maven Wrapper standardization:
 - The project uses Maven Wrapper exclusively. No system 'mvn' is required.
 - A shim script named 'mvn' is provided at the project root to proxy any 'mvn ...' calls to './mvnw'.
-- A Procfile is included to start the app via './mvnw' in environments that support Procfile.
+- Preview/CI entrypoints (start, start.sh, run.sh, Makefile, Procfile) are wired to use './mvnw' so 'bash: mvn: command not found' is avoided.
 
 Build:
   ./mvnw -q -DskipTests clean package
-  # or if execution permission is blocked:
-  sh mvnw -q -DskipTests clean package
-  # or using Makefile:
-  make build
   # or using the mvn shim (proxies to ./mvnw):
   ./mvn -q -DskipTests clean package
+  # or using Makefile:
+  make build
+  # or if execution permission is blocked:
+  sh mvnw -q -DskipTests clean package
 
 Run (port 8989, bind 0.0.0.0):
   ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
-  # or if execution permission is blocked:
-  sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+  # or using the mvn shim (equivalent):
+  ./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
   # or using Makefile:
   make run
   # or using Procfile (platform-dependent):
@@ -34,6 +34,10 @@ Run (port 8989, bind 0.0.0.0):
   ./start
   # or:
   ./run.sh
+
+Permissions note:
+- If preview environment strips execute bits, use: sh mvnw ... or sh start.sh
+- Ensure the 'mvn' shim is executable: chmod +x mvn (if needed)
 
 Verification (clean package):
   # Verifies wrapper and shim both work

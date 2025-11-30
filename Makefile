@@ -7,7 +7,7 @@ build:
 	./mvnw -q -DskipTests clean package
 
 # PUBLIC_INTERFACE
-# build-shim: Build using the 'mvn' shim which proxies to ./mvnw.
+# build-shim: Build using the 'mvn' shim which proxies to ./mvnw (helps previews that call 'mvn').
 # Usage: make build-shim
 build-shim:
 	./mvn -q -DskipTests clean package

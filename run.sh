@@ -2,7 +2,7 @@
 # PUBLIC_INTERFACE
 # run.sh - Wrapper to run the Spring Boot app using Maven Wrapper on port 8989.
 # Summary:
-#   - Uses ./mvnw so no system Maven is required.
+#   - Uses ./mvnw so no system Maven is required. A root-level 'mvn' shim also proxies to ./mvnw.
 #   - Exposes the app on 0.0.0.0:8989 for preview environments.
 # Usage:
 #   ./run.sh                     -> run with ./mvnw

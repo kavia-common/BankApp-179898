@@ -38,27 +38,38 @@ https://projectlombok.org/setup/eclipse
 
 Build:
 ```
+# Preferred: Maven Wrapper
 ./mvnw -q -DskipTests clean package
-# or:
-sh mvnw -q -DskipTests clean package
-# or:
-make build
-# or (shim that proxies to ./mvnw):
+
+# Alternatively use the mvn shim (proxies to ./mvnw; fixes previews that call 'mvn'):
 ./mvn -q -DskipTests clean package
+
+# Using Makefile:
+make build
+
+# If execute permission is blocked:
+sh mvnw -q -DskipTests clean package
 ```
 
 Run on port 8989 bound to 0.0.0.0:
 ```
+# Preferred: Maven Wrapper
 ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
-# or:
-sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
-# or:
+
+# Or via mvn shim (still uses wrapper):
+./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+
+# Makefile helper:
 make run
-# or:
+
+# Generic run script:
 ./run.sh
-# or (common preview systems that execute a 'start' file):
+
+# Common preview entrypoints:
 ./start
-# or (platforms supporting Procfile):
+./start.sh
+
+# Platforms supporting Procfile (for reference):
 web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
 ```
 

@@ -7,6 +7,7 @@
 #   - Binds to 0.0.0.0
 #   - Uses $PORT if provided by the environment, otherwise falls back to 8989
 #   - Falls back to 'sh mvnw' if execution permission on ./mvnw is not available.
+#   - Environments calling 'mvn' directly are supported by the root-level mvn shim.
 
 set -e
 
