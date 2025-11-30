@@ -22,7 +22,7 @@ Status values:
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | To-do |  |
 | 03.02 | Replace Springfox with Springdoc | To-do |  |
-| 04.01 | Clean build on Java 21 | Blocked | Build invoked via Maven Wrapper using ./mvn shim as intended. Compilation failed with 'error: release version 21 not supported' indicating the build JDK is older than 21. Logs captured at ./logs/build-04.01.txt. Action required: ensure JAVA_HOME/JDK is 21+ in the environment and re-run: ./mvn -q -DskipTests clean package. |
+| 04.01 | Clean build on Java 21 | Blocked | Executed clean build via local Maven shim/wrapper: ./mvn -q -DskipTests clean package (shim proxies to ./mvnw). Build failed with 'error: release version 21 not supported', confirming environment JDK < 21. Detailed log captured at ./logs/build-04.01.txt. Action: set JAVA_HOME to JDK 21+ and re-run the same command. |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
 
