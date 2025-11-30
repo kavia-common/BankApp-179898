@@ -46,6 +46,12 @@ Verification (clean package):
   ./mvnw -q -DskipTests clean package
   ./mvn  -q -DskipTests clean package
 
+Migration Step 04.01 build log:
+  # Generate/capture the clean build log for the migration tracker
+  ./scripts/run_build_04_01.sh
+  # Log is saved to:
+  ./logs/build-04.01.txt
+
 Note on Java versions:
 - Migrated to target Java 21 and Spring Boot 3.3.x. Build requires JDK 21 in the environment.
 - If you see 'error: release version 21 not supported', your JDK is older than 21; upgrade JAVA_HOME to JDK 21 and rebuild.

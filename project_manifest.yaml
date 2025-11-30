@@ -3,8 +3,8 @@ type: backend
 language: java
 framework: springboot
 
-# Preview runner commands configured to use the Maven Wrapper via the ./mvn shim.
-# If execution permission is stripped in the environment, the runner can switch to 'sh mvn ...'.
+# Preview runner commands configured to use the Maven Wrapper via the local ./mvn shim first.
+# Explicit fallbacks: sh mvn (in case exec bits are stripped), then ./mvnw, then sh mvnw.
 # Placeholders <port> and <host> will be substituted by the preview system.
 preview:
   installCommand: "./mvn -q -DskipTests install || sh mvn -q -DskipTests install || ./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install"
