@@ -11,3 +11,4 @@ spring:
       enabled: true
       # Path defaults to /h2-console in Boot 3; SecurityConfig permits "/h2-console/**"
 # Swagger UI available at /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html (springdoc-openapi)
+# H2 console reachable at /bank-api/h2-console (context path applied)

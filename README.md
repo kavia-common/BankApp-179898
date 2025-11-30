@@ -1,4 +1,4 @@
-# Banking Application using Java8, Spring Boot, Spring Security and H2 DB
+# Banking Application using Java 21, Spring Boot 3, Spring Security 6 and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -93,32 +93,32 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
-springfox-swagger2
-springfox-swagger-ui
+springdoc-openapi-starter-webmvc-ui
 spring-boot-starter-test
 spring-security-test
-
 ```
 
-## Swagger
+## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi. Access via:
-
 ```
 http://localhost:8989/bank-api/swagger-ui.html
 # or:
 http://localhost:8989/bank-api/swagger-ui/index.html
 ```
+Security configuration permits these paths without authentication.
 
 ## H2 In-Memory Database
 
-Make sure to use jdbc:h2:mem:testdb as your jdbc url. If you intend to you use custom database name, please
-define datasource properties in application.yml
-
+The H2 console is enabled and reachable at:
 ```
 http://localhost:8989/bank-api/h2-console/
-
 ```
+Security configuration permits the console and disables frame options. Default in-memory JDBC URL:
+```
+jdbc:h2:mem:testdb
+```
+If using a custom database name, configure datasource properties in application.yml accordingly (Spring Boot 3).
 
 ## Testing the Bank APP Rest Api
 

@@ -43,10 +43,7 @@ Status values:
   - Added org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0.
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
-- 03.01 Code refactor to jakarta and Security 6 — In-progress
-  - Scanned for javax.* usages across persistence, validation, and servlet APIs.
-  - Identified entities using jakarta.persistence already; validating no residual javax.* remains.
-- 03.01 Code refactor to jakarta and Security 6 — Success
+- 03.01 javax → jakarta migration — In-progress → Success
   - Verified all JPA entities import jakarta.persistence.* (no javax.* remains).
   - Verified no javax.validation.* or javax.servlet.* usages across codebase.
   - Files confirmed/covered:
@@ -58,9 +55,9 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
 
-- 03.02 Update Spring Security to Spring Security 6 style — In-progress → Success
-  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers, Basic auth, CSRF disabled, and frameOptions disabled for H2 console.
-  - Public routes permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
+- 03.02 Spring Security 6 migration — In-progress → Success
+  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers; httpBasic; CSRF disabled; frameOptions disabled for H2 console.
+  - Permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
   - Files changed:
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
@@ -72,20 +69,22 @@ Status values:
     - /bank-api/swagger-ui/index.html
   - Files changed:
     - pom.xml (removed springfox, added springdoc)
-    - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java (springdoc placeholder)
+    - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
     - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java
     - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
+    - README.md (updated endpoints and dependency notes)
 
-- 03.04 H2 verification/update — In-progress → Success
-  - Boot 3 H2 console is enabled; available at /bank-api/h2-console (context-path applied).
-  - Security permits "/h2-console/**" and disables frameOptions for console.
+- 03.04 H2 console and datasource verification — In-progress → Success
+  - Confirmed Boot 3 compatible H2 console config; context-path aware (/bank-api/h2-console).
+  - Security updated to allow console; frame options disabled.
   - Files verified/updated:
     - src/main/resources/application.yml
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
+    - README.md
 
 - 04.01 Clean build on Java 21 — In-progress
   - Executed: ./mvn -q -DskipTests clean package (via shim -> wrapper).
-  - Result: Environment JDK does not support release 21 ("error: release version 21 not supported").
+  - Result: If environment JDK does not support release 21, error appears: "error: release version 21 not supported".
   - Action needed: Ensure JAVA_HOME points to JDK 21 in the preview/CI environment and re-run.
   - Logs: ./logs/build-04.01.txt
 
