@@ -24,8 +24,8 @@ Status values:
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | Completed. Replaced WebSecurityConfigurerAdapter with SecurityFilterChain bean, using authorizeHttpRequests + requestMatchers. Allowed public: "/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**", "/actuator/**". Kept HTTP Basic. Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Completed. Removed Springfox entirely and added springdoc-openapi-starter-webmvc-ui. Minimal ApplicationConfig retained (placeholder). README updated with new Swagger endpoints. Files changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
 | 03.04 | Verify H2 console path and datasource settings | Success | Completed. application.yml, SecurityConfig, and README updated for Boot 3 H2 console and frame options. |
-| 04.01 | Clean build on Java 21 | Blocked-by-environment | Preview hardcodes 'mvn' outside repo root causing code 127; needs ./mvn or ./mvnw and JDK 21 (see Diagnostics). |
-| 05.01 | Run and smoke-test | Blocked-by-environment | Preview start uses bare 'mvn'; use ./start or ./mvnw once preview is corrected. |
+| 04.01 | Clean build on Java 21 | Blocked-by-environment | Error: bash: mvn: command not found. The preview hardcodes 'mvn' outside the project root (bypassing the repo's ./mvn shim and ./mvnw). Repo already includes mvn shim and mvnw. |
+| 05.01 | Run and smoke-test | Blocked-by-environment | Error: bash: mvn: command not found. The preview start uses bare 'mvn'. Repo already includes mvn shim and mvnw; use ./start or ./mvnw once preview commands are updated. |
 | 06.01 | Update docs | In-progress | Tracker kept current; BUILD_NOTES updated with wrapper and shim usage. |
 
 ## Step Updates
@@ -78,26 +78,27 @@ Status values:
     - README.md
 
 - 04.01 Clean build on Java 21 — Blocked-by-environment
-  - Expected command: ./mvn -q -DskipTests clean package (shim → wrapper) or ./mvnw ...
-  - Current preview failure: 'mvn: command not found' because preview hardcodes 'mvn' outside project root, bypassing our ./mvn shim.
-  - Environment requirement: JAVA_HOME must point to JDK 21, and preview must call ./mvn or ./mvnw (or ./start).
-  - Local/CI helper: ./scripts/run_build_04_01.sh writes ./logs/build-04.01.txt.
+  - Exact error: bash: mvn: command not found
+  - Cause: Preview hardcodes 'mvn' and invokes it from outside the project root, bypassing the repo's './mvn' shim and './mvnw'.
+  - Note: The repository already includes an mvn shim and mvnw. No further preview attempts will be made until preview commands are updated to use ./mvn or ./mvnw (or ./start).
 
 - 05.01 Run and smoke-test — Blocked-by-environment
-  - Expected command: ./start or ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=$PORT --server.address=0.0.0.0".
-  - Blocked because preview currently attempts bare 'mvn'; once preview uses ./mvn (shim) or ./mvnw, run should succeed.
+  - Exact error: bash: mvn: command not found
+  - Cause: Preview start uses bare 'mvn'; it must be updated to use './mvn' (shim) or './mvnw', or './start'.
+  - Note: The repository already includes an mvn shim and mvnw. No further preview attempts will be made until preview commands are updated.
 
 ## Diagnostics
 
-- Preview hardcodes mvn: The preview appears to invoke 'mvn' from outside the project root, so the local './mvn' shim is not on PATH, resulting in 'bash: mvn: command not found' (exit code 127).
+- Environment failure acknowledgment:
+  - The preview is using a hardcoded 'mvn' command. Since it is run from outside the repo root, the local './mvn' shim is not found, producing: bash: mvn: command not found (exit code 127).
+
 - Local tooling present and correct:
   - mvn shim at repo root: ./mvn (proxies to ./mvnw, with 'sh mvnw' fallback)
   - Maven Wrapper scripts: ./mvnw and ./mvnw.cmd
   - Start helpers: ./start, ./start.sh, ./run.sh, and scripts/start_via_shim.sh
-  - project_manifest.yaml is configured to use './mvn' and fallbacks
-- Required environment actions (outside of repo):
-  1) Run preview commands from repo root, or use './start' as entrypoint.
-  2) Ensure JAVA_HOME is a JDK 21 installation.
-  3) Call './mvn' (shim) or './mvnw' explicitly if the platform does not honor the manifest.
 
-Once the preview uses './mvn' or './mvnw', steps 04.01 and 05.01 can proceed.
+- Required environment actions (outside of repo):
+  - Update preview entry to call './mvn' or './mvnw' (or './start') from the project root, and ensure JAVA_HOME is JDK 21.
+
+- Next actions:
+  - Per user guidance, no changes will be made to preview/startup now. We will resume Steps 04.01 and 05.01 once the preview commands are updated to use the wrapper/shim.
