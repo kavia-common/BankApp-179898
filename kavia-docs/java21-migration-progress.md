@@ -20,7 +20,7 @@ Status values:
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | Success | springdoc-openapi starter added; Boot-managed H2/Security versions applied. |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
-| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence across entities; verified no javax.validation/servlet remains. Files: src/main/java/com/coding/exercise/bankapp/model/*.java |
+| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence across entities; verified no javax.validation/servlet remains. Files changed in earlier step: src/main/java/com/coding/exercise/bankapp/model/*.java. Final sweep in step 03.01 confirms no remaining javax.* (persistence, validation, servlet) across codebase. |
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | Replaced WebSecurityConfigurerAdapter with SecurityFilterChain using authorizeHttpRequests/requestMatchers; permit OpenAPI/Swagger/H2/actuator; HTTP Basic; CSRF disabled; frameOptions disabled for H2. File: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Removed Springfox; added springdoc-openapi-starter-webmvc-ui with minimal config; updated docs. Files: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
 | 03.04 | Verify H2 console path and datasource settings | Success | Confirmed H2 console at /bank-api/h2-console; Security permits /h2-console/**; frame options disabled; datasource defaults OK for Boot 3. Files: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
@@ -58,9 +58,10 @@ Step updates:
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
 - 03.01 javax → jakarta migration — Success
-  - Verified all JPA entities import jakarta.persistence.* (no javax.* remains).
-  - Verified no javax.validation.* or javax.servlet.* usages across codebase.
-  - Files confirmed/covered:
+  - Final codebase sweep completed for javax.* usages (persistence, validation, servlet) and confirmed none remain.
+  - All JPA entities now import jakarta.persistence.*.
+  - No javax.validation.* or javax.servlet.* usages present anywhere in the project.
+  - Files updated in the earlier jakarta migration:
     - src/main/java/com/coding/exercise/bankapp/model/Account.java
     - src/main/java/com/coding/exercise/bankapp/model/Address.java
     - src/main/java/com/coding/exercise/bankapp/model/BankInfo.java
