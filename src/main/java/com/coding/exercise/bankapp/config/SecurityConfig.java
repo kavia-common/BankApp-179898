@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  * Summary:
  * - Uses authorizeHttpRequests with requestMatchers (replaces deprecated antMatchers).
  * - Permits unauthenticated access to:
- *   "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
+ *   "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", and "/h2-console/**".
  * - Disables CSRF and disables frame options (required for H2 console).
  * - Enables HTTP Basic for protected endpoints.
  */
@@ -25,21 +25,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // CSRF is disabled to simplify API interactions and allow H2 console
+            // CSRF is disabled to simplify API interactions and allow H2 console to work with POSTs
             .csrf(csrf -> csrf.disable())
             // H2 console requires frames
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/",
-                    "/h2-console/**",
+                    // OpenAPI/Swagger endpoints
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/actuator/**"
+                    // H2 console
+                    "/h2-console/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
+            // Keep HTTP Basic for simplicity
             .httpBasic(Customizer.withDefaults());
 
         return http.build();
