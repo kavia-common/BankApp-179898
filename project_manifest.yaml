@@ -3,33 +3,33 @@ type: backend
 language: java
 framework: springboot
 
-# Preview runner commands configured to use the Maven Wrapper.
-# If execution permission is stripped in the environment, the runner can switch to 'sh mvnw ...'.
+# Preview runner commands configured to use the Maven Wrapper via the ./mvn shim.
+# If execution permission is stripped in the environment, the runner can switch to 'sh mvn ...'.
 # Placeholders <port> and <host> will be substituted by the preview system.
 preview:
   installCommand: |
-    if [ -x "./mvnw" ]; then
-      ./mvnw install
+    if [ -x "./mvn" ]; then
+      ./mvn install
     else
-      sh mvnw install
+      sh mvn install
     fi
   buildCommand: |
-    if [ -x "./mvnw" ]; then
-      ./mvnw clean install
+    if [ -x "./mvn" ]; then
+      ./mvn clean install
     else
-      sh mvnw clean install
+      sh mvn clean install
     fi
   testCommand: |
-    if [ -x "./mvnw" ]; then
-      ./mvnw test
+    if [ -x "./mvn" ]; then
+      ./mvn test
     else
-      sh mvnw test
+      sh mvn test
     fi
   startCommand: |
-    if [ -x "./mvnw" ]; then
-      ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
+    if [ -x "./mvn" ]; then
+      ./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
     else
-      sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
+      sh mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host>"
     fi
 
 # Preserve any future fields by keeping the manifest minimal and additive.

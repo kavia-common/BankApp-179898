@@ -22,7 +22,7 @@ Status values:
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | To-do |  |
 | 03.02 | Replace Springfox with Springdoc | To-do |  |
-| 04.01 | Clean build on Java 21 | Success | Logs captured at ./logs/build-04.01.txt. Manifest uses ./mvnw with sh fallback; mvn shim present to proxy any 'mvn' calls. |
+| 04.01 | Clean build on Java 21 | Success | Logs captured at ./logs/build-04.01.txt. Manifest now uses ./mvn (shim) with sh fallback to ensure previews that invoke 'mvn' run via the wrapper. |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
 
@@ -47,3 +47,4 @@ Status values:
   - pom.xml: Upgraded parent to Spring Boot 3.3.4 (Java 21 compatible).
   - Kept maven-compiler-plugin at 3.11.0 with <release>21</release>.
   - Removed deprecated/incompatible Springfox dependencies (springfox-swagger2, springfox-swagger-ui). Replacement with springdoc will occur in step 02.03/03.02.
+  - Removed maven-toolchains-plugin to avoid CI requirement for ~/.m2/toolchains.xml; builds will rely on JAVA_HOME being JDK 21.
