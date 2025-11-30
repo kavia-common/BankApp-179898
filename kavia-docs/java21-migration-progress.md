@@ -88,6 +88,9 @@ Environment acknowledgment:
 - Preview invocation guidance (to apply later):
   - Switch preview commands to './mvn ...' or './mvnw ...' run from the project root, or use './start'.
 
+- Manifest update:
+  - project_manifest.yaml preview commands now point to './mvn' (shim) first, with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw', keeping <port> and <host> placeholders intact. This resolves 'mvn not found' in environments expecting to invoke 'mvn' but lacking system Maven.
+
 - Status confirmations (03.01–03.04):
   - 03.01 — Success (jakarta migration complete).
   - 03.02 — Success (Security 6).
