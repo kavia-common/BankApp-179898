@@ -20,7 +20,7 @@ Status values:
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | Success | springdoc-openapi starter added; Boot-managed H2/Security versions applied. |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
-| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence across all entities; Security config modernized. |
+| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence across all entities; Security config modernized; no javax.validation or javax.servlet usages found. |
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | SecurityFilterChain with requestMatchers; httpBasic; CSRF/frameOptions disabled for H2. |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Springfox removed; springdoc starter added; controllers cleaned of io.swagger.annotations. |
 | 03.04 | Verify H2 console path and datasource settings | Success | application.yml verified for Boot 3; /h2-console permitted in security. |
@@ -43,12 +43,10 @@ Status values:
   - Added org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0.
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
-- 03.01 Code refactor to jakarta and Security 6 — In-progress
-  - Searched for javax.* usage across codebase (persistence/validation/servlet).
-  - Found only javax.persistence.* in entities; no javax.validation.* or javax.servlet.* imports present.
-  - Prepared replacements and verified Hibernate 6 annotations compatibility.
 - 03.01 Code refactor to jakarta and Security 6 — Success
-  - Replaced javax.persistence.* -> jakarta.persistence.* in:
+  - Searched for javax.* usage across codebase (persistence, validation, servlet).
+  - Remaining javax.* usages: None. All persistence imports already migrated to jakarta.*.
+  - Replaced previously (now finalized) javax.persistence.* -> jakarta.persistence.* in:
     - src/main/java/com/coding/exercise/bankapp/model/Account.java
     - src/main/java/com/coding/exercise/bankapp/model/Address.java
     - src/main/java/com/coding/exercise/bankapp/model/BankInfo.java
@@ -56,8 +54,8 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/Customer.java
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
-  - No javax.validation or javax.servlet imports to migrate.
-  - Files changed: the seven model entity classes above.
+  - Verified no javax.validation.* or javax.servlet.* imports exist; Spring Boot 3 API differences addressed in SecurityConfig via SecurityFilterChain.
+  - Files changed in this step: the seven model entity classes above and SecurityConfig modernization was covered under 03.02.
 
 - 03.02 Update Spring Security to Spring Security 6 style — In-progress
   - Created SecurityFilterChain bean using authorizeHttpRequests + requestMatchers.
