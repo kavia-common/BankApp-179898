@@ -16,74 +16,40 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coding.exercise.bankapp.domain.CustomerDetails;
 import com.coding.exercise.bankapp.service.BankingServiceImpl;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
+/**
+ * REST controller for customer management operations.
+ * Uses Spring Web annotations only; OpenAPI documentation is provided by springdoc automatically.
+ */
 @RestController
 @RequestMapping("customers")
-@Api(tags = { "Customer REST endpoints" })
 public class CustomerController {
 
-	@Autowired
-	private BankingServiceImpl bankingService;
+    @Autowired
+    private BankingServiceImpl bankingService;
 
-	@GetMapping(path = "/all")
-	@ApiOperation(value = "Find all customers", notes = "Gets details of all the customers")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
+    @GetMapping(path = "/all")
+    public List<CustomerDetails> getAllCustomers() {
+        return bankingService.findAll();
+    }
 
-	public List<CustomerDetails> getAllCustomers() {
+    @PostMapping(path = "/add")
+    public ResponseEntity<Object> addCustomer(@RequestBody CustomerDetails customer) {
+        return bankingService.addCustomer(customer);
+    }
 
-		return bankingService.findAll();
-	}
+    @GetMapping(path = "/{customerNumber}")
+    public CustomerDetails getCustomer(@PathVariable Long customerNumber) {
+        return bankingService.findByCustomerNumber(customerNumber);
+    }
 
-	@PostMapping(path = "/add")
-	@ApiOperation(value = "Add a Customer", notes = "Add customer and create an account")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
+    @PutMapping(path = "/{customerNumber}")
+    public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDetails customerDetails,
+                                                 @PathVariable Long customerNumber) {
+        return bankingService.updateCustomer(customerDetails, customerNumber);
+    }
 
-	public ResponseEntity<Object> addCustomer(@RequestBody CustomerDetails customer) {
-
-		return bankingService.addCustomer(customer);
-	}
-
-	@GetMapping(path = "/{customerNumber}")
-	@ApiOperation(value = "Get customer details", notes = "Get Customer details by customer number.")
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Success", response = CustomerDetails.class, responseContainer = "Object"),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
-
-	public CustomerDetails getCustomer(@PathVariable Long customerNumber) {
-
-		return bankingService.findByCustomerNumber(customerNumber);
-	}
-
-	@PutMapping(path = "/{customerNumber}")
-	@ApiOperation(value = "Update customer", notes = "Update customer and any other account information associated with him.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = Object.class),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
-
-	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDetails customerDetails,
-			@PathVariable Long customerNumber) {
-
-		return bankingService.updateCustomer(customerDetails, customerNumber);
-	}
-
-	@DeleteMapping(path = "/{customerNumber}")
-	@ApiOperation(value = "Delete customer and related accounts", notes = "Delete customer and all accounts associated with him.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success", response = Object.class),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
-
-	public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerNumber) {
-
-		return bankingService.deleteCustomer(customerNumber);
-	}
-
+    @DeleteMapping(path = "/{customerNumber}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerNumber) {
+        return bankingService.deleteCustomer(customerNumber);
+    }
 }

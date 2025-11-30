@@ -4,7 +4,10 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Springdoc-OpenAPI is auto-configured by the starter dependency.
- * This class is kept as a placeholder for any future OpenAPI customizations.
+ * This class remains as a placeholder for future OpenAPI customizations.
+ * Swagger UI is available at:
+ *   - /swagger-ui.html
+ *   - /swagger-ui/index.html
  */
 @Configuration
 public class ApplicationConfig {
