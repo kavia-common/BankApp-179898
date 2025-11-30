@@ -10,15 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
  * Spring Security 6 configuration using SecurityFilterChain.
- * - AuthorizeHttpRequests with requestMatchers.
- * - Permits:
- *   "/" (root),
- *   "/h2-console/**" (H2 Console),
- *   "/v3/api-docs/**" (OpenAPI),
- *   "/swagger-ui/**" and "/swagger-ui.html" (Swagger UI via springdoc),
- *   "/actuator/**" (Spring Boot Actuator).
+ * Summary:
+ * - Uses authorizeHttpRequests with requestMatchers (replaces antMatchers).
+ * - Permits unauthenticated access to:
+ *   "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
  * - Disables CSRF and frame options to allow H2 console rendering.
- * - Uses HTTP Basic for other endpoints.
+ * - Enables HTTP Basic for other endpoints.
  */
 @Configuration
 @EnableWebSecurity
@@ -28,11 +25,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // CSRF is disabled to simplify API interactions and allow H2 console
             .csrf(csrf -> csrf.disable())
+            // H2 console requires frames
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers(
+                    "/",
+                    "/h2-console/**",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/actuator/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults());

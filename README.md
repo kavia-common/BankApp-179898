@@ -105,7 +105,7 @@ The API documentation is provided by springdoc-openapi (Springfox removed). Acce
 - http://localhost:8989/bank-api/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:8989/bank-api/v3/api-docs
 
-Security configuration (Spring Security 6) permits these paths without authentication.
+Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
 
 ## H2 In-Memory Database
 
