@@ -21,11 +21,11 @@ Status values:
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | Success | Success: Final sweep confirms no javax.* usages remain (persistence, validation, servlet). JPA entities use jakarta.persistence.*; no javax.validation.* or javax.servlet.* references found. Files changed/verified: src/main/java/com/coding/exercise/bankapp/model/Account.java, Address.java, BankInfo.java, Contact.java, Customer.java, CustomerAccountXRef.java, Transaction.java. Also reviewed: config/SecurityConfig.java (Spring Security 6), controllers, services, repositories. |
-| 03.02 | Update Spring Security to Spring Security 6 style | Success | In-progress → Success: SecurityFilterChain with authorizeHttpRequests + requestMatchers; HTTP Basic enabled; CSRF disabled; frame options disabled for H2. Permitted: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**. Changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
-| 03.03 | Replace Springfox with springdoc-openapi | Success | In-progress → Success: Springfox removed; springdoc-openapi-starter-webmvc-ui added and auto-configures docs. Swagger UI at /bank-api/swagger-ui.html (/index.html); OpenAPI at /bank-api/v3/api-docs. Changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
-| 03.04 | Verify H2 console path and datasource settings | Success | In-progress → Success: H2 console available at /bank-api/h2-console; Security permits /h2-console/** and disables frame options; Boot 3 default datasource OK, no extra props required. Changed: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
-| 04.01 | Clean build on Java 21 | Blocked-by-environment | Environment blocker: 'bash: mvn: command not found'. The preview hardcodes 'mvn' from outside the repo root, bypassing the repo's ./mvn shim and ./mvnw. Local mvn shim and mvnw exist. |
-| 05.01 | Run and smoke-test | Blocked-by-environment | Environment blocker: 'bash: mvn: command not found'. The preview start uses bare 'mvn'; use ./start, ./mvn, or ./mvnw once preview commands are updated. |
+| 03.02 | Update Spring Security to Spring Security 6 style | Success | SecurityFilterChain with authorizeHttpRequests + requestMatchers; HTTP Basic enabled; CSRF disabled; frame options disabled for H2. Permitted: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**. Changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
+| 03.03 | Replace Springfox with springdoc-openapi | Success | Springfox removed; springdoc-openapi-starter-webmvc-ui added and auto-configures docs. Swagger UI at /bank-api/swagger-ui.html (/index.html); OpenAPI at /bank-api/v3/api-docs. Changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
+| 03.04 | Verify H2 console path and datasource settings | Success | H2 console available at /bank-api/h2-console; Security permits /h2-console/** and disables frame options; Boot 3 default datasource OK, no extra props required. Changed: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
+| 04.01 | Clean build on Java 21 | Blocked-by-environment | Persistent environment error: 'bash: mvn: command not found'. Preview hardcodes 'mvn' outside repo root, bypassing local ./mvn shim and ./mvnw wrapper. Use ./mvn or ./mvnw once preview is updated. |
+| 05.01 | Run and smoke-test | Blocked-by-environment | Persistent environment error: 'bash: mvn: command not found'. Start should invoke ./mvn or ./mvnw (or ./start) from repo root; update preview config later. |
 | 06.01 | Update docs | Success | Tracker updated; BUILD_NOTES documents wrapper and shim usage. |
 
 ## Step Updates
@@ -44,59 +44,44 @@ Status values:
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
 - 03.01 javax → jakarta migration — Success
-  - Final repository sweep confirms: all javax.persistence imports migrated to jakarta.persistence across entities; no javax.validation.* or javax.servlet.* references remain (none existed; controllers/services/repositories rely on Spring APIs only).
-  - Verified files include all model entities and key layers (controllers/services/repositories).
+  - Repository sweep confirms: all javax.persistence imports migrated to jakarta.persistence across entities; no javax.validation.* or javax.servlet.* references present. Verified entities, controllers, services, repositories.
 
 - 03.02 Spring Security 6 migration — Success
-  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers; httpBasic; CSRF disabled; frame options disabled for H2 console.
-  - Permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
-  - Files changed:
-    - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
+  - SecurityFilterChain configured with authorizeHttpRequests + requestMatchers; HTTP Basic; CSRF disabled; frame options disabled for H2 console. Permits "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
+  - Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
 - 03.03 Replace Springfox with Springdoc — Success
-  - Removed Springfox dependencies and configs; added springdoc-openapi-starter-webmvc-ui:2.6.0.
-  - Controllers rely on springdoc auto configuration; OpenAPI visible at /bank-api/v3/api-docs; Swagger UI at /bank-api/swagger-ui.html and /bank-api/swagger-ui/index.html.
-  - Files changed:
-    - pom.xml (removed springfox, added springdoc)
-    - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
-    - README.md (updated endpoints and dependency notes)
+  - Springfox removed; springdoc-openapi-starter-webmvc-ui:2.6.0 added.
+  - OpenAPI at /bank-api/v3/api-docs; Swagger UI at /bank-api/swagger-ui.html and /bank-api/swagger-ui/index.html.
+  - Files changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md
 
 - 03.04 H2 console and datasource verification — Success
-  - Confirmed Boot 3 compatible H2 console config; context-path aware (/bank-api/h2-console).
-  - Security updated to allow console; frame options disabled.
-  - Files verified/updated:
-    - src/main/resources/application.yml
-    - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
-    - README.md
+  - Boot 3 compatible H2 console; Security allows console with frames disabled.
+  - Files verified/updated: application.yml, SecurityConfig.java, README.md
 
 - 04.01 Clean build on Java 21 — Blocked-by-environment
-  - Persistent error: bash: mvn: command not found.
-  - Cause: Preview hardcodes 'mvn' and invokes it from outside the project root, bypassing the repo's './mvn' shim and './mvnw'.
-  - Note: The repository already includes an mvn shim and mvnw. We will not attempt to rerun the preview until commands are updated.
+  - Persistent error recorded: 'bash: mvn: command not found' (exit code 127).
+  - Diagnosis: Preview calls bare 'mvn' from outside repo root, so local ./mvn shim and ./mvnw are not on the path.
+  - Deferral: Do not rerun preview; will proceed once preview commands are updated to call ./mvn or ./mvnw from project root.
 
 - 05.01 Run and smoke-test — Blocked-by-environment
-  - Persistent error: bash: mvn: command not found.
-  - Cause: Preview start uses bare 'mvn'; it must be updated to use './mvn' (shim) or './mvnw', or './start'.
-  - Note: The repository already includes an mvn shim and mvnw. We will not attempt to rerun the preview until commands are updated.
+  - Persistent error recorded: 'bash: mvn: command not found'.
+  - Diagnosis: Start path uses bare 'mvn'. Should switch to ./mvn or ./mvnw, or use ./start which delegates to Maven Wrapper.
+  - Deferral: Defer preview fix; mark step as Blocked-by-environment.
 
 ## Diagnostics
 
-- Environment failure acknowledgment:
-  - The preview is using a hardcoded 'mvn' command. Since it is run from outside the repo root, the local './mvn' shim is not found, producing the exact error: 'bash: mvn: command not found' (exit code 127).
+- Environment error (persistent):
+  - 'bash: mvn: command not found' indicates the preview environment invokes 'mvn' without system Maven and from outside the repository root, bypassing the repo-provided shim/wrapper.
 
-- Local tooling present and correct (repo already has a mvn shim and mvnw wrapper):
-  - mvn shim at repo root: ./mvn (proxies to ./mvnw, with 'sh mvnw' fallback)
-  - Maven Wrapper scripts: ./mvnw and ./mvnw.cmd
-  - Start helpers: ./start, ./start.sh, ./run.sh, and scripts/start_via_shim.sh
+- Local tooling present:
+  - mvn shim at repo root: ./mvn (proxies to ./mvnw; falls back to 'sh mvnw').
+  - Maven Wrapper: ./mvnw and ./mvnw.cmd are present.
+  - Start helpers: ./start, ./start.sh, ./run.sh; scripts include ./scripts/start_via_shim.sh.
 
-- Step status confirmation (03.01–03.04):
-  - 03.01 Code refactor to jakarta and Security 6 — Success (validated by repository changes across entities, services, controllers).
-  - 03.02 Update Spring Security to Spring Security 6 style — Success (SecurityFilterChain present).
-  - 03.03 Replace Springfox with springdoc-openapi — Success (Springfox removed; springdoc added).
-  - 03.04 Verify H2 console path and datasource settings — Success (application.yml and SecurityConfig align with Boot 3).
+- Preview invocation guidance (to apply later):
+  - Update preview/install/build/start commands to use './mvn' or './mvnw' from the project root (or './start').
+  - This resolves the 'mvn: command not found' error without requiring system Maven.
 
-- Required environment actions (outside of repo):
-  - Update preview entry to call './mvn' or './mvnw' (or './start') from the project root, and ensure JAVA_HOME is JDK 21.
-
-- Next actions:
-  - No preview/startup changes will be made now. Steps 04.01 and 05.01 remain Blocked-by-environment until preview commands are updated to use the wrapper/shim.
+- Status confirmations (03.01–03.04):
+  - Confirmed Success for 03.01–03.04 based on repository changes: jakarta persistence imports, SecurityFilterChain in place, Springfox removed in favor of springdoc, H2 console path verified with corresponding security and application.yml settings.
