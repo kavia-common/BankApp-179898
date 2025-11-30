@@ -66,3 +66,12 @@ Wrapper usage in previews:
 - The preview manifest (project_manifest.yaml) uses './mvn' (shim) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'.
 - If a platform hardcodes 'mvn', the root-level './mvn' shim ensures the call ultimately runs via the Maven Wrapper.
 - If a preview invokes 'mvn' from outside the project root (and thus misses the shim), use './start' as the entrypoint which internally calls the Maven Wrapper.
+
+Preview diagnostic (mvn-not-found):
+
+- If a preview logs "bash: mvn: command not found", it is hardcoding 'mvn' and invoking it from outside the project root, bypassing our './mvn' shim.
+- Resolution options:
+  1) Use './start' as the preview entrypoint (internally uses ./mvnw).
+  2) Ensure commands are executed from the project root so './mvn' and './mvnw' are available.
+  3) Explicitly call './mvnw ...' or 'sh mvnw ...' in preview configuration.
+- The repository already contains an mvn shim and mvnw wrapper; no system Maven is needed.
