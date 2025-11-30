@@ -10,6 +10,6 @@ preview:
   installCommand: "./mvn -q -DskipTests install || sh mvn -q -DskipTests install || ./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install"
   buildCommand: "./mvn -q -DskipTests clean package || sh mvn -q -DskipTests clean package || ./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package"
   testCommand: "./mvn -q test || sh mvn -q test || ./mvnw -q test || sh mvnw -q test"
-  startCommand: "./mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || ./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\""
+  startCommand: "./mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvn spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || ./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || ./start || sh start"
 
 # Preserve any future fields by keeping the manifest minimal and additive.

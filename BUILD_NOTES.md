@@ -58,5 +58,6 @@ Note on Java versions:
 - Previous note for Java 8 has been superseded by the Java 21 migration.
 
 Wrapper usage in previews:
-- The preview manifest (project_manifest.yaml) uses './mvnw' with a fallback to 'sh mvnw'.
+- The preview manifest (project_manifest.yaml) uses './mvn' (shim) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'.
 - If a platform hardcodes 'mvn', the root-level './mvn' shim ensures the call ultimately runs via the Maven Wrapper.
+- If a preview invokes 'mvn' from outside the project root (and thus misses the shim), use './start' as the entrypoint which internally calls the Maven Wrapper.

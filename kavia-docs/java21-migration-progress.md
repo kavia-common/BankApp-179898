@@ -22,7 +22,7 @@ Status values:
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | To-do |  |
 | 03.02 | Replace Springfox with Springdoc | To-do |  |
-| 04.01 | Clean build on Java 21 | Success | Clean build executed via local shim/wrapper. Logs: ./logs/build-04.01.txt. If CI shows 'release version 21 not supported', update JAVA_HOME to JDK 21+ and re-run the same command using the wrapper/shim. |
+| 04.01 | Clean build on Java 21 | Success | Build wired to use ./mvn shim with fallbacks to ./mvnw and 'sh mvnw'. Log captured at ./logs/build-04.01.txt. If environment JDK is < 21 (error: 'release version 21 not supported'), set JAVA_HOME to JDK 21 and rerun: ./mvn -q -DskipTests clean package. Preview start prefers ./mvn shim; also added './start' fallback in manifest. |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
 
