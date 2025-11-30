@@ -56,6 +56,8 @@ sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server
 make run
 # or:
 ./run.sh
+# or (common preview systems that execute a 'start' file):
+./start
 # or (platforms supporting Procfile):
 web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
 ```

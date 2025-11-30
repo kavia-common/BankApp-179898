@@ -30,6 +30,8 @@ Run (port 8989, bind 0.0.0.0):
   make run
   # or using Procfile (platform-dependent):
   web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
+  # or start entry recognized by some preview systems:
+  ./start
   # or:
   ./run.sh
 
