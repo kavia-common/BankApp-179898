@@ -10,8 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
  * Spring Security 6 configuration using SecurityFilterChain.
- * - Permits access to root, H2 console, and OpenAPI/Swagger paths.
+ * - Permits access to root ("/"), H2 console ("/h2-console/**"), OpenAPI ("/v3/api-docs/**"),
+ *   Swagger UI ("/swagger-ui/**", "/swagger-ui.html"), and Actuator ("/actuator/**").
  * - Disables CSRF and frame options to allow H2 console to render in iframes.
+ * - Keeps HTTP Basic authentication for protected endpoints.
  */
 @Configuration
 @EnableWebSecurity

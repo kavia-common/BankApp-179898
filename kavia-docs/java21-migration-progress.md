@@ -20,10 +20,10 @@ Status values:
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | Success | springdoc-openapi starter added; Boot-managed H2/Security versions applied. |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
-| 03.01 | Code refactor to jakarta and Security 6 | Success | javax.persistence -> jakarta.persistence applied to all JPA entities; confirmed no javax.validation or javax.servlet in codebase. Files changed: model/*.java. |
-| 03.02 | Update Spring Security to Spring Security 6 style | Success | SecurityFilterChain using authorizeHttpRequests + requestMatchers; httpBasic; CSRF and frameOptions disabled for H2 console. Files changed: src/main/java/.../config/SecurityConfig.java. |
-| 03.03 | Replace Springfox with springdoc-openapi | Success | Removed Springfox (pom deps/config); added org.springdoc:springdoc-openapi-starter-webmvc-ui. Controllers use Spring Web only; springdoc auto-configures Swagger UI. Files changed: pom.xml, config/ApplicationConfig.java, controller/*.java, README.md. |
-| 03.04 | Verify H2 console path and datasource settings | Success | application.yml uses Boot 3 properties; H2 console enabled and permitted at /bank-api/h2-console; frameOptions disabled in security. Files verified/updated: application.yml, config/SecurityConfig.java, README.md. |
+| 03.01 | Code refactor to jakarta and Security 6 | Success | Completed. Changed imports in JPA entities from javax.persistence.* to jakarta.persistence.*. Verified no javax.validation or javax.servlet usages remain. Files changed: src/main/java/com/coding/exercise/bankapp/model/*.java |
+| 03.02 | Update Spring Security to Spring Security 6 style | Success | Completed. Replaced WebSecurityConfigurerAdapter with SecurityFilterChain bean, using authorizeHttpRequests + requestMatchers. Allowed public: "/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**", "/actuator/**". Kept HTTP Basic. Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
+| 03.03 | Replace Springfox with springdoc-openapi | Success | Completed. Removed Springfox entirely and added springdoc-openapi-starter-webmvc-ui. Minimal ApplicationConfig retained (placeholder). README updated with new Swagger endpoints. Files changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
+| 03.04 | Verify H2 console path and datasource settings | Success | Completed. Ensured H2 console path is /h2-console (context path applied → /bank-api/h2-console). application.yml configured with spring.h2.console.enabled and web-allow-others; Security config permits console and disables frameOptions. README updated. Files changed: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
 | 04.01 | Clean build on Java 21 | Blocked | Blocked by environment: preview hardcodes 'mvn' not found; requires using ./mvn or ./mvnw and JDK 21 (see Diagnostics). |
 | 05.01 | Run and smoke-test | Blocked | Blocked by environment: preview start uses 'mvn' directly. Use ./start or ./mvnw once preview is fixed. |
 | 06.01 | Update docs | To-do |  |
@@ -55,12 +55,17 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
 
+- 03.02 Spring Security 6 migration — In-progress
+  - Refactoring config to SecurityFilterChain, requestMatchers, and HTTP Basic.
+  - Public paths accounted for (OpenAPI/Swagger/H2).
 - 03.02 Spring Security 6 migration — Success
   - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers; httpBasic; CSRF disabled; frameOptions disabled for H2 console.
-  - Permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
+  - Permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/**".
   - Files changed:
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
+- 03.03 Replace Springfox with Springdoc — In-progress
+  - Removing Springfox deps/config and adding springdoc starter.
 - 03.3 Replace Springfox with Springdoc — Success
   - Removed Springfox dependencies and configs; added springdoc-openapi-starter-webmvc-ui:2.6.0.
   - Controllers no longer use io.swagger.annotations; springdoc auto-generates OpenAPI.
@@ -74,6 +79,8 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
     - README.md (updated endpoints and dependency notes)
 
+- 03.04 H2 console and datasource verification — In-progress
+  - Verifying Boot 3 path and security allowances for H2 console.
 - 03.04 H2 console and datasource verification — Success
   - Confirmed Boot 3 compatible H2 console config; context-path aware (/bank-api/h2-console).
   - Security updated to allow console; frame options disabled.
