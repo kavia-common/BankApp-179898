@@ -1,0 +1,6 @@
+# Ensure shell scripts have execute permissions in environments that honor git attributes
+mvn           eol=lf
+mvnw          eol=lf
+run.sh        eol=lf
+start.sh      eol=lf
+Procfile      eol=lf

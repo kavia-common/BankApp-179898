@@ -7,6 +7,12 @@ build:
 	./mvnw -q -DskipTests clean package
 
 # PUBLIC_INTERFACE
+# build-shim: Build using the 'mvn' shim which proxies to ./mvnw.
+# Usage: make build-shim
+build-shim:
+	./mvn -q -DskipTests clean package
+
+# PUBLIC_INTERFACE
 # run: Starts the Spring Boot app on port 8989 bound to 0.0.0.0 using the Maven Wrapper.
 # Usage: make run
 run:

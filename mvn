@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# PUBLIC_INTERFACE
+# mvn shim - proxies all invocations of 'mvn' to the Maven Wrapper ('./mvnw').
+# This ensures environments that call 'mvn' directly will work even if system Maven is not installed.
+# Usage:
+#   mvn <args...>   -> equivalent to ./mvnw <args...>
+
+set -e
+
+# Prefer local executable mvnw; fall back to 'sh mvnw' if execution permission is missing.
+if [ -x "./mvnw" ]; then
+  exec ./mvnw "$@"
+else
+  exec sh mvnw "$@"
+fi

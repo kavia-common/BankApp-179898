@@ -43,6 +43,8 @@ Build:
 sh mvnw -q -DskipTests clean package
 # or:
 make build
+# or (shim that proxies to ./mvnw):
+./mvn -q -DskipTests clean package
 ```
 
 Run on port 8989 bound to 0.0.0.0:
@@ -54,6 +56,8 @@ sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server
 make run
 # or:
 ./run.sh
+# or (platforms supporting Procfile):
+web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
 ```
 
 5. Default port for the api is 8989
