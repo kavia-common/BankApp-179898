@@ -58,33 +58,27 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
 
-- 03.02 Update Spring Security to Spring Security 6 style — In-progress
-  - Drafted migration off WebSecurityConfigurerAdapter to SecurityFilterChain with requestMatchers.
-  - Identified public endpoints: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
-- 03.02 Update Spring Security to Spring Security 6 style — Success
-  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers, httpBasic, CSRF disabled, and frameOptions disabled for H2 console.
-  - File changed:
+- 03.02 Update Spring Security to Spring Security 6 style — In-progress → Success
+  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers, Basic auth, CSRF disabled, and frameOptions disabled for H2 console.
+  - Public routes permitted: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
+  - Files changed:
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
-- 03.03 Replace Springfox with Springdoc — In-progress
-  - Removed Springfox libraries from pom and added springdoc-openapi-starter-webmvc-ui:2.6.0.
-  - Cleaned controllers of io.swagger.annotations (springdoc infers from Spring MVC).
-- 03.03 Replace Springfox with Springdoc — Success
+- 03.03 Replace Springfox with Springdoc — In-progress → Success
+  - Removed Springfox dependencies and configs; added springdoc-openapi-starter-webmvc-ui:2.6.0.
+  - Controllers no longer use io.swagger.annotations; springdoc auto-generates OpenAPI.
   - Swagger UI reachable at:
     - /bank-api/swagger-ui.html
     - /bank-api/swagger-ui/index.html
   - Files changed:
     - pom.xml (removed springfox, added springdoc)
     - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java (springdoc placeholder)
-    - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java (removed springfox annotations)
-    - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java (removed springfox annotations)
+    - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java
+    - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
 
-- 03.04 H2 verification/update — In-progress
-  - Validating Boot 3 H2 console configuration and context-path interactions.
-  - Checking security exemptions and frame headers for console rendering.
-- 03.04 H2 verification/update — Success
-  - spring.h2.console.enabled: true, H2 console at /bank-api/h2-console.
-  - SecurityConfig permits "/h2-console/**" and disables frameOptions for H2.
+- 03.04 H2 verification/update — In-progress → Success
+  - Boot 3 H2 console is enabled; available at /bank-api/h2-console (context-path applied).
+  - Security permits "/h2-console/**" and disables frameOptions for console.
   - Files verified/updated:
     - src/main/resources/application.yml
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
