@@ -22,7 +22,7 @@ Status values:
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | To-do |  |
 | 03.02 | Replace Springfox with Springdoc | To-do |  |
-| 04.01 | Clean build on Java 21 | To-do |  |
+| 04.01 | Clean build on Java 21 | To-do | Prereq: Preview infra updated to use Maven Wrapper via project_manifest.yaml (install/build/test/start use ./mvnw with sh fallback). |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
 
