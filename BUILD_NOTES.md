@@ -12,6 +12,7 @@ Maven Wrapper standardization:
 - The project uses Maven Wrapper exclusively. No system 'mvn' is required.
 - A shim script named 'mvn' is provided at the project root to proxy any 'mvn ...' calls to './mvnw'.
 - Preview/CI entrypoints (start, start.sh, run.sh, Makefile, Procfile) are wired to use './mvnw' so 'bash: mvn: command not found' is avoided.
+- project_manifest.yaml is configured to use './mvnw' with 'sh mvnw' fallback; if a preview insists on invoking 'mvn', the 'mvn' shim proxies to './mvnw'.
 - Definitive entry file for previews: ./start (supports CLEAN_PACKAGE to pre-build).
 
 Build:
@@ -48,3 +49,7 @@ Verification (clean package):
 Note on Java versions:
 - The project targets Java 8 bytecode but can be built on newer JDKs (e.g., 17).
 - To avoid module access issues with annotation processing on JDK 17+, the necessary --add-opens flags are provided via .mvn/jvm.config.
+
+Wrapper usage in previews:
+- The preview manifest (project_manifest.yaml) uses './mvnw' with a fallback to 'sh mvnw'.
+- If a platform hardcodes 'mvn', the root-level './mvn' shim ensures the call ultimately runs via the Maven Wrapper.
