@@ -112,7 +112,6 @@ Allowed without authentication (Boot 3/Security 6):
 - /bank-api/swagger-ui/**
 - /bank-api/swagger-ui.html
 - /bank-api/h2-console/**
-- /bank-api/actuator/** (if actuator is enabled)
 Note: Security config uses requestMatchers for these paths and enables HTTP Basic for others.
 
 ## H2 In-Memory Database
