@@ -27,8 +27,19 @@ Status values:
 
 Step updates:
 - 03.01 In-progress → Success
-  - Notes: Replaced javax.persistence.* with jakarta.persistence.* across all entities; validated no javax.validation or javax.servlet imports remain.
-  - Files changed: src/main/java/com/coding/exercise/bankapp/model/*.java
+  - Notes: Final repository sweep completed for javax.* usages (persistence, validation, servlet). No remaining javax.* references found. All JPA entities already import jakarta.persistence.*; controllers/services/repositories contain no javax.validation or javax.servlet imports. No additional API changes were required for Spring Boot 3 in this step.
+  - Files reviewed (no changes in this sweep):
+    - src/main/java/com/coding/exercise/bankapp/model/Account.java
+    - src/main/java/com/coding/exercise/bankapp/model/Address.java
+    - src/main/java/com/coding/exercise/bankapp/model/BankInfo.java
+    - src/main/java/com/coding/exercise/bankapp/model/Contact.java
+    - src/main/java/com/coding/exercise/bankapp/model/Customer.java
+    - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
+    - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
+    - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java (already Spring Security 6 style)
+    - src/main/java/com/coding/exercise/bankapp/controller/*.java (no javax.*)
+    - src/main/java/com/coding/exercise/bankapp/service/**/*.java (no javax.*)
+    - src/main/java/com/coding/exercise/bankapp/repository/*.java (no javax.*)
 - 03.02 In-progress → Success
   - Notes: Migrated to Spring Security 6 using SecurityFilterChain bean; using authorizeHttpRequests with requestMatchers; permitted OpenAPI (/v3/api-docs/**), Swagger UI (/swagger-ui/**, /swagger-ui.html), H2 console (/h2-console/**), actuator; enabled HTTP Basic; disabled CSRF; disabled frameOptions for H2.
   - Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
