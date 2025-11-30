@@ -21,7 +21,7 @@ Status values:
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
 | 03.01 | Code refactor to jakarta and Security 6 | Success | Success: Final sweep confirms no javax.* usages remain (persistence, validation, servlet). JPA entities import jakarta.persistence.*; no javax.validation.* or javax.servlet.* references found. Files changed/verified: src/main/java/com/coding/exercise/bankapp/model/Account.java, Address.java, BankInfo.java, Contact.java, Customer.java, CustomerAccountXRef.java, Transaction.java; config/controllers/services/repositories verified. |
-| 03.02 | Update Spring Security to Spring Security 6 style | In-progress | Starting step: Ensure SecurityFilterChain + requestMatchers, HTTP Basic, CSRF disabled, H2 frame options disabled; verify endpoints permitted. Code already migrated in src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java; will validate and adjust if any gaps arise in subsequent steps. |
+| 03.02 | Update Spring Security to Spring Security 6 style | Success | In-progress → Success: SecurityFilterChain with authorizeHttpRequests + requestMatchers; HTTP Basic enabled; CSRF disabled; frame options disabled for H2. Permitted: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**. Changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | In-progress → Success: Springfox removed; springdoc-openapi-starter-webmvc-ui added and auto-configures docs. Swagger UI at /bank-api/swagger-ui.html (/index.html); OpenAPI at /bank-api/v3/api-docs. Changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
 | 03.04 | Verify H2 console path and datasource settings | Success | In-progress → Success: H2 console available at /bank-api/h2-console; Security permits /h2-console/** and disables frame options; Boot 3 default datasource OK, no extra props required. Changed: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
 | 04.01 | Clean build on Java 21 | Blocked-by-environment | Environment blocker: 'bash: mvn: command not found'. The preview hardcodes 'mvn' from outside the repo root, bypassing the repo's ./mvn shim and ./mvnw. Local mvn shim and mvnw exist. |
@@ -44,7 +44,7 @@ Status values:
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
 - 03.01 javax → jakarta migration — Success
-  - Final repository sweep confirms all javax.persistence imports were migrated to jakarta.persistence across entities; no javax.validation.* or javax.servlet.* usages remain in controllers, services, or repositories.
+  - Final repository sweep confirms: all javax.persistence imports migrated to jakarta.persistence across entities; no javax.validation.* or javax.servlet.* references remain (none existed; controllers/services/repositories rely on Spring APIs only).
   - Verified files include all model entities and key layers (controllers/services/repositories).
 
 - 03.02 Spring Security 6 migration — Success
@@ -55,7 +55,7 @@ Status values:
 
 - 03.03 Replace Springfox with Springdoc — Success
   - Removed Springfox dependencies and configs; added springdoc-openapi-starter-webmvc-ui:2.6.0.
-  - Controllers rely on springdoc auto configuration; OpenAPI visible at /bank-api/v3/api-docs; Swagger UI at /bank-api/swagger-ui.html.
+  - Controllers rely on springdoc auto configuration; OpenAPI visible at /bank-api/v3/api-docs; Swagger UI at /bank-api/swagger-ui.html and /bank-api/swagger-ui/index.html.
   - Files changed:
     - pom.xml (removed springfox, added springdoc)
     - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
