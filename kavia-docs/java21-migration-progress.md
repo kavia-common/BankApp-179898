@@ -76,8 +76,11 @@ Status values:
   - application.yml: spring.h2.console.enabled: true confirmed; default path /h2-console noted.
   - SecurityConfig permits "/h2-console/**" and disables frame options for rendering.
 
-- 04.01 Clean build on Java 21 — Success
-  - Build requires JDK 21. Logs captured under ./logs/build-04.01.txt (see BUILD_NOTES.md for commands).
+- 04.01 Clean build on Java 21 — In-progress
+  - Executed: ./mvn -q -DskipTests clean package (via shim -> wrapper).
+  - Result: Environment JDK does not support release 21 ("error: release version 21 not supported").
+  - Action needed: Ensure JAVA_HOME points to JDK 21 in the preview/CI environment and re-run.
+  - Logs: ./logs/build-04.01.txt
 
 ## Notes
 
