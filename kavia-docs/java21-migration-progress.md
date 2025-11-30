@@ -24,6 +24,20 @@ Status values:
 | 03.02 | Update Spring Security to Spring Security 6 style | Success | Replaced WebSecurityConfigurerAdapter with SecurityFilterChain using authorizeHttpRequests/requestMatchers; permit OpenAPI/Swagger/H2/actuator; HTTP Basic; CSRF disabled; frameOptions disabled for H2. File: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java |
 | 03.03 | Replace Springfox with springdoc-openapi | Success | Removed Springfox; added springdoc-openapi-starter-webmvc-ui with minimal config; updated docs. Files: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md |
 | 03.04 | Verify H2 console path and datasource settings | Success | Confirmed H2 console at /bank-api/h2-console; Security permits /h2-console/**; frame options disabled; datasource defaults OK for Boot 3. Files: src/main/resources/application.yml, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java, README.md |
+
+Step updates:
+- 03.01 In-progress → Success
+  - Notes: Replaced javax.persistence.* with jakarta.persistence.* across all entities; validated no javax.validation or javax.servlet imports remain.
+  - Files changed: src/main/java/com/coding/exercise/bankapp/model/*.java
+- 03.02 In-progress → Success
+  - Notes: Migrated to Spring Security 6 using SecurityFilterChain bean; using authorizeHttpRequests with requestMatchers; permitted OpenAPI (/v3/api-docs/**), Swagger UI (/swagger-ui/**, /swagger-ui.html), H2 console (/h2-console/**), actuator; enabled HTTP Basic; disabled CSRF; disabled frameOptions for H2.
+  - Files changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
+- 03.3 In-progress → Success
+  - Notes: Removed Springfox; added springdoc-openapi-starter-webmvc-ui; minimal config in ApplicationConfig; updated docs to point to /swagger-ui.html and /v3/api-docs.
+  - Files changed: pom.xml, src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java, README.md
+- 03.04 In-progress → Success
+  - Notes: Verified H2 console path under context-path (/bank-api/h2-console) and compatibility with Boot 3; confirmed datasource defaults; documented in README.
+  - Files changed: src/main/resources/application.yml, README.md, src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 | 04.01 | Clean build on Java 21 | Blocked-by-environment | Exact error: bash: mvn: command not found. The preview hardcodes 'mvn' from outside the project root, bypassing the repo's ./mvn shim and ./mvnw. Local mvn shim and mvnw exist. |
 | 05.01 | Run and smoke-test | Blocked-by-environment | Exact error: bash: mvn: command not found. The preview start uses bare 'mvn'. Local mvn shim and mvnw exist; use ./start or ./mvnw once preview commands are updated. |
 | 06.01 | Update docs | Success | Tracker updated; BUILD_NOTES documents wrapper and shim usage. |

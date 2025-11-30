@@ -105,7 +105,7 @@ The API documentation is provided by springdoc-openapi (Springfox removed). Acce
 - http://localhost:8989/bank-api/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:8989/bank-api/v3/api-docs
 
-Security configuration permits these paths without authentication.
+Security configuration (Spring Security 6) permits these paths without authentication.
 
 ## H2 In-Memory Database
 
@@ -127,6 +127,11 @@ spring:
     hibernate:
       ddl-auto: update
 ```
+
+Notes on migration:
+- javax.* packages migrated to jakarta.* (JPA).
+- Spring Security migrated to SecurityFilterChain + requestMatchers.
+- Springfox removed; springdoc-openapi-starter-webmvc-ui added.
 
 ## Testing the Bank APP Rest Api
 
