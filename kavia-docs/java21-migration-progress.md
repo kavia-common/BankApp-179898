@@ -16,7 +16,7 @@ Status values:
 |---|---|---|---|
 | 01.01 | Create tracker | To-do |  |
 | 02.01 | Update Java version/toolchain | In-progress | Begin updating pom.xml to target Java 21; adjust compiler and add toolchains plugin. No Spring Boot version changes in this step. |
-| 02.02 | Upgrade Spring Boot | To-do |  |
+| 02.02 | Upgrade Spring Boot | In-progress | Bumping parent to Spring Boot 3.3.4 to enable Java 21; aligning plugins and removing deprecated Springfox deps incompatible with Spring Boot 3. |
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | To-do |  |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
@@ -42,3 +42,8 @@ Status values:
   - Removed legacy Java 8 settings (<maven.compiler.source>, <maven.compiler.target>, <maven.compiler.release>8).
   - Added maven-toolchains-plugin targeting JDK [21,) with vendor any.
   - Kept Spring Boot version unchanged (2.1.4.RELEASE) as instructed for this step.
+
+- 02.02 Upgrade Spring Boot — Success
+  - pom.xml: Upgraded parent to Spring Boot 3.3.4 (Java 21 compatible).
+  - Kept maven-compiler-plugin at 3.11.0 with <release>21</release>.
+  - Removed deprecated/incompatible Springfox dependencies (springfox-swagger2, springfox-swagger-ui). Replacement with springdoc will occur in step 02.03/03.02.
