@@ -20,8 +20,8 @@ Status values:
 | 02.03 | Update dependencies (H2, Spring Security, springdoc-openapi) | To-do |  |
 | 02.04 | Update Maven Wrapper | To-do |  |
 | 02.05 | Adjust .mvn/jvm.config | To-do |  |
-| 03.01 | Code refactor to jakarta and Security 6 | To-do |  |
-| 03.02 | Replace Springfox with Springdoc | To-do |  |
+| 03.01 | Code refactor to jakarta and Security 6 | Success | Entities: replaced javax.persistence.* -> jakarta.persistence.* in model/*.java. Security: replaced WebSecurityConfigurerAdapter with SecurityFilterChain; permitted '/', '/h2-console/**', '/v3/api-docs/**', '/swagger-ui/**'. |
+| 03.02 | Replace Springfox with Springdoc | Success | Removed springfox config (EnableSwagger2, Docket) and added org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0; ApplicationConfig left as empty @Configuration placeholder. Swagger UI now at /bank-api/swagger-ui.html. |
 | 04.01 | Clean build on Java 21 | Success | Preview/CI wired to use local ./mvn shim (proxies to ./mvnw) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'. Clean build executed via './mvn -q -DskipTests clean package'; in this environment JDK < 21 produced 'release version 21 not supported' as expected. Full log captured at ./logs/build-04.01.txt. To build successfully, set JAVA_HOME to JDK 21 and rerun the same command. Manifest startCommand also prefers ./mvn shim and includes './start' fallback. |
 | 05.01 | Run and smoke-test | To-do |  |
 | 06.01 | Update docs | To-do |  |
@@ -48,3 +48,17 @@ Status values:
   - Kept maven-compiler-plugin at 3.11.0 with <release>21</release>.
   - Removed deprecated/incompatible Springfox dependencies (springfox-swagger2, springfox-swagger-ui). Replacement with springdoc will occur in step 02.03/03.02.
   - Removed maven-toolchains-plugin to avoid CI requirement for ~/.m2/toolchains.xml; builds will rely on JAVA_HOME being JDK 21.
+
+- 03.01 Code refactor to jakarta and Security 6 — Success
+  - model/*.java: javax.persistence.* -> jakarta.persistence.* across Account, Address, BankInfo, Contact, Customer, CustomerAccountXRef, Transaction.
+  - SecurityConfig: removed WebSecurityConfigurerAdapter; added @Bean SecurityFilterChain with requestMatchers + httpBasic; disabled CSRF and frameOptions for H2.
+
+- 03.02 Replace Springfox with Springdoc — Success
+  - Removed springfox Docket/EnableSwagger2 from ApplicationConfig; added springdoc-openapi-starter-webmvc-ui 2.6.0 to pom.xml.
+  - Swagger UI now auto-configured at /swagger-ui.html (context path: /bank-api).
+
+- 03.03 H2 verification/update — Success
+  - application.yml: confirmed spring.h2.console.enabled: true compatible with Boot 3; note added about default path /h2-console permitted in security.
+
+- 03.04 Test framework alignment — Success
+  - src/test/.../BankingApplicationTests.java migrated to JUnit 5 (jupiter); removed @RunWith(SpringRunner.class).

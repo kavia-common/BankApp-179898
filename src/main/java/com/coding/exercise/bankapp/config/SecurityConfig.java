@@ -1,26 +1,34 @@
 package com.coding.exercise.bankapp.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- * 
- * Spring security denied access to h2-console.
- * This configuration will resolve 403 forbidden error when accessing h2-console.
- * 
- * @author sbathina
- *
+ * Spring Security 6 configuration using SecurityFilterChain.
+ * - Permits access to root, H2 console, and OpenAPI/Swagger paths.
+ * - Disables CSRF and frame options to allow H2 console to render in iframes.
  */
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityConfig {
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
+    // PUBLIC_INTERFACE
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(Customizer.withDefaults());
 
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
+        return http.build();
     }
 }

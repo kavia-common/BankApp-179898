@@ -102,11 +102,12 @@ spring-security-test
 
 ## Swagger
 
-Please find the Rest API documentation in the below url
+The API documentation is provided by springdoc-openapi. Access via:
 
 ```
 http://localhost:8989/bank-api/swagger-ui.html
-
+# or:
+http://localhost:8989/bank-api/swagger-ui/index.html
 ```
 
 ## H2 In-Memory Database
