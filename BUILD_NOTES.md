@@ -12,6 +12,7 @@ Maven Wrapper standardization:
 - The project uses Maven Wrapper exclusively. No system 'mvn' is required.
 - A shim script named 'mvn' is provided at the project root to proxy any 'mvn ...' calls to './mvnw'.
 - Preview/CI entrypoints (start, start.sh, run.sh, Makefile, Procfile) are wired to use './mvnw' so 'bash: mvn: command not found' is avoided.
+- Definitive entry file for previews: ./start (supports CLEAN_PACKAGE to pre-build).
 
 Build:
   ./mvnw -q -DskipTests clean package
@@ -30,7 +31,7 @@ Run (port 8989, bind 0.0.0.0):
   make run
   # or using Procfile (platform-dependent):
   web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
-  # or start entry recognized by some preview systems:
+  # or start entry recognized by some preview systems (supports CLEAN_PACKAGE=true):
   ./start
   # or:
   ./run.sh

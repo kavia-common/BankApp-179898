@@ -1,18 +1,26 @@
 #!/usr/bin/env sh
 # PUBLIC_INTERFACE
-# start - Entry point for preview environments that look for a file named 'start'.
-# Purpose:
-#   Ensures the app runs via Maven Wrapper (./mvnw) without requiring system Maven.
-# Behavior:
-#   - Binds to 0.0.0.0
-#   - Uses $PORT if provided by the environment, otherwise falls back to 8989
-#   - Falls back to 'sh mvnw' if execution permission on ./mvnw is not available.
-#   - Environments calling 'mvn' directly are supported by the root-level mvn shim.
-
+# start - Definitive entrypoint for preview environments.
+# Summary:
+#   Invokes Maven Wrapper to run the Spring Boot app on $PORT or 8989, bound to 0.0.0.0.
+#   Falls back to "sh mvnw" if execute permission is missing.
+#   If the preview calls "mvn" implicitly, a root-level "mvn" shim proxies to "./mvnw".
+# Usage:
+#   ./start
+#   sh start  # if execute permission is removed by platform
 set -e
 
 PORT_VALUE="${PORT:-8989}"
 ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0"
+
+# If a CLEAN_PACKAGE flag is set, do a clean package first to verify wrapper
+if [ "${CLEAN_PACKAGE}" = "true" ]; then
+  if [ -x "./mvnw" ]; then
+    ./mvnw -q -DskipTests clean package
+  else
+    sh mvnw -q -DskipTests clean package
+  fi
+fi
 
 if [ -x "./mvnw" ]; then
   exec ./mvnw spring-boot:run -Dspring-boot.run.arguments="${ARGS}"

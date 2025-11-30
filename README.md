@@ -65,8 +65,9 @@ make run
 # Generic run script:
 ./run.sh
 
-# Common preview entrypoints:
+# Definitive preview entrypoint (supports CLEAN_PACKAGE=true to build first):
 ./start
+# or:
 ./start.sh
 
 # Platforms supporting Procfile (for reference):
