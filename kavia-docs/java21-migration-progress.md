@@ -43,10 +43,13 @@ Status values:
   - Added org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0.
   - Relied on Boot 3-managed versions for Spring Security 6, Hibernate 6, and H2.
 
+- 03.01 Code refactor to jakarta and Security 6 — In-progress
+  - Scanned for javax.* usages across persistence, validation, and servlet APIs.
+  - Identified entities using jakarta.persistence already; validating no residual javax.* remains.
 - 03.01 Code refactor to jakarta and Security 6 — Success
-  - Searched for javax.* usage across codebase (persistence, validation, servlet).
-  - Remaining javax.* usages: None. All persistence imports already migrated to jakarta.*.
-  - Replaced previously (now finalized) javax.persistence.* -> jakarta.persistence.* in:
+  - Verified all JPA entities import jakarta.persistence.* (no javax.* remains).
+  - Verified no javax.validation.* or javax.servlet.* usages across codebase.
+  - Files confirmed/covered:
     - src/main/java/com/coding/exercise/bankapp/model/Account.java
     - src/main/java/com/coding/exercise/bankapp/model/Address.java
     - src/main/java/com/coding/exercise/bankapp/model/BankInfo.java
@@ -54,36 +57,35 @@ Status values:
     - src/main/java/com/coding/exercise/bankapp/model/Customer.java
     - src/main/java/com/coding/exercise/bankapp/model/CustomerAccountXRef.java
     - src/main/java/com/coding/exercise/bankapp/model/Transaction.java
-  - Verified no javax.validation.* or javax.servlet.* imports exist; Spring Boot 3 API differences addressed in SecurityConfig via SecurityFilterChain.
-  - Files changed in this step: the seven model entity classes above and SecurityConfig modernization was covered under 03.02.
 
 - 03.02 Update Spring Security to Spring Security 6 style — In-progress
-  - Created SecurityFilterChain bean using authorizeHttpRequests + requestMatchers.
-  - Drafted permitted paths: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
+  - Drafted migration off WebSecurityConfigurerAdapter to SecurityFilterChain with requestMatchers.
+  - Identified public endpoints: "/", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html".
 - 03.02 Update Spring Security to Spring Security 6 style — Success
-  - Implemented SecurityFilterChain with httpBasic, CSRF disabled, and frameOptions disabled for H2.
-  - File changed: src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
+  - Implemented SecurityFilterChain with authorizeHttpRequests + requestMatchers, httpBasic, CSRF disabled, and frameOptions disabled for H2 console.
+  - File changed:
+    - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
 - 03.03 Replace Springfox with Springdoc — In-progress
-  - Removed springfox dependencies and annotations from controllers.
-  - Added springdoc-openapi-starter-webmvc-ui 2.6.0.
+  - Removed Springfox libraries from pom and added springdoc-openapi-starter-webmvc-ui:2.6.0.
+  - Cleaned controllers of io.swagger.annotations (springdoc infers from Spring MVC).
 - 03.03 Replace Springfox with Springdoc — Success
-  - OpenAPI/Swagger UI available at:
+  - Swagger UI reachable at:
     - /bank-api/swagger-ui.html
     - /bank-api/swagger-ui/index.html
   - Files changed:
-    - pom.xml (dependency add/removal)
+    - pom.xml (removed springfox, added springdoc)
     - src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java (springdoc placeholder)
-    - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java (swagger annotations removed)
-    - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java (swagger annotations removed)
+    - src/main/java/com/coding/exercise/bankapp/controller/AccountController.java (removed springfox annotations)
+    - src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java (removed springfox annotations)
 
 - 03.04 H2 verification/update — In-progress
-  - Checked application.yml properties for Boot 3 compatibility.
-  - Ensured security permits H2 console and headers allow frames.
+  - Validating Boot 3 H2 console configuration and context-path interactions.
+  - Checking security exemptions and frame headers for console rendering.
 - 03.04 H2 verification/update — Success
-  - spring.h2.console.enabled: true retained; default path /h2-console (effective at /bank-api/h2-console due to context-path).
-  - SecurityConfig: "/h2-console/**" permitted, frame options disabled.
-  - Files verified:
+  - spring.h2.console.enabled: true, H2 console at /bank-api/h2-console.
+  - SecurityConfig permits "/h2-console/**" and disables frameOptions for H2.
+  - Files verified/updated:
     - src/main/resources/application.yml
     - src/main/java/com/coding/exercise/bankapp/config/SecurityConfig.java
 
