@@ -29,11 +29,34 @@ https://projectlombok.org/setup/eclipse
 
 ```
 - Import existing maven project
-- Run mvn clean install
+- Build with Maven Wrapper: ./mvnw -q -DskipTests clean package
+  (or: sh mvnw ... if execution permission is blocked)
 - If using STS, Run As Spring Boot App
-
 ```
-4. Default port for the api is 8989
+
+4. Build and Run without system Maven
+
+Build:
+```
+./mvnw -q -DskipTests clean package
+# or:
+sh mvnw -q -DskipTests clean package
+# or:
+make build
+```
+
+Run on port 8989 bound to 0.0.0.0:
+```
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+# or:
+sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+# or:
+make run
+# or:
+./run.sh
+```
+
+5. Default port for the api is 8989
 
 
 ### Prerequisites
