@@ -1,2 +1,2 @@
 # Uses Maven Wrapper on Windows environments
-web: cmd /c "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=--server.port=%PORT% --server.address=0.0.0.0"
+web: cmd /c "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0^\""
