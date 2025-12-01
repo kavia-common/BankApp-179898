@@ -84,6 +84,11 @@ On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 -Dspring-boot.run.arguments=^"--server.port=%PORT% --server.address=0.0.0.0^"
 ```
 
+Preview note: Some preview platforms replace `<port>` placeholders but do not expand `${PORT}` if embedded in YAML strings. Use:
+```
+./mvnw spring-boot:run -Dspring-boot.run.arguments='--server.port=<port> --server.address=0.0.0.0'
+```
+
 Verification commands (ensure these succeed from the project root):
 ```
 # 1) Build/install
