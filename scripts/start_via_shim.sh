@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 # PUBLIC_INTERFACE
 # start_via_shim.sh
-# Purpose: Start the Spring Boot app using the local ./mvn shim which proxies to ./mvnw.
+# Purpose: Compatibility start script using the local ./mvn shim which proxies to ./mvnw.
+# Preferred to use: ./mvnw directly. This shim path is for environments that insist on 'mvn'.
 # Usage: ./scripts/start_via_shim.sh
 # Notes:
 # - Binds to 0.0.0.0 and uses $PORT (default 8989).

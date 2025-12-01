@@ -15,19 +15,17 @@ Maven Wrapper standardization:
 - project_manifest.yaml is configured to use './mvnw' with 'sh mvnw' fallback; if a preview insists on invoking 'mvn', the 'mvn' shim proxies to './mvnw'.
 - Definitive entry file for previews: ./start (supports CLEAN_PACKAGE to pre-build).
 
-Build:
+Build (preferred):
   ./mvnw -q -DskipTests clean package
-  # or using the mvn shim (proxies to ./mvnw):
-  ./mvn -q -DskipTests clean package
-  # or using Makefile:
-  make build
   # or if execution permission is blocked:
   sh mvnw -q -DskipTests clean package
+  # or using Makefile:
+  make build
 
-Run (port 8989, bind 0.0.0.0):
+Run (port 8989, bind 0.0.0.0) (preferred):
   ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
-  # or using the mvn shim (equivalent):
-  ./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+  # or if execution permission is blocked:
+  sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
   # or using Makefile:
   make run
   # or using Procfile (platform-dependent):

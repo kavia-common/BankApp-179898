@@ -29,7 +29,7 @@ https://projectlombok.org/setup/eclipse
 
 ```
 - Import existing maven project
-- Build with Maven Wrapper: ./mvnw -q -DskipTests clean package
+- Build with Maven Wrapper (preferred): ./mvnw -q -DskipTests clean package
   (or: sh mvnw ... if execution permission is blocked)
 - If using STS, Run As Spring Boot App
 ```
