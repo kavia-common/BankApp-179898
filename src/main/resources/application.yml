@@ -26,3 +26,13 @@ spring:
 # H2 console:  /bank-api/h2-console (context path applied)
 # SecurityFilterChain permits:
 # - /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**
+
+# Actuator exposure (health/info)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
