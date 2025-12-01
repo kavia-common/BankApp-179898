@@ -1,6 +1,10 @@
 server.port: 8989
 server.servlet.context-path: /bank-api
 
+spring:
+  application:
+    name: BankAppPro
+
 spring.security.user.name: bankapp
 spring.security.user.password: changeit
 

@@ -1,6 +1,6 @@
-# Banking Application using Java 17+, Spring Boot 3, Spring Security 6 and H2 DB
+# Banking Application using Java 17+, Spring Boot 3, Spring Security 6, and H2 DB
 
-RESTful API to simulate simple banking operations. 
+RESTful API to simulate simple banking operations. Project name: BankAppPro.
 
 ## Requirements
 
@@ -174,5 +174,7 @@ Notes on migration:
 
 ## Authors
 
-* **Shyam Bathina**
+- **Shyam Bathina**
+
+Project: BankAppPro
 

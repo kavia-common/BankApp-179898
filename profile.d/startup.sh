@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 # PUBLIC_INTERFACE
 # Profile.d script to document start command for platforms that source profile.d.
-echo "Starting BankApp via Maven Wrapper (./mvnw) on port \${PORT:-8989}"
+echo "Starting BankAppPro via Maven Wrapper (./mvnw) on port \${PORT:-8989}"

@@ -11,9 +11,9 @@
   </parent>
 
   <groupId>com.coding.exercise</groupId>
-  <artifactId>bank-app</artifactId>
+  <artifactId>bankapppro</artifactId>
   <version>1.0.0</version>
-  <name>BankApp</name>
+  <name>BankAppPro</name>
   <description>Bank App Spring Boot Project</description>
 
   <properties>

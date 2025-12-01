@@ -20,6 +20,8 @@ Maven Wrapper standardization:
 - project_manifest.yaml is configured to use './mvnw' with 'sh mvnw' fallback; if a preview insists on invoking 'mvn', the 'mvn' shim proxies to './mvnw'.
 - Definitive entry file for previews: ./start (supports CLEAN_PACKAGE to pre-build).
 
+Project name: BankAppPro
+
 Build (preferred):
   ./mvnw -q -DskipTests clean package
   # or if execution permission is blocked:
