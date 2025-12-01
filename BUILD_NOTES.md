@@ -75,6 +75,7 @@ Wrapper usage in previews:
 - The preview manifest (project_manifest.yaml) uses './mvn' (shim) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'.
 - If a platform hardcodes 'mvn', the root-level './mvn' shim ensures the call ultimately runs via the Maven Wrapper.
 - If a preview invokes 'mvn' from outside the project root (and thus misses the shim), use './start' as the entrypoint which internally calls the Maven Wrapper.
+- Updated startCommand binds to ${PORT:-8989} and 0.0.0.0 and quotes -Dspring-boot.run.arguments properly to avoid Maven usage/exit code 1 issues on some runners.
 
 Migration steps 03.01–03.04 summary:
 - javax → jakarta: All entities use jakarta.persistence; no javax.validation/servlet present.
