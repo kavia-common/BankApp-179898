@@ -10,6 +10,6 @@ preview:
   installCommand: "./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install"
   buildCommand: "./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package"
   testCommand: "./mvnw -q test || sh mvnw -q test"
-  startCommand: "./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || sh mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=<host>\" || ./start || sh start"
+  startCommand: "./mvnw spring-boot:run -Dspring-boot.run.arguments --server.port=3002 --server.address=127.0.0.1"
 
 # Preserve any future fields by keeping the manifest minimal and additive.
