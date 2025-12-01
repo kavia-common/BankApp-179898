@@ -17,9 +17,9 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Target Java 21 -->
-    <java.version>21</java.version>
-    <maven.compiler.release>21</maven.compiler.release>
+    <!-- Target Java 17 (compatible with Java 21 runtime) -->
+    <java.version>17</java.version>
+    <maven.compiler.release>17</maven.compiler.release>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

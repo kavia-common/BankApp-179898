@@ -60,14 +60,14 @@ Migration Step 04.01 build log:
   ./logs/build-04.01.txt
 
 Environment note for build:
-- If you encounter "error: release version 21 not supported", the runtime JDK is older than 21.
-- Set JAVA_HOME to a JDK 21 installation in the preview/CI environment and re-run the build command:
+- If you encounter "error: release version 21 not supported" or a similar message, the runtime JDK is older than the configured release.
+- The project is configured to compile for Java 17 to match common environments. Ensure JAVA_HOME points to a JDK 17+ installation and re-run:
   ./mvn -q -DskipTests clean package
 
 Note on Java versions:
-- Migrated to target Java 21 and Spring Boot 3.3.x. Build requires JDK 21 in the environment.
-- If you see 'error: release version 21 not supported', your JDK is older than 21; upgrade JAVA_HOME to JDK 21 and rebuild.
-- Previous note for Java 8 has been superseded by the Java 21 migration.
+- Baseline set to Java 17 with Spring Boot 3.3.x (Boot 3 supports Java 17 and Java 21).
+- Builds and runs on JDK 17+. To compile with release 21 locally, override with: -Dmaven.compiler.release=21 and ensure JAVA_HOME points to a JDK 21 installation.
+- Previous note requiring Java 21 has been superseded by this alignment to Java 17 for compatibility in preview/CI environments.
 
 Wrapper usage in previews:
 - The preview manifest (project_manifest.yaml) uses './mvn' (shim) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'.
