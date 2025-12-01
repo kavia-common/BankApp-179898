@@ -74,17 +74,29 @@ make run
 web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
 ```
 
-Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the `-Dspring-boot.run.arguments` value is quoted as a single string. Unquoted forms like:
+Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the -Dspring-boot.run.arguments value is quoted as a single string. Do not pass unquoted application args directly to Maven. Correct forms:
 ```
--Dspring-boot.run.arguments=--server.port=8989 --server.address=0.0.0.0
-```
-will cause Maven to interpret `--server.address=0.0.0.0` as a CLI option and fail. Correct form:
-```
--Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
 ```
 On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 ```
 -Dspring-boot.run.arguments=^"--server.port=%PORT% --server.address=0.0.0.0^"
+```
+
+Verification commands (ensure these succeed from the project root):
+```
+# 1) Build/install
+mvn clean install
+
+# 2) Run with defaults from application.yml
+mvn spring-boot:run
+
+# 3) Run with explicit port and context-path (overrides application.yml)
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.servlet.context-path=/bank-api"
+
+# 4) Run with explicit port, bind address, and context-path
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 ```
 
 5. Default port for the api is 8989

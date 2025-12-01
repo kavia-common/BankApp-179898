@@ -25,6 +25,12 @@ run-sh:
 	sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
 
 # PUBLIC_INTERFACE
+# run-ctx: Run with explicit context-path and port (helpful for verifying quoting of multiple Spring args).
+# Usage: make run-ctx
+run-ctx:
+	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.servlet.context-path=/bank-api"
+
+# PUBLIC_INTERFACE
 # build-sh: Same as build, but invokes the wrapper via 'sh' for environments without execute permission.
 # Usage: make build-sh
 build-sh:
