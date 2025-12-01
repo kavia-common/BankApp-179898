@@ -10,6 +10,11 @@
 
 Maven Wrapper standardization:
 - The project uses Maven Wrapper exclusively. No system 'mvn' is required.
+- Maven Wrapper upgraded to wrapper 3.2.x with Maven distribution 3.9.9.
+  - .mvn/wrapper/maven-wrapper.properties:
+    - distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip
+    - wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar
+  - mvnw and mvnw.cmd refreshed to 3.2.x (no Takari references).
 - A shim script named 'mvn' is provided at the project root to proxy any 'mvn ...' calls to './mvnw'.
 - Preview/CI entrypoints (start, start.sh, run.sh, Makefile, Procfile) are wired to use './mvnw' so 'bash: mvn: command not found' is avoided.
 - project_manifest.yaml is configured to use './mvnw' with 'sh mvnw' fallback; if a preview insists on invoking 'mvn', the 'mvn' shim proxies to './mvnw'.
@@ -43,6 +48,10 @@ Verification (clean package):
   # Verifies wrapper and shim both work
   ./mvnw -q -DskipTests clean package
   ./mvn  -q -DskipTests clean package
+
+Verify Maven version (should be 3.9.9 via wrapper):
+  ./mvnw -v
+  # Apache Maven 3.9.9 (via Maven Wrapper 3.2.x)
 
 Migration Step 04.01 build log:
   # Generate/capture the clean build log for the migration tracker (uses ./mvn shim)
