@@ -88,3 +88,16 @@ Preview diagnostic (mvn-not-found):
   2) Ensure commands are executed from the project root so './mvn' and './mvnw' are available.
   3) Explicitly call './mvnw ...' or 'sh mvnw ...' in preview configuration.
 - The repository already contains an mvn shim and mvnw wrapper; no system Maven is needed.
+
+## CI / Non-interactive builds
+
+Preferred full build with tests (batch mode, errors printed):
+  ./mvnw -B -e clean package
+
+If you encounter transient repository errors (HTTP 5xx/401) during dependency resolution, try:
+  ./mvnw -B -e -DskipTests=true clean package
+  ./mvnw -B -e -DskipTests=true dependency:purge-local-repository -DreResolve=false
+Then retry the full build:
+  ./mvnw -B -e clean package
+
+These commands run in batch mode (-B) and emit stack traces (-e) to aid CI diagnostics.
