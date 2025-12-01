@@ -4,12 +4,10 @@ server.servlet.context-path: /bank-api
 spring:
   application:
     name: BankAppPro
-
-spring.security.user.name: bankapp
-spring.security.user.password: changeit
-
-# Enabling H2 Console (Boot 3)
-spring:
+  security:
+    user:
+      name: bankapp
+      password: changeit
   h2:
     console:
       enabled: true
