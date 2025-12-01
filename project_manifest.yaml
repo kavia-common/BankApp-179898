@@ -7,9 +7,11 @@ framework: springboot
 # Use placeholder <port> which the preview platform will substitute.
 # Ensure -Dspring-boot.run.arguments is quoted as a single string so Maven does not misparse it.
 preview:
-  installCommand: "./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install"
-  buildCommand: "./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package"
-  testCommand: "./mvnw -q test || sh mvnw -q test"
-  startCommand: "./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=0.0.0.0\" || sh mvnw spring-boot:run -Dspring-boot.run.arguments=\"--server.port=<port> --server.address=0.0.0.0\""
+  installCommand: './mvnw -q -DskipTests install || sh mvnw -q -DskipTests install'
+  buildCommand:   './mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package'
+  testCommand:    './mvnw -q test || sh mvnw -q test'
+  # Keep the entire -Dspring-boot.run.arguments value as a single, quoted string.
+  # Use single quotes at YAML level; inner arguments in double quotes.
+  startCommand:   './mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=0.0.0.0" || sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=0.0.0.0"'
 
 # Preserve any future fields by keeping the manifest minimal and additive.

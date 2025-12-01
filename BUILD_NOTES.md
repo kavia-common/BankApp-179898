@@ -1,5 +1,9 @@
 # Build Notes
 
+Important: If Maven shows only its help/options and exits with code 1 when starting the app, it is almost always due to incorrect quoting of -Dspring-boot.run.arguments by the preview runner. Ensure the entire value is passed as one string, e.g.:
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+The project_manifest.yaml has been updated to use single quotes at YAML level and double quotes around the inner Spring arguments to avoid misparsing.
+
 - Removed maven-compiler-plugin `--add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED` arguments from pom.xml.
   These flags are not allowed when targeting Java 8 (`target=1.8` / `release=8`) and caused:
   "Fatal error compiling: error: option --add-opens not allowed with target 8".

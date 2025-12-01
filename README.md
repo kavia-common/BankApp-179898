@@ -89,6 +89,12 @@ Preview note: Some preview platforms replace `<port>` placeholders but do not ex
 ./mvnw spring-boot:run -Dspring-boot.run.arguments='--server.port=<port> --server.address=0.0.0.0'
 ```
 
+Preview manifest example (YAML):
+```
+startCommand: './mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=0.0.0.0"'
+```
+This uses single quotes around the entire command and double quotes around the Spring arguments to keep them as one value.
+
 Verification commands (ensure these succeed from the project root):
 ```
 # 1) Build/install
