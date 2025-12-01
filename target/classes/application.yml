@@ -9,5 +9,20 @@ spring:
   h2:
     console:
       enabled: true
-      # Path defaults to /h2-console in Boot 3; SecurityConfig permits "/h2-console/**"
-# Swagger UI available at /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html (springdoc-openapi)
+      settings:
+        web-allow-others: true
+      # Path defaults to /h2-console in Boot 3; SecurityFilterChain permits "/h2-console/**".
+      # With the configured context-path, the full URL is /bank-api/h2-console.
+  # Datasource: using Boot 3 defaults (jdbc:h2:mem:testdb). Uncomment below to customize:
+  # datasource:
+  #   url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  #   driverClassName: org.h2.Driver
+  #   username: sa
+  #   password:
+
+# Swagger UI (springdoc)
+# - UI:        /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html
+# - OpenAPI:   /bank-api/v3/api-docs
+# H2 console:  /bank-api/h2-console (context path applied)
+# SecurityFilterChain permits:
+# - /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**

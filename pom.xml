@@ -85,6 +85,17 @@
   </dependencies>
 
   <build>
+    <!-- Explicit resources configuration: disable filtering to avoid atomic moves that can fail on some container filesystems -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <!-- Use JDK 21 for compilation -->
       <plugin>
@@ -94,6 +105,23 @@
         <configuration>
           <release>${maven.compiler.release}</release>
           <parameters>${maven.compiler.parameters}</parameters>
+        </configuration>
+      </plugin>
+
+      <!-- Pin resources plugin and ensure YAML files are not filtered -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <useDefaultDelimiters>true</useDefaultDelimiters>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>yml</nonFilteredFileExtension>
+            <nonFilteredFileExtension>yaml</nonFilteredFileExtension>
+            <nonFilteredFileExtension>properties</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
+          <overwrite>true</overwrite>
         </configuration>
       </plugin>
 
