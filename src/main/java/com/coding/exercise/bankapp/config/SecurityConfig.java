@@ -31,6 +31,12 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    // Health endpoints and root readiness checks
+                    "/",
+                    "/health",
+                    "/ready",
+                    "/actuator/health",
+                    "/actuator/health/**",
                     // OpenAPI/Swagger endpoints
                     "/v3/api-docs/**",
                     "/swagger-ui/**",

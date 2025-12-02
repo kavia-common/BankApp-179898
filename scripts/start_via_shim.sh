@@ -9,11 +9,13 @@
 # - Works even if execute bits are stripped by using 'sh mvn' fallback.
 set -e
 
-PORT_VALUE="${PORT:-8989}"
-ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0"
+PORT_VALUE="${PORT:-3001}"
+ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/"
 
-if [ -x "./mvn" ]; then
+if [ -x "./mvnw" ]; then
+  exec ./mvnw spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+elif [ -f "./mvn" ] && [ -x "./mvn" ]; then
   exec ./mvn spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
 else
-  exec sh mvn spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+  exec sh mvnw spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
 fi
