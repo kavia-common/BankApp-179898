@@ -85,19 +85,16 @@
   </dependencies>
 
   <build>
-    <!-- Explicit resources configuration: disable filtering to avoid atomic moves that can fail on some container filesystems -->
+    <!-- Standard resources: copy from src/main/resources without filtering -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
         <filtering>false</filtering>
-        <includes>
-          <include>**/*</include>
-        </includes>
       </resource>
     </resources>
 
     <plugins>
-      <!-- Use JDK 21 for compilation -->
+      <!-- Compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -108,23 +105,21 @@
         </configuration>
       </plugin>
 
-      <!-- Pin resources plugin and ensure YAML files are not filtered -->
+      <!-- Resources: keep defaults; explicitly mark YAML as non-filtered if filtering added later -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.1</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <useDefaultDelimiters>true</useDefaultDelimiters>
           <nonFilteredFileExtensions>
             <nonFilteredFileExtension>yml</nonFilteredFileExtension>
             <nonFilteredFileExtension>yaml</nonFilteredFileExtension>
-            <nonFilteredFileExtension>properties</nonFilteredFileExtension>
           </nonFilteredFileExtensions>
-          <overwrite>true</overwrite>
         </configuration>
       </plugin>
 
+      <!-- Spring Boot repackage stays default (no filtering here) -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
