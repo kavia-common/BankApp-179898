@@ -132,4 +132,27 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>endpoint-checks</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Run only the dedicated HTTP endpoint probe class when this profile is active. -->
+              <includes>
+                <include>**/EndpointChecksIT.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

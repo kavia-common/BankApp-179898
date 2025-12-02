@@ -165,6 +165,37 @@ Notes on migration:
 - Spring Security migrated to SecurityFilterChain + requestMatchers.
 - Springfox removed; springdoc-openapi-starter-webmvc-ui added.
 
+## Endpoint Verification
+
+Once the application is running on port 8989 with context path `/bank-api`, you can run lightweight automated checks against the key infrastructure endpoints.
+
+Using the Maven `endpoint-checks` profile (JUnit-based probes):
+
+```bash
+# From the project root, with the app already running
+./mvnw -q -Pendpoint-checks test
+# or, if execute permission is blocked:
+sh mvnw -q -Pendpoint-checks test
+```
+
+Using the curl-based helper script:
+
+```bash
+# Default base URL is http://localhost:8989/bank-api
+bash kavia-scripts/check_endpoints.sh
+
+# Override the base URL (for example, when the app runs on a different host/port)
+BASE_URL=http://localhost:3001/bank-api bash kavia-scripts/check_endpoints.sh
+```
+
+Both options perform HTTP GET requests (no authentication headers) and verify:
+
+- `/healthz` responds with HTTP 200 and `{"status":"ok"}`.
+- `/actuator/health` responds with HTTP 200 and a JSON `status` field (typically `UP`).
+- `/v3/api-docs` responds with HTTP 200 and an `openapi` field when using springdoc-openapi (or is skipped gracefully if only Swagger 2.x is present).
+- `/swagger-ui.html` serves the Swagger UI (following redirects to `/swagger-ui/index.html` if necessary).
+- `/h2-console` is reachable (HTTP 200 after following redirects, and contains `H2 Console` in the HTML).
+
 ## Testing the Bank APP Rest Api
 
 1. Please use the Swagger url to perform CRUD operations. 
