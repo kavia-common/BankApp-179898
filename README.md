@@ -99,7 +99,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.ser
 mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 ```
 
-5. Default port for the api is 3001
+5. Default port for the API (and the default container) is 3001, as configured in `src/main/resources/application.yml`
 
 
 ### Prerequisites
@@ -150,8 +150,8 @@ enable the `java21` profile. This profile:
 
 - Switches the compiler to **`--release 21`**.
 - Enforces that the JDK resolved by Maven is **Java 21 or newer** via Maven Enforcer.
-- Activates automatically when Maven is running on JDK 21+ (via `<activation><jdk>[21,)</jdk>`),
-  or can be forced explicitly with `-Pjava21`.
+- Is **never activated by default**; you must explicitly enable it with `-Pjava21`
+  (optionally combined with `-Pwith-toolchain` when using Maven Toolchains).
 
 Examples (no toolchain, Maven itself on JDK 21+):
 

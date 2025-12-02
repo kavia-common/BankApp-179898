@@ -20,7 +20,8 @@
   <properties>
     <!-- Default compilation targets Java 17 (minimum supported by Spring Boot 3.x)
          so that builds succeed even when a Java 21 JDK is not available.
-         A dedicated 'java21' profile restores release=21 compilation on JDK 21+. -->
+         A dedicated 'java21' profile restores release=21 compilation only when
+         explicitly enabled via -Pjava21 (optionally with -Pwith-toolchain). -->
     <java.version>17</java.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -165,14 +166,14 @@
                     The BankApp project requires Java 17 or newer to build and run
                     (Spring Boot 3.x baseline). The JVM running Maven is lower than 17.
                     Please upgrade your JDK or point JAVA_HOME at a Java 17+ installation.
-                    
+
                     If you also want to compile with Java 21 bytecode, use the 'java21'
                     profile on top of a Java 21+ JDK or toolchain
                     (see README section "Java versions & build profiles").
                   </message>
                 </requireJavaVersion>
               </rules>
-              <!-- Fail fast on unsupported Java runtimes &lt; 17 -->
+              <!-- Fail fast on unsupported Java runtimes < 17 -->
               <fail>true</fail>
             </configuration>
           </execution>
@@ -248,7 +249,7 @@
                         The 'with-toolchain' profile is active, so this build is expected to
                         run with or resolve a Java 21+ toolchain. The JVM running Maven was
                         detected as ${java.version}, which is lower than 21.
-                        
+
                         Please:
                           * Ensure JAVA_TOOLCHAIN_JAVA21_HOME / JAVA_21_HOME are set to a JDK 21+,
                           * Check your ~/.m2/toolchains.xml (or .mvn/toolchains.xml),
@@ -256,7 +257,7 @@
                       </message>
                     </requireJavaVersion>
                   </rules>
-                  <!-- In toolchain mode, treat Java &lt; 21 as a hard error -->
+                  <!-- In toolchain mode, treat Java < 21 as a hard error -->
                   <fail>true</fail>
                 </configuration>
               </execution>
@@ -270,16 +271,10 @@
          This profile:
            * sets the compiler to use --release 21, and
            * enforces that the build is running on (or resolving) a Java 21+ JDK.
-         It is activated automatically when Maven is running on JDK 21+ via &lt;jdk&gt;,
-         and can also be enabled explicitly with -Pjava21 (for example together with
-         -Pwith-toolchain when using Maven Toolchains). -->
+         It is only enabled when explicitly requested via -Pjava21
+         (optionally combined with -Pwith-toolchain when using Maven Toolchains). -->
     <profile>
       <id>java21</id>
-      <activation>
-        <!-- Auto-activate when the JVM running Maven reports Java 21 or newer.
-             You can also force this profile with -Pjava21. -->
-        <jdk>[21,)</jdk>
-      </activation>
       <properties>
         <!-- Compiler release used when the java21 profile is active. -->
         <maven.compiler.release>21</maven.compiler.release>
@@ -318,7 +313,7 @@
                       </message>
                     </requireJavaVersion>
                   </rules>
-                  <!-- When the java21 profile is active, treat Java &lt; 21 as a hard error. -->
+                  <!-- When the java21 profile is active, treat Java < 21 as a hard error. -->
                   <fail>true</fail>
                 </configuration>
               </execution>
