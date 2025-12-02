@@ -272,7 +272,7 @@
 
     <!-- Strict Java 21 compilation path.
          This profile:
-           * sets the compiler to use --release 21, and
+           * sets the compiler to use Java release 21, and
            * enforces that the build is running on (or resolving) a Java 21+ JDK.
          It is only enabled when explicitly requested via -Pjava21
          (optionally combined with -Pwith-toolchain when using Maven Toolchains). -->
