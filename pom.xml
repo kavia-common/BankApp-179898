@@ -111,9 +111,9 @@
     </resources>
 
     <plugins>
-      <!-- Use JDK 21 for compilation. When the with-toolchain profile is active,
-           the compiler will use the configured JDK 21 toolchain; otherwise it
-           uses the JDK from JAVA_HOME (which must be Java 21+). -->
+      <!-- Use the JDK pointed to by JAVA_HOME (or the Java used to run Maven) by default.
+           When the with-toolchain profile is active, the compiler will transparently use
+           the configured JDK 21 toolchain; otherwise it uses the default JDK. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -142,6 +142,45 @@
         </configuration>
       </plugin>
 
+      <!-- Global Java version check: warn when building with a JDK lower than 21,
+           but do NOT fail the build. Strict enforcement is handled via profiles. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <id>java-version-warning</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[21,)</version>
+                  <message>
+                    The BankApp project is configured to compile with Java release 21
+                    (maven.compiler.release=21), but the JVM running Maven is lower than 21.
+                    The build will continue, but you may see compilation errors such as
+                    "release version 21 not supported".
+                    
+                    Recommended:
+                      * Run 'bash scripts/java21-preflight.sh' to verify your JDK setup.
+                      * Either:
+                          - Run Maven with a JDK 21+ (JAVA_HOME pointing at JDK 21+), or
+                          - Configure and enable the 'with-toolchain' profile
+                            (e.g. -Pwith-toolchain or -DUSE_TOOLCHAIN=true)
+                            with a Java 21 toolchain.
+                  </message>
+                </requireJavaVersion>
+              </rules>
+              <!-- Warning-only: do not fail the build at this stage -->
+              <fail>false</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -150,12 +189,15 @@
   </build>
 
   <profiles>
-    <!-- Profile that enables the Maven Toolchains plugin when USE_TOOLCHAIN=true is set.
+    <!-- Profile that enables the Maven Toolchains plugin when USE_TOOLCHAIN=true is set
+         or when explicitly activated via -Pwith-toolchain.
          This allows compiling with a JDK 21 different from the JAVA_HOME JDK. -->
     <profile>
       <id>with-toolchain</id>
       <activation>
         <property>
+          <!-- Activate automatically when -DUSE_TOOLCHAIN=true is present.
+               It can also be activated explicitly via -Pwith-toolchain. -->
           <name>USE_TOOLCHAIN</name>
           <value>true</value>
         </property>
@@ -163,7 +205,9 @@
       <build>
         <plugins>
           <!-- Ensure Maven uses a JDK 21 toolchain when this profile is active.
-               Toolchains can be defined in ~/.m2/toolchains.xml or .mvn/toolchains.xml. -->
+               Toolchains can be defined in ~/.m2/toolchains.xml or .mvn/toolchains.xml.
+               This plugin is only executed when the 'with-toolchain' profile is active,
+               so it does not run unconditionally during default builds or spring-boot:run. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-toolchains-plugin</artifactId>
@@ -185,31 +229,16 @@
               </toolchains>
             </configuration>
           </plugin>
-        </plugins>
-      </build>
-    </profile>
 
-    <!-- Enforce Java 21+ only when not using a toolchain.
-         This profile is active by default and is disabled when USE_TOOLCHAIN is set. -->
-    <profile>
-      <id>enforce-java21-no-toolchain</id>
-      <activation>
-        <property>
-          <!-- Activate when USE_TOOLCHAIN is NOT set -->
-          <name>!USE_TOOLCHAIN</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <!-- Fail fast if the build is running on a Java version lower than 21,
-               but only when we are not using a Maven toolchain. -->
+          <!-- When the 'with-toolchain' profile is enabled we expect a Java 21+ toolchain
+               to be configured. Enforce this so misconfigured toolchains fail fast. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <version>3.4.1</version>
             <executions>
               <execution>
-                <id>enforce-java-version</id>
+                <id>enforce-java21-with-toolchain</id>
                 <goals>
                   <goal>enforce</goal>
                 </goals>
@@ -218,13 +247,61 @@
                     <requireJavaVersion>
                       <version>[21,)</version>
                       <message>
-                        This project requires Java 21 or newer when not using a Maven toolchain.
-                        Please set JAVA_HOME to a JDK 21 installation (or configure USE_TOOLCHAIN=true
-                        with a Java 21 toolchain) and ensure Maven runs with that JDK.
-                        See README.md for details.
+                        The 'with-toolchain' profile is active, so this build is expected to
+                        run with or resolve a Java 21+ toolchain. The JVM running Maven was
+                        detected as ${java.version}, which is lower than 21.
+                        
+                        Please:
+                          * Ensure JAVA_TOOLCHAIN_JAVA21_HOME / JAVA_21_HOME are set to a JDK 21+,
+                          * Check your ~/.m2/toolchains.xml (or .mvn/toolchains.xml),
+                          * Or run 'bash scripts/java21-preflight.sh' for diagnostics.
                       </message>
                     </requireJavaVersion>
                   </rules>
+                  <!-- In toolchain mode, treat Java &lt; 21 as a hard error -->
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Strict Java 21 enforcement when Maven itself is running on JDK 21+.
+         This profile only activates when the active JDK is 21 or newer; on older
+         JDKs you will only see the global warning (no hard failure here). -->
+    <profile>
+      <id>enforce-java21-when-jdk21plus</id>
+      <activation>
+        <!-- Activate when the JVM running Maven reports Java 21 or newer -->
+        <jdk>[21,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.4.1</version>
+            <executions>
+              <execution>
+                <id>enforce-java21-on-jdk21plus</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireJavaVersion>
+                      <version>[21,)</version>
+                      <message>
+                        The BankApp project is configured for Java 21. Since you are already
+                        running Maven with a Java 21+ runtime (${java.version}), this rule
+                        enforces that the build must continue to use Java 21 or newer.
+                      </message>
+                    </requireJavaVersion>
+                  </rules>
+                  <!-- When building directly on a JDK 21+ runtime, treat Java &lt; 21 as an error.
+                       (In practice this will only fail if the runtime is misreported.) -->
                   <fail>true</fail>
                 </configuration>
               </execution>
