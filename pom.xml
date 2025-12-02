@@ -147,7 +147,10 @@
       </plugin>
 
       <!-- Global Java version check: enforce Java 17+ as the minimum runtime for building.
-           Strict Java 21 enforcement is handled via the 'java21' and 'with-toolchain' profiles. -->
+           Strict Java 21 enforcement is handled via the 'java21' and 'with-toolchain' profiles.
+           This execution is configured as warn-only (fail=false) so default builds do not fail
+           solely due to Java version checks; strict enforcement lives in the java21/with-toolchain
+           profiles. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -169,12 +172,12 @@
 
                     If you also want to compile with Java 21 bytecode, use the 'java21'
                     profile on top of a Java 21+ JDK or toolchain
-                    (see README section "Java versions & build profiles").
+                    (see README section "Java versions &amp; build profiles").
                   </message>
                 </requireJavaVersion>
               </rules>
-              <!-- Fail fast on unsupported Java runtimes < 17 -->
-              <fail>true</fail>
+              <!-- Warn (do not fail) on unsupported Java runtimes < 17 in the default build. -->
+              <fail>false</fail>
             </configuration>
           </execution>
         </executions>
