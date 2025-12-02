@@ -2,7 +2,7 @@
 # PUBLIC_INTERFACE
 # start - Definitive entrypoint for preview environments.
 # Summary:
-#   Invokes Maven Wrapper to run the Spring Boot app on $PORT or 8989, bound to 0.0.0.0.
+#   Invokes Maven Wrapper to run the Spring Boot app on $PORT or 3001, bound to 0.0.0.0.
 #   Falls back to "sh mvnw" if execute permission is missing.
 #   If the preview calls "mvn" implicitly, a root-level "mvn" shim proxies to "./mvnw".
 # Usage:
@@ -10,7 +10,7 @@
 #   sh start  # if execute permission is removed by platform
 set -e
 
-PORT_VALUE="${PORT:-8989}"
+PORT_VALUE="${PORT:-3001}"
 ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0"
 
 # If a CLEAN_PACKAGE flag is set, do a clean package first to verify wrapper
