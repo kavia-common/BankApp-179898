@@ -1,4 +1,4 @@
-# Banking Application using Java 17+, Spring Boot 3, Spring Security 6 and H2 DB
+# Banking Application using Java 21, Spring Boot 3, Spring Security 6, and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -104,7 +104,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.add
 
 ### Prerequisites
 
-* Java 17+ (OpenJDK/Temurin recommended; Java 21 also supported)
+* Java 21 (OpenJDK/Temurin recommended)
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
 
@@ -118,6 +118,8 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
+jakarta.xml.bind-api - Jakarta XML Binding API for Java 21
+jaxb-runtime - JAXB runtime implementation for Java 21
 springdoc-openapi-starter-webmvc-ui
 spring-boot-starter-test
 spring-security-test

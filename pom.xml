@@ -17,9 +17,9 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Target Java 17 (compatible with Java 21 runtime) -->
-    <java.version>17</java.version>
-    <maven.compiler.release>17</maven.compiler.release>
+    <!-- Target Java 21 (LTS) -->
+    <java.version>21</java.version>
+    <maven.compiler.release>21</maven.compiler.release>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -62,6 +62,18 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
+    </dependency>
+
+    <!-- JAXB (Jakarta XML Binding) for Java 21 -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>4.0.5</version>
     </dependency>
 
     <!-- OpenAPI/Swagger UI via springdoc (replaces Springfox) -->
