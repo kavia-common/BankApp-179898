@@ -118,6 +118,29 @@ If you see an error like:
 
 it means Maven is running with a JDK that does **not** support `--release 21` (e.g. JDK 17 or 11).
 
+### 0. Quick Java 21 preflight
+
+Before doing a full build, you can run a small script that checks which JDKs your environment variables and Maven toolchain point at and fails fast if any are below Java 21:
+
+```bash
+bash scripts/java21-preflight.sh
+```
+
+The script checks (in order):
+
+- `JAVA_TOOLCHAIN_JAVA21_HOME` (if defined by the platform)
+- `JAVA_21_HOME` (used by `.mvn/toolchains.xml`)
+- `JAVA_HOME`
+- and finally `java` from your `PATH`
+
+If any of these point to a Java version lower than 21, the script prints a clear error and exits with a non-zero status so CI or preview systems can stop early.
+
+> Tip: On some platforms a variable like `JAVA_TOOLCHAIN_JAVA21_HOME` is already defined; you can align it with the project conventions via:
+> ```bash
+> export JAVA_21_HOME="$JAVA_TOOLCHAIN_JAVA21_HOME"
+> export JAVA_HOME="$JAVA_21_HOME"
+> ```
+
 ### 1. Verify your Java and Maven JDK
 
 From the project root:
