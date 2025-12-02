@@ -8,7 +8,7 @@ overview:
   description: RESTful Spring Boot banking API providing customer, account, and transaction management backed by an in-memory H2 database.
   third_party_services:
     - H2 Database
-    - springdoc-openapi
+    - springfox-swagger (swagger-ui)
 
 env:
   TRUST_PROXY: 'true'
@@ -16,7 +16,7 @@ env:
   HEALTHCHECK_PATH: /bank-api/actuator/health
   FEATURE_FLAGS: '{}'
   EXPERIMENTS_ENABLED: 'false'
-  BACKEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3001
+  BACKEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:8989
   FRONTEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
   SITE_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
   ALLOWED_ORIGINS: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000,http://localhost:3000,http://localhost:4000
@@ -25,19 +25,19 @@ env:
   CORS_MAX_AGE: '3600'
   COOKIE_DOMAIN: .vscode-internal-24402-beta.beta01.cloud.kavia.ai
   HOST: 0.0.0.0
-  PORT: '3001'
+  PORT: '8989'
 
 containers:
   - container_name: BankApp-179898
     description: Spring Boot backend for customers, accounts, transactions, transfers with H2.
     interfaces:
       - HTTP (REST API)
-      - OpenAPI/Swagger UI
+      - Swagger UI (springfox)
     container_type: backend
     dependent_containers: []
     workspace: BankApp-179898
     container_root: BankApp-179898
-    port: '3001'
+    port: '8989'
     framework: springboot
     type: backend
     buildCommand: ./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package
@@ -50,8 +50,7 @@ containers:
       - /bank-api/accounts
       - /bank-api/transactions
       - /bank-api/transfers
-      - /bank-api/v3/api-docs
-      - /bank-api/swagger-ui/index.html
+      - /bank-api/swagger-ui.html
       - /bank-api/h2-console
       - /bank-api/actuator/health
     container_details:
@@ -60,5 +59,5 @@ containers:
         - Account lifecycle and balance operations including deposits and withdrawals.
         - Internal fund transfers between a customer’s accounts with transactional integrity.
         - In-memory H2 database with web console for easy inspection during development.
-        - HTTP Basic authentication with Spring Security 6 and whitelisted Swagger/H2 endpoints.
-        - Auto-generated OpenAPI/Swagger UI documentation via springdoc-openapi.
+        - HTTP Basic authentication using Spring Security compatible with Spring Boot 2.x (Spring Security 5). Swagger and H2 console are whitelisted in security config.
+        - Auto-generated Swagger UI via springfox (swagger-ui.html).
