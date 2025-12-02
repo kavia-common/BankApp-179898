@@ -26,15 +26,15 @@ import org.springframework.boot.test.context.SpringBootTest;
  * <p>
  * Assumptions:
  * <ul>
- *   <li>The application is already running on port 8989 with context-path {@code /bank-api}.</li>
+ *   <li>The application is already running on port 3001 with context-path {@code /bank-api}.</li>
  *   <li>No authentication headers are required for the probed endpoints (per SecurityConfig).</li>
  * </ul>
  * <p>
  * Base URL resolution:
  * <ul>
- *   <li>Defaults to {@code http://localhost:8989/bank-api}.</li>
+ *   <li>Defaults to {@code http://localhost:3001/bank-api}.</li>
  *   <li>Can be overridden via the {@code BASE_URL} environment variable (e.g.
- *       {@code BASE_URL=http://localhost:3001/bank-api}). Trailing slashes are trimmed.</li>
+ *       {@code BASE_URL=http://localhost:8080/bank-api}). Trailing slashes are trimmed.</li>
  * </ul>
  * <p>
  * This class is wired to run only via the {@code endpoint-checks} Maven profile, which
@@ -48,7 +48,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 )
 class EndpointChecksIT {
 
-    private static final String DEFAULT_BASE_URL = "http://localhost:8989/bank-api";
+    private static final String DEFAULT_BASE_URL = "http://localhost:3001/bank-api";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -61,7 +61,7 @@ class EndpointChecksIT {
     /**
      * Resolve the base URL for checks, preferring the BASE_URL environment variable.
      *
-     * @return a base URL without a trailing slash (e.g. http://localhost:8989/bank-api)
+     * @return a base URL without a trailing slash (e.g. http://localhost:3001/bank-api)
      */
     private String getBaseUrl() {
         String env = System.getenv("BASE_URL");

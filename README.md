@@ -4,9 +4,9 @@ RESTful API to simulate simple banking operations.
 
 ## Requirements
 
-*	CRUD operations for customers and accounts.
-*	Support deposits and withdrawals on accounts.
-*	Internal transfer support (i.e. a customer may transfer funds from one account to another).
+* CRUD operations for customers and accounts.
+* Support deposits and withdrawals on accounts.
+* Internal transfer support (i.e. a customer may transfer funds from one account to another).
 
 
 ## Getting Started
@@ -51,13 +51,13 @@ make build
 sh mvnw -q -DskipTests clean package
 ```
 
-Run on port 8989 bound to 0.0.0.0:
+Run on port 3001 bound to 0.0.0.0:
 ```
 # Preferred: Maven Wrapper
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
 
 # Or via mvn shim (still uses wrapper):
-./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
 
 # Makefile helper:
 make run
@@ -71,17 +71,17 @@ make run
 ./start.sh
 
 # Platforms supporting Procfile (for reference):
-web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
+web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
 ```
 
 Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the -Dspring-boot.run.arguments value is quoted as a single string. Do not pass unquoted application args directly to Maven. Correct forms:
 ```
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
 ```
 On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 ```
--Dspring-boot.run.arguments=^"--server.port=%PORT% --server.address=0.0.0.0^"
+-Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0^\"
 ```
 
 Verification commands (ensure these succeed from the project root):
@@ -93,13 +93,13 @@ mvn clean install
 mvn spring-boot:run
 
 # 3) Run with explicit port and context-path (overrides application.yml)
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.servlet.context-path=/bank-api"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
 
 # 4) Run with explicit port, bind address, and context-path
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 ```
 
-5. Default port for the api is 8989
+5. Default port for the api is 3001
 
 
 ### Prerequisites
@@ -128,10 +128,10 @@ spring-security-test
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi (Springfox removed). Access via:
-- http://localhost:8989/bank-api/swagger-ui/index.html
-- OpenAPI JSON: http://localhost:8989/bank-api/v3/api-docs
+- http://localhost:3001/bank-api/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:3001/bank-api/v3/api-docs
 
-Note: http://localhost:8989/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
+Note: http://localhost:3001/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
 
 Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
 
@@ -146,7 +146,7 @@ Note: Security config uses requestMatchers for these paths (plus `/swagger-ui.ht
 ## H2 In-Memory Database
 
 The H2 console is enabled and reachable at:
-- http://localhost:8989/bank-api/h2-console/
+- http://localhost:3001/bank-api/h2-console/
 
 Security configuration permits the console and disables frame options for iframe rendering. Default in-memory JDBC URL (Boot 3 managed):
 - jdbc:h2:mem:testdb
@@ -171,7 +171,7 @@ Notes on migration:
 
 ## Endpoint Verification
 
-Once the application is running on port 8989 with context path `/bank-api`, you can run lightweight automated checks against the key infrastructure endpoints.
+Once the application is running on port 3001 with context path `/bank-api`, you can run lightweight automated checks against the key infrastructure endpoints.
 
 Using the Maven `endpoint-checks` profile (JUnit-based probes):
 
@@ -185,11 +185,11 @@ sh mvnw -q -Pendpoint-checks test
 Using the curl-based helper script:
 
 ```bash
-# Default base URL is http://localhost:8989/bank-api
+# Default base URL is http://localhost:3001/bank-api
 bash kavia-scripts/check_endpoints.sh
 
 # Override the base URL (for example, when the app runs on a different host/port)
-BASE_URL=http://localhost:3001/bank-api bash kavia-scripts/check_endpoints.sh
+BASE_URL=http://localhost:8080/bank-api bash kavia-scripts/check_endpoints.sh
 ```
 
 Both options perform HTTP GET requests (no authentication headers) and verify:
@@ -210,4 +210,3 @@ Both options perform HTTP GET requests (no authentication headers) and verify:
 ## Authors
 
 * **Shyam Bathina**
-

@@ -16,7 +16,7 @@ env:
   HEALTHCHECK_PATH: /bank-api/actuator/health
   FEATURE_FLAGS: '{}'
   EXPERIMENTS_ENABLED: 'false'
-  BACKEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:8989
+  BACKEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3001
   FRONTEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
   SITE_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
   ALLOWED_ORIGINS: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000,http://localhost:3000,http://localhost:4000
@@ -25,7 +25,7 @@ env:
   CORS_MAX_AGE: '3600'
   COOKIE_DOMAIN: .vscode-internal-24402-beta.beta01.cloud.kavia.ai
   HOST: 0.0.0.0
-  PORT: '8989'
+  PORT: '3001'
 
 containers:
   - container_name: BankApp-179898
@@ -37,7 +37,7 @@ containers:
     dependent_containers: []
     workspace: BankApp-179898
     container_root: BankApp-179898
-    port: '8989'
+    port: '3001'
     framework: springboot
     type: backend
     buildCommand: ./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package

@@ -27,14 +27,14 @@ Build (preferred):
   # or using Makefile:
   make build
 
-Run (port 8989, bind 0.0.0.0) (preferred):
-  ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+Run (port 3001, bind 0.0.0.0) (preferred):
+  ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
   # or if execution permission is blocked:
-  sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
+  sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
   # or using Makefile:
   make run
   # or using Procfile (platform-dependent):
-  web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-8989} --server.address=0.0.0.0"
+  web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
   # or start entry recognized by some preview systems (supports CLEAN_PACKAGE=true):
   ./start
   # or:
@@ -83,7 +83,7 @@ Migration steps 03.01–03.04 summary:
 
 Preview diagnostic (mvn-not-found):
 
-- If a preview logs "bash: mvn: command not found", it is hardcoding 'mvn' and invoking it from outside the project root, bypassing our './mvn' shim.
+- If a preview logs "bash: mvn: command not found", it is hardcoding 'mvn' and invoking it from outside the project root, bypassing our './mvn' shim and './mvnw'.
 - Resolution options:
   1) Use './start' as the preview entrypoint (internally uses ./mvnw).
   2) Ensure commands are executed from the project root so './mvn' and './mvnw' are available.

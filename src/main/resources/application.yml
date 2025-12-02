@@ -1,4 +1,4 @@
-server.port: 8989
+server.port: 3001
 server.servlet.context-path: /bank-api
 
 spring.security.user.name: bankapp

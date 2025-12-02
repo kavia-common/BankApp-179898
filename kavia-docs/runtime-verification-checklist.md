@@ -2,28 +2,28 @@
 
 ## 1. Runtime configuration and ports
 
-The BankApp-179898 backend is a Spring Boot application with a servlet context path of `/bank-api`. In the application configuration (`application.yml`) the default server port is `8989`. In the preview manifest, the container is configured with `PORT='3001'` and `HOST='0.0.0.0`, and the `startCommand` explicitly passes these values via `--server.port=<port>` and `--server.address=<host>`, along with the context path `--server.servlet.context-path=/bank-api`. This means that in the preview environment the API is expected to be reachable at `http://0.0.0.0:3001/bank-api` (or via the external URL the platform provides), while local runs can still use port `8989` by default.
+The BankApp-179898 backend is a Spring Boot application with a servlet context path of `/bank-api`. In the application configuration (`application.yml`) the default server port is `3001`. In the preview manifest, the container is configured with `PORT='3001'` and `HOST='0.0.0.0`, and the `startCommand` explicitly passes these values via `--server.port=<port>` and `--server.address=<host>`, along with the context path `--server.servlet-context-path=/bank-api`. This means that in both local and preview environments the API is expected to be reachable at `http://0.0.0.0:3001/bank-api` (or via the external URL the platform provides).
 
 The Spring Boot Actuator dependency is present, so the health endpoint is exposed at `/actuator/health`, which becomes `/bank-api/actuator/health` when the servlet context path is applied. The OpenAPI documentation is provided by `springdoc-openapi`, which exposes `/v3/api-docs` and a Swagger UI at `/swagger-ui/index.html`, again under the `/bank-api` context path.
 
-## 2. Aligning runtime to port 8989 (optional)
+## 2. Ensuring runtime uses port 3001
 
-If you want to align runtime behavior to the original `8989` port instead of `3001`, there are two common scenarios.
+If you want to confirm that runtime behavior is aligned to port `3001`, there are two common scenarios.
 
 For local development, you can simply rely on the existing defaults, or override them explicitly:
 
 - Run with the helper scripts:
-  - `./start` or `./start.sh` will bind to `0.0.0.0:${PORT:-8989}`. If you do not set `PORT`, the application will run on `8989` with context path `/bank-api`.
-  - To be explicit, run: `PORT=8989 ./start`.
+  - `./start` or `./start.sh` will bind to `0.0.0.0:${PORT:-3001}`. If you do not set `PORT`, the application will run on `3001` with context path `/bank-api`.
+  - To be explicit, run: `PORT=3001 ./start`.
 - Run directly via Maven Wrapper:
-  - `./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
+  - `./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
 
-For the preview manifest, the default is configured to use port `3001`. If you must change the preview to run on port `8989` instead, you should:
+For the preview manifest, the default is configured to use port `3001`. If you change the preview to run on a different port, you should:
 
-1. Update the `env.PORT` value in `project_manifest.yaml` from `'3001'` to `'8989'`.
+1. Update the `env.PORT` value in `project_manifest.yaml` to the desired port.
 2. Adjust any URL‑style environment variables to match, for example:
-   - `BACKEND_URL: https://<host>:8989`
-3. Ensure that any upstream services or frontends that call this backend are also updated to use port `8989`.
+   - `BACKEND_URL: https://<host>:<port>`
+3. Ensure that any upstream services or frontends that call this backend are also updated to use the same port.
 
 Because the manifest drives how the platform wires routing and health checks, changing the port in the manifest should always be done deliberately and in sync with other configuration.
 
@@ -45,7 +45,7 @@ As long as these variable names match and the platform supports the placeholder 
 
 ## 4. Endpoint verification checklist
 
-This section lists the primary endpoints you should verify once the application is running. Replace `<host>` and `<port>` with the actual host and port for your environment (for example, `localhost:8989` for local runs or the preview URL on port `3001`).
+This section lists the primary endpoints you should verify once the application is running. Replace `<host>` and `<port>` with the actual host and port for your environment (for example, `localhost:3001` for local runs or the preview URL on port `3001`).
 
 ### 4.1 Health and diagnostics
 

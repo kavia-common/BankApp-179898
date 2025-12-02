@@ -7,7 +7,7 @@
 #   bash kavia-scripts/check_endpoints.sh
 #
 #   # Override the base URL (e.g., different host/port):
-#   BASE_URL=http://localhost:3001/bank-api bash kavia-scripts/check_endpoints.sh
+#   BASE_URL=http://localhost:8080/bank-api bash kavia-scripts/check_endpoints.sh
 #
 # Behavior:
 #   - Uses curl to perform GET requests against key endpoints.
@@ -17,11 +17,11 @@
 #
 # Notes:
 #   - No authentication headers are sent; relies on SecurityConfig whitelisting.
-#   - Default base URL is http://localhost:8989/bank-api.
+#   - Default base URL is http://localhost:3001/bank-api.
 
 set -euo pipefail
 
-BASE_URL="${BASE_URL:-http://localhost:8989/bank-api}"
+BASE_URL="${BASE_URL:-http://localhost:3001/bank-api}"
 # Trim trailing slash to avoid '//' when joining paths.
 BASE_URL="${BASE_URL%/}"
 
