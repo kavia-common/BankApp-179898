@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +18,8 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Target Java 21 (LTS). Do not use maven.compiler.source/target; rely on release + toolchains. -->
+    <!-- Target Java 21 (LTS). Do not use maven.compiler.source/target; rely on release.
+         Toolchains are optional and can be enabled via the 'with-toolchain' profile. -->
     <java.version>21</java.version>
     <maven.compiler.release>21</maven.compiler.release>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -109,57 +111,9 @@
     </resources>
 
     <plugins>
-      <!-- Ensure Maven uses a JDK 21 toolchain even if the default JAVA_HOME is older -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <!-- Require at least Java 21; vendor-agnostic -->
-              <version>[21,)</version>
-              <vendor>any</vendor>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin>
-
-      <!-- Fail fast if the build is running on a Java version lower than 21 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.4.1</version>
-        <executions>
-          <execution>
-            <id>enforce-java-version</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <version>[21,)</version>
-                  <message>
-                    This project requires Java 21 or newer. Please set JAVA_HOME or JAVA_21_HOME to a JDK 21
-                    installation and ensure Maven runs with that JDK. See README.md for details.
-                  </message>
-                </requireJavaVersion>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Use JDK 21 for compilation -->
+      <!-- Use JDK 21 for compilation. When the with-toolchain profile is active,
+           the compiler will use the configured JDK 21 toolchain; otherwise it
+           uses the JDK from JAVA_HOME (which must be Java 21+). -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -196,6 +150,91 @@
   </build>
 
   <profiles>
+    <!-- Profile that enables the Maven Toolchains plugin when USE_TOOLCHAIN=true is set.
+         This allows compiling with a JDK 21 different from the JAVA_HOME JDK. -->
+    <profile>
+      <id>with-toolchain</id>
+      <activation>
+        <property>
+          <name>USE_TOOLCHAIN</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Ensure Maven uses a JDK 21 toolchain when this profile is active.
+               Toolchains can be defined in ~/.m2/toolchains.xml or .mvn/toolchains.xml. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <!-- Require at least Java 21; vendor-agnostic -->
+                  <version>[21,)</version>
+                  <vendor>any</vendor>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Enforce Java 21+ only when not using a toolchain.
+         This profile is active by default and is disabled when USE_TOOLCHAIN is set. -->
+    <profile>
+      <id>enforce-java21-no-toolchain</id>
+      <activation>
+        <property>
+          <!-- Activate when USE_TOOLCHAIN is NOT set -->
+          <name>!USE_TOOLCHAIN</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Fail fast if the build is running on a Java version lower than 21,
+               but only when we are not using a Maven toolchain. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.4.1</version>
+            <executions>
+              <execution>
+                <id>enforce-java-version</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireJavaVersion>
+                      <version>[21,)</version>
+                      <message>
+                        This project requires Java 21 or newer when not using a Maven toolchain.
+                        Please set JAVA_HOME to a JDK 21 installation (or configure USE_TOOLCHAIN=true
+                        with a Java 21 toolchain) and ensure Maven runs with that JDK.
+                        See README.md for details.
+                      </message>
+                    </requireJavaVersion>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Existing profile for endpoint-only checks -->
     <profile>
       <id>endpoint-checks</id>
       <activation>
