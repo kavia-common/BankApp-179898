@@ -31,12 +31,18 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    // Root redirects and basic landing
+                    "/",
+                    "/index.html",
                     // OpenAPI/Swagger endpoints
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     // H2 console
-                    "/h2-console/**"
+                    "/h2-console/**",
+                    // Actuator health/info
+                    "/actuator/health",
+                    "/actuator/info"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

@@ -10,8 +10,8 @@
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/ContactDetails.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/repository/CustomerAccountXRefRepository.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/model/Account.java
-/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/repository/CustomerRepository.java
+/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/BankingService.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/helper/BankingServiceHelper.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/AddressDetails.java
@@ -22,5 +22,5 @@
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/TransferDetails.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/BankingServiceImpl.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/TransactionDetails.java
-/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/CustomerDetails.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/model/Customer.java
+/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/CustomerDetails.java
