@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 https://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <!-- Require Java 21; this works with the [21,) constraint in the pom plugin config -->
+      <version>21</version>
+      <vendor>any</vendor>
+    </provides>
+    <configuration>
+      <!-- Point to a JDK 21 installation via environment variable -->
+      <jdkHome>${env.JAVA_21_HOME}</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>

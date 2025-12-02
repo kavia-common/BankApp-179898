@@ -108,6 +108,90 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.add
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
 
+## Java 21 Toolchains & Build Troubleshooting
+
+This project targets **Java 21** and uses **Maven Toolchains** to ensure compilation with a JDK 21 even if the default `JAVA_HOME` points to an older JDK.
+
+If you see an error like:
+
+> `Fatal error compiling: error: release version 21 not supported`
+
+it means Maven is running with a JDK that does **not** support `--release 21` (e.g. JDK 17 or 11).
+
+### 1. Verify your Java and Maven JDK
+
+From the project root:
+
+```bash
+java -version
+mvn -version
+```
+
+Both commands should report a **Java 21** runtime/JDK. If Maven shows a different Java home or version, adjust your environment.
+
+Example (Linux/macOS):
+
+```bash
+# Point to your JDK 21 installation
+export JAVA_21_HOME=/path/to/jdk-21
+export JAVA_HOME="$JAVA_21_HOME"
+```
+
+Example (Windows, cmd):
+
+```bat
+set "JAVA_21_HOME=C:\Program Files\Java\jdk-21"
+set "JAVA_HOME=%JAVA_21_HOME%"
+```
+
+### 2. Project-local toolchains.xml
+
+This repository includes a project-local toolchains configuration at:
+
+- `.mvn/toolchains.xml`
+
+It is configured to use a JDK 21 installation via the `JAVA_21_HOME` environment variable:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 https://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>21</version>
+      <vendor>any</vendor>
+    </provides>
+    <configuration>
+      <jdkHome>${env.JAVA_21_HOME}</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+```
+
+Make sure `JAVA_21_HOME` points at a real JDK 21 install. Maven’s Toolchains plugin (configured in `pom.xml`) will then pick this JDK for compilation.
+
+If your environment does **not** honor project-local toolchains for some reason, you can also configure a global `${user.home}/.m2/toolchains.xml` with equivalent content.
+
+### 3. Useful build commands
+
+Quick compile (no tests):
+
+```bash
+./mvnw -q -DskipTests clean compile
+```
+
+Verbose build with debug output (helpful for diagnosing toolchain/JDK issues):
+
+```bash
+./mvnw -e -X -DskipTests clean package
+```
+
+If you're using system Maven instead of the wrapper, replace `./mvnw` with `mvn`.
+
+> **Note:** As a last resort in environments where Java 21 is not available at all, you could temporarily lower the compiler `<release>` in `pom.xml` (for example to 17). This is **not** recommended for production; the project is intended to run on Java 21.
+
 ### Maven Dependencies
 
 ```
