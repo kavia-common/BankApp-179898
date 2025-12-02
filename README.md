@@ -136,10 +136,12 @@ Note: http://localhost:8989/bank-api/swagger-ui.html also redirects to the Swagg
 Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
 
 Allowed without authentication (Boot 3/Security 6):
+- /bank-api/healthz (lightweight JSON health probe)
+- /bank-api/actuator/health (Spring Boot Actuator health endpoint)
 - /bank-api/v3/api-docs/**
 - /bank-api/swagger-ui/** (canonical UI at /bank-api/swagger-ui/index.html)
 - /bank-api/h2-console/**
-Note: Security config uses requestMatchers for these paths and enables HTTP Basic for others.
+Note: Security config uses requestMatchers for these paths (plus `/swagger-ui.html` redirect support) and enables HTTP Basic for other business APIs.
 
 ## H2 In-Memory Database
 

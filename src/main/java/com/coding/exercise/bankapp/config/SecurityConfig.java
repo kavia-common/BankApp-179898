@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *       <li>OpenAPI/Swagger endpoints: {@code /v3/api-docs/**}, {@code /swagger-ui/**}
  *           (canonical UI at {@code /swagger-ui/index.html}, with {@code /swagger-ui.html} redirect support)</li>
  *       <li>H2 console: {@code /h2-console/**}</li>
- *       <li>Lightweight health check: {@code /healthz}</li>
+ *       <li>Health endpoints: {@code /healthz}, {@code /actuator/health}</li>
  *     </ul>
  *   </li>
  *   <li>Disables CSRF and frame options (required for H2 console).</li>
@@ -50,8 +50,9 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     // H2 console
                     "/h2-console/**",
-                    // Lightweight health endpoint under context path (/bank-api/healthz)
-                    "/healthz"
+                    // Health endpoints under context path (/bank-api/healthz, /bank-api/actuator/health)
+                    "/healthz",
+                    "/actuator/health"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

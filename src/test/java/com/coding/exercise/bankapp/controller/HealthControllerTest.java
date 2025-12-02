@@ -15,10 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Integration-style tests for {@link HealthController}.
+ * Integration-style tests for {@link HealthController} and related health endpoints.
  * <p>
  * These tests load the full Spring Boot context including security configuration to
- * ensure the health endpoint is both reachable and publicly accessible (no auth required).
+ * ensure the health endpoints are both reachable and publicly accessible (no auth required).
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,5 +34,14 @@ class HealthControllerTest {
                .andExpect(status().isOk())
                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                .andExpect(jsonPath("$.status").value("ok"));
+    }
+
+    @Test
+    @DisplayName("GET /bank-api/actuator/health returns 200 and JSON status 'UP' without authentication")
+    void actuatorHealthEndpointReturnsUpWithoutAuthentication() throws Exception {
+        mockMvc.perform(get("/bank-api/actuator/health"))
+               .andExpect(status().isOk())
+               .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+               .andExpect(jsonPath("$.status").value("UP"));
     }
 }
