@@ -5,17 +5,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Spring Security 6 configuration using SecurityFilterChain.
+ * Spring Security 6 configuration using {@link SecurityFilterChain}.
+ * <p>
  * Summary:
- * - Uses authorizeHttpRequests with requestMatchers (replaces deprecated antMatchers).
- * - Permits unauthenticated access to OpenAPI/Swagger/H2 console endpoints:
- *   "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**".
- * - Disables CSRF and disables frame options (required for H2 console).
- * - Enables HTTP Basic for protected endpoints.
+ * <ul>
+ *   <li>Uses {@code authorizeHttpRequests} with {@code requestMatchers} (replaces deprecated antMatchers).</li>
+ *   <li>Permits unauthenticated access to:
+ *     <ul>
+ *       <li>OpenAPI/Swagger endpoints: {@code /v3/api-docs/**}, {@code /swagger-ui/**}, {@code /swagger-ui.html}</li>
+ *       <li>H2 console: {@code /h2-console/**}</li>
+ *       <li>Lightweight health check: {@code /healthz}</li>
+ *     </ul>
+ *   </li>
+ *   <li>Disables CSRF and frame options (required for H2 console).</li>
+ *   <li>Enables HTTP Basic for all other protected endpoints.</li>
+ * </ul>
+ * <p>
+ * Note: The application servlet context path is configured as {@code /bank-api}, so the
+ * externally visible URLs are prefixed accordingly (for example,
+ * {@code /bank-api/healthz}, {@code /bank-api/h2-console}).
  */
 @Configuration
 @EnableWebSecurity
@@ -36,7 +48,9 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     // H2 console
-                    "/h2-console/**"
+                    "/h2-console/**",
+                    // Lightweight health endpoint under context path (/bank-api/healthz)
+                    "/healthz"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
