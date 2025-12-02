@@ -165,7 +165,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <!-- Rely on --release; do not set source/target separately -->
+          <!-- Rely on the Java release flag; do not set source/target separately. -->
           <release>${maven.compiler.release}</release>
           <parameters>${maven.compiler.parameters}</parameters>
         </configuration>
