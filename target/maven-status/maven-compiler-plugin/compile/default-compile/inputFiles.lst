@@ -12,11 +12,11 @@
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/model/Account.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/repository/CustomerRepository.java
-/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/BankingService.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/helper/BankingServiceHelper.java
+/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/service/BankingService.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/AddressDetails.java
-/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/BankingApplication.java
+/home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/controller/AccountController.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/model/Address.java
 /home/kavia/workspace/code-generation/BankApp-179898/src/main/java/com/coding/exercise/bankapp/domain/TransferDetails.java

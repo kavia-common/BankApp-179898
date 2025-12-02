@@ -29,8 +29,8 @@ com/coding/exercise/bankapp/domain/TransferDetails.class
 com/coding/exercise/bankapp/model/BankInfo$BankInfoBuilder.class
 com/coding/exercise/bankapp/domain/BankInformation.class
 com/coding/exercise/bankapp/domain/TransactionDetails$TransactionDetailsBuilder.class
-com/coding/exercise/bankapp/BankingApplication.class
 com/coding/exercise/bankapp/model/Customer.class
+com/coding/exercise/bankapp/BankingApplication.class
 com/coding/exercise/bankapp/repository/AccountRepository.class
 com/coding/exercise/bankapp/repository/CustomerRepository.class
 com/coding/exercise/bankapp/domain/AccountInformation.class
