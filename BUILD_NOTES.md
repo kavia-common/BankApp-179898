@@ -73,11 +73,12 @@ Wrapper usage in previews:
 - The preview manifest (project_manifest.yaml) uses './mvn' (shim) with fallbacks to 'sh mvn', './mvnw', and 'sh mvnw'.
 - If a platform hardcodes 'mvn', the root-level './mvn' shim ensures the call ultimately runs via the Maven Wrapper.
 - If a preview invokes 'mvn' from outside the project root (and thus misses the shim), use './start' as the entrypoint which internally calls the Maven Wrapper.
+- If a preview insists on system Maven, keep using './mvnw' locally; the repo remains self-contained.
 
 Migration steps 03.01–03.04 summary:
 - javax → jakarta: All entities use jakarta.persistence; no javax.validation/servlet present.
-- Spring Security 6: SecurityFilterChain with requestMatchers; HTTP Basic; CSRF disabled; H2 frame options disabled; permitted: /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**.
-- Swagger: Springfox fully removed; using springdoc-openapi-starter-webmvc-ui (Swagger UI at /bank-api/swagger-ui.html and /index.html).
+- Spring Security 6: SecurityFilterChain with requestMatchers; HTTP Basic; CSRF disabled; H2 frame options disabled; permitted: /v3/api-docs/**, /swagger-ui/** (canonical UI at /bank-api/swagger-ui/index.html, with /swagger-ui.html redirect support), /h2-console/**.
+- Swagger: Springfox fully removed; using springdoc-openapi-starter-webmvc-ui (Swagger UI at /bank-api/swagger-ui/index.html; /swagger-ui.html redirects there).
 - H2 console verified at /bank-api/h2-console; Boot 3 datasource defaults apply.
 
 Preview diagnostic (mvn-not-found):

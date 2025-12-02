@@ -257,7 +257,7 @@ class BankingApplicationTests {
 ### 5.2 Runtime checks
 - Application starts on Java 21 with Boot 3.3.x without reflective access warnings.
 - H2 console available at /bank-api/h2-console/.
-- Swagger UI available at /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html.
+- Swagger UI available at /bank-api/swagger-ui/index.html (with /bank-api/swagger-ui.html redirecting to this path).
 
 ### 5.3 Endpoints smoke test
 - GET /bank-api/customers/all returns 200

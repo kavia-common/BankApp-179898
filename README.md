@@ -126,16 +126,16 @@ spring-security-test
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi (Springfox removed). Access via:
-- http://localhost:8989/bank-api/swagger-ui.html
 - http://localhost:8989/bank-api/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:8989/bank-api/v3/api-docs
+
+Note: http://localhost:8989/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
 
 Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
 
 Allowed without authentication (Boot 3/Security 6):
 - /bank-api/v3/api-docs/**
-- /bank-api/swagger-ui/**
-- /bank-api/swagger-ui.html
+- /bank-api/swagger-ui/** (canonical UI at /bank-api/swagger-ui/index.html)
 - /bank-api/h2-console/**
 Note: Security config uses requestMatchers for these paths and enables HTTP Basic for others.
 

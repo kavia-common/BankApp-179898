@@ -21,7 +21,8 @@ spring:
   #   password:
 
 # Swagger UI (springdoc)
-# - UI:        /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html
+# - UI (canonical): /bank-api/swagger-ui/index.html
+#   (note: /bank-api/swagger-ui.html redirects to the UI)
 # - OpenAPI:   /bank-api/v3/api-docs
 # H2 console:  /bank-api/h2-console (context path applied)
 # SecurityFilterChain permits:

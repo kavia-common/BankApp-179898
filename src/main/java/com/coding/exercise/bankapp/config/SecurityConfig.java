@@ -16,7 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
  *   <li>Uses {@code authorizeHttpRequests} with {@code requestMatchers} (replaces deprecated antMatchers).</li>
  *   <li>Permits unauthenticated access to:
  *     <ul>
- *       <li>OpenAPI/Swagger endpoints: {@code /v3/api-docs/**}, {@code /swagger-ui/**}, {@code /swagger-ui.html}</li>
+ *       <li>OpenAPI/Swagger endpoints: {@code /v3/api-docs/**}, {@code /swagger-ui/**}
+ *           (canonical UI at {@code /swagger-ui/index.html}, with {@code /swagger-ui.html} redirect support)</li>
  *       <li>H2 console: {@code /h2-console/**}</li>
  *       <li>Lightweight health check: {@code /healthz}</li>
  *     </ul>
