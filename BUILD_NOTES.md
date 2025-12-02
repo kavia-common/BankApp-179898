@@ -205,7 +205,14 @@ Using this in CI/preview pipelines will surface misconfigured JDKs early, before
 
 ## Maven Enforcer
 
-To make the requirement explicit at build time, the POM includes **maven-enforcer-plugin**:
+To make the Java 21 requirement explicit without breaking default builds on older JDKs, the POM uses **maven-enforcer-plugin** in two modes:
+
+1. A **global, non-failing execution** that only prints a warning when Maven is running on a JDK lower than 21 (default builds do **not** fail here).
+2. **Strict, failing executions** that are active only when:
+   - the `with-toolchain` profile is enabled, or
+   - Maven itself is running on Java 21+ (profile `enforce-java21-when-jdk21plus`, activated with `<jdk>[21,)</jdk>`).
+
+Global warning-only execution (always configured, never fails the build):
 
 ```xml
 <plugin>
@@ -214,7 +221,7 @@ To make the requirement explicit at build time, the POM includes **maven-enforce
   <version>3.4.1</version>
   <executions>
     <execution>
-      <id>enforce-java-version</id>
+      <id>java-version-warning</id>
       <goals>
         <goal>enforce</goal>
       </goals>
@@ -223,19 +230,35 @@ To make the requirement explicit at build time, the POM includes **maven-enforce
           <requireJavaVersion>
             <version>[21,)</version>
             <message>
-              This project requires Java 21 or newer. Please set JAVA_HOME or JAVA_21_HOME to a JDK 21
-              installation and ensure Maven runs with that JDK. See README.md for details.
+              The BankApp project is configured to compile with Java release 21
+              (maven.compiler.release=21), but the JVM running Maven is lower than 21.
+              The build will continue, but you may see compilation errors such as
+              "release version 21 not supported".
+
+              Recommended:
+                * Run 'bash scripts/java21-preflight.sh' to verify your JDK setup.
+                * Either:
+                    - Run Maven with a JDK 21+ (JAVA_HOME pointing at JDK 21+), or
+                    - Configure and enable the 'with-toolchain' profile
+                      (e.g. -Pwith-toolchain or -DUSE_TOOLCHAIN=true)
+                      with a Java 21 toolchain.
             </message>
           </requireJavaVersion>
         </rules>
-        <fail>true</fail>
+        <!-- Warning-only: do not fail the build at this stage -->
+        <fail>false</fail>
       </configuration>
     </execution>
   </executions>
 </plugin>
 ```
 
-This ensures that even if the toolchain is misconfigured, Maven will stop with a clear error before attempting compilation.
+Strict, failing enforcement only happens in:
+
+- The `with-toolchain` profile (`enforce-java21-with-toolchain` execution), which expects a properly configured Java 21 toolchain and fails fast when the resolved Java version is below 21.
+- The `enforce-java21-when-jdk21plus` profile (`enforce-java21-on-jdk21plus` execution), which is activated via `<jdk>[21,)</jdk>` and enforces that builds continue to use Java 21+ once you are already running Maven on a Java 21+ runtime.
+
+On JDK < 21 the Enforcer plugin now only emits a warning and does **not** fail the build. Compilation may still fail with `release version 21 not supported` if no Java 21 toolchain is available, but the Enforcer configuration itself is relaxed so environments without JDK 21 can progress to the compile phase while still enforcing Java 21 when appropriate.
 
 ## Test Plugin Compatibility with Java 21
 
