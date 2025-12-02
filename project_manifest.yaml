@@ -19,17 +19,17 @@ env:
   BACKEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3001
   FRONTEND_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
   SITE_URL: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000
-  ALLOWED_ORIGINS: 'https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000,http://localhost:3000,http://localhost:4000'
-  ALLOWED_HEADERS: 'Content-Type,Authorization,X-Requested-With'
-  ALLOWED_METHODS: 'GET,POST,PUT,DELETE,PATCH,OPTIONS'
+  ALLOWED_ORIGINS: https://vscode-internal-24402-beta.beta01.cloud.kavia.ai:3000,http://localhost:3000,http://localhost:4000
+  ALLOWED_HEADERS: Content-Type,Authorization,X-Requested-With
+  ALLOWED_METHODS: GET,POST,PUT,DELETE,PATCH,OPTIONS
   CORS_MAX_AGE: '3600'
-  COOKIE_DOMAIN: '.vscode-internal-24402-beta.beta01.cloud.kavia.ai'
-  HOST: '0.0.0.0'
+  COOKIE_DOMAIN: .vscode-internal-24402-beta.beta01.cloud.kavia.ai
+  HOST: 0.0.0.0
   PORT: '3001'
 
 containers:
   - container_name: BankApp-179898
-    description: Spring Boot backend for customers, accounts, transactions, and transfers with an in-memory H2 database.
+    description: Spring Boot backend for customers, accounts, transactions, transfers with H2.
     interfaces:
       - HTTP (REST API)
       - OpenAPI/Swagger UI
@@ -40,38 +40,25 @@ containers:
     port: '3001'
     framework: springboot
     type: backend
-    buildCommand: './mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package'
-    startCommand: './mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api" || sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api"'
-    testCommand: './mvnw -q test || sh mvnw -q test'
-    installCommand: './mvnw -q -DskipTests install || sh mvnw -q -DskipTests install'
+    buildCommand: ./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package
+    startCommand: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api" || sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api"
+    testCommand: ./mvnw -q test || sh mvnw -q test
+    installCommand: ./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install
     routes:
-      - path: /bank-api
-        description: Root API context path
-      - path: /bank-api/customers
-        description: Customer REST endpoints
-      - path: /bank-api/accounts
-        description: Account REST endpoints
-      - path: /bank-api/transactions
-        description: Transaction-related endpoints (aggregate route)
-      - path: /bank-api/accounts/transactions
-        description: Account transaction history endpoints
-      - path: /bank-api/transfers
-        description: Transfer-related endpoints (aggregate route)
-      - path: /bank-api/accounts/transfer
-        description: Internal account transfer endpoints
-      - path: /bank-api/v3/api-docs
-        description: OpenAPI JSON (springdoc)
-      - path: /bank-api/swagger-ui/index.html
-        description: Swagger UI for API exploration
-      - path: /bank-api/h2-console
-        description: H2 in-memory database web console
-      - path: /bank-api/actuator/health
-        description: Spring Boot Actuator health endpoint
+      - /bank-api
+      - /bank-api/customers
+      - /bank-api/accounts
+      - /bank-api/transactions
+      - /bank-api/transfers
+      - /bank-api/v3/api-docs
+      - /bank-api/swagger-ui/index.html
+      - /bank-api/h2-console
+      - /bank-api/actuator/health
     container_details:
       features:
         - CRUD operations for customers including personal and contact details management.
         - Account lifecycle and balance operations including deposits and withdrawals.
-        - Internal fund transfers between a customer's accounts with transactional integrity.
+        - Internal fund transfers between a customer’s accounts with transactional integrity.
         - In-memory H2 database with web console for easy inspection during development.
-        - HTTP Basic authentication with Spring Security 6 and whitelisted Swagger and H2 console endpoints.
+        - HTTP Basic authentication with Spring Security 6 and whitelisted Swagger/H2 endpoints.
         - Auto-generated OpenAPI/Swagger UI documentation via springdoc-openapi.
