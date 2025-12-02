@@ -284,7 +284,7 @@
       </properties>
       <build>
         <plugins>
-          <!-- Override the default compiler setup to use --release 21. -->
+          <!-- Override the default compiler setup to target Java release 21. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
