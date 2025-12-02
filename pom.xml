@@ -18,10 +18,12 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Target Java 21 (LTS). Do not use maven.compiler.source/target; rely on release.
-         Toolchains are optional and can be enabled via the 'with-toolchain' profile. -->
-    <java.version>21</java.version>
-    <maven.compiler.release>21</maven.compiler.release>
+    <!-- Default compilation targets Java 17 (minimum supported by Spring Boot 3.x)
+         so that builds succeed even when a Java 21 JDK is not available.
+         A dedicated 'java21' profile restores release=21 compilation on JDK 21+. -->
+    <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -119,8 +121,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <!-- Rely on the Java release flag; do not set source/target separately. -->
-          <release>${maven.compiler.release}</release>
+          <!-- Default path: compile as Java 17 bytecode so builds succeed on JDK 17+. -->
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
           <parameters>${maven.compiler.parameters}</parameters>
         </configuration>
       </plugin>
@@ -142,40 +145,35 @@
         </configuration>
       </plugin>
 
-      <!-- Global Java version check: warn when building with a JDK lower than 21,
-           but do NOT fail the build. Strict enforcement is handled via profiles. -->
+      <!-- Global Java version check: enforce Java 17+ as the minimum runtime for building.
+           Strict Java 21 enforcement is handled via the 'java21' and 'with-toolchain' profiles. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>3.4.1</version>
         <executions>
           <execution>
-            <id>java-version-warning</id>
+            <id>java-version-minimum-17</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[21,)</version>
+                  <version>[17,)</version>
                   <message>
-                    The BankApp project is configured to compile with Java release 21
-                    (maven.compiler.release=21), but the JVM running Maven is lower than 21.
-                    The build will continue, but you may see compilation errors such as
-                    "release version 21 not supported".
+                    The BankApp project requires Java 17 or newer to build and run
+                    (Spring Boot 3.x baseline). The JVM running Maven is lower than 17.
+                    Please upgrade your JDK or point JAVA_HOME at a Java 17+ installation.
                     
-                    Recommended:
-                      * Run 'bash scripts/java21-preflight.sh' to verify your JDK setup.
-                      * Either:
-                          - Run Maven with a JDK 21+ (JAVA_HOME pointing at JDK 21+), or
-                          - Configure and enable the 'with-toolchain' profile
-                            (e.g. -Pwith-toolchain or -DUSE_TOOLCHAIN=true)
-                            with a Java 21 toolchain.
+                    If you also want to compile with Java 21 bytecode, use the 'java21'
+                    profile on top of a Java 21+ JDK or toolchain
+                    (see README section "Java versions & build profiles").
                   </message>
                 </requireJavaVersion>
               </rules>
-              <!-- Warning-only: do not fail the build at this stage -->
-              <fail>false</fail>
+              <!-- Fail fast on unsupported Java runtimes &lt; 17 -->
+              <fail>true</fail>
             </configuration>
           </execution>
         </executions>
@@ -268,17 +266,37 @@
       </build>
     </profile>
 
-    <!-- Strict Java 21 enforcement when Maven itself is running on JDK 21+.
-         This profile only activates when the active JDK is 21 or newer; on older
-         JDKs you will only see the global warning (no hard failure here). -->
+    <!-- Strict Java 21 compilation path.
+         This profile:
+           * sets the compiler to use --release 21, and
+           * enforces that the build is running on (or resolving) a Java 21+ JDK.
+         It is activated automatically when Maven is running on JDK 21+ via &lt;jdk&gt;,
+         and can also be enabled explicitly with -Pjava21 (for example together with
+         -Pwith-toolchain when using Maven Toolchains). -->
     <profile>
-      <id>enforce-java21-when-jdk21plus</id>
+      <id>java21</id>
       <activation>
-        <!-- Activate when the JVM running Maven reports Java 21 or newer -->
+        <!-- Auto-activate when the JVM running Maven reports Java 21 or newer.
+             You can also force this profile with -Pjava21. -->
         <jdk>[21,)</jdk>
       </activation>
+      <properties>
+        <!-- Compiler release used when the java21 profile is active. -->
+        <maven.compiler.release>21</maven.compiler.release>
+      </properties>
       <build>
         <plugins>
+          <!-- Override the default compiler setup to use --release 21. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+              <release>${maven.compiler.release}</release>
+              <parameters>${maven.compiler.parameters}</parameters>
+            </configuration>
+          </plugin>
+          <!-- Enforce that Java 21+ is being used when this profile is active. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
@@ -294,14 +312,13 @@
                     <requireJavaVersion>
                       <version>[21,)</version>
                       <message>
-                        The BankApp project is configured for Java 21. Since you are already
-                        running Maven with a Java 21+ runtime (${java.version}), this rule
-                        enforces that the build must continue to use Java 21 or newer.
+                        The 'java21' profile compiles this project with Java release 21.
+                        The JVM and/or toolchain resolved by Maven must therefore be
+                        Java 21 or newer.
                       </message>
                     </requireJavaVersion>
                   </rules>
-                  <!-- When building directly on a JDK 21+ runtime, treat Java &lt; 21 as an error.
-                       (In practice this will only fail if the runtime is misreported.) -->
+                  <!-- When the java21 profile is active, treat Java &lt; 21 as a hard error. -->
                   <fail>true</fail>
                 </configuration>
               </execution>

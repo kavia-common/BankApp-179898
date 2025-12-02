@@ -1,4 +1,4 @@
-# Banking Application using Java 21, Spring Boot 3, Spring Security 6, and H2 DB
+# Banking Application using Java 17+ (Java 21-ready), Spring Boot 3, Spring Security 6, and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -104,46 +104,89 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.add
 
 ### Prerequisites
 
-* Java 21 (OpenJDK/Temurin recommended)
+* Java 17+ (OpenJDK/Temurin recommended; Java 21 recommended for the `java21` profile)
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
 
-## Java 21 Toolchains & Build Troubleshooting
+## Java versions & build profiles
 
-This project targets **Java 21**. By default it uses the JDK from `JAVA_HOME` (no toolchains required) and enforces Java 21 only when you are *not* using a toolchain. Optionally, you can enable a `with-toolchain` Maven profile to compile with a JDK 21 that is different from the `JAVA_HOME` JDK.
+This project uses Spring Boot 3.x and therefore requires **Java 17 or newer**.
 
-If you see an error like:
+The `pom.xml` is configured with two main build paths:
+
+1. A **default path** that compiles with Java 17 source/target (works on any JDK ≥ 17).
+2. An optional **strict Java 21 path** that compiles with `--release 21` via the `java21` profile,
+   optionally combined with the `with-toolchain` profile when using Maven Toolchains.
+
+### Path A (default): Build with JDK 17+ (no Java 21 required)
+
+By default, the Maven Compiler Plugin is configured to:
+
+- `source = 17`
+- `target = 17`
+
+This means:
+
+- You can build the project with **any JDK ≥ 17** (including JDK 21).
+- No Maven toolchains configuration is required for the default path.
+- You will **not** see `javac: release version 21 not supported` errors on environments that only have JDK 17.
+
+Typical default builds:
+
+```bash
+# Using system Maven
+mvn -q -DskipTests clean package
+
+# Using the Maven Wrapper
+./mvnw -q -DskipTests clean package
+```
+
+If you are running on JDK 21, the default build still emits Java 17 bytecode for maximum compatibility.
+
+### Path B: Strict Java 21 build (`java21` profile, optional `with-toolchain`)
+
+When you want to compile the application specifically as Java 21 bytecode (for example, for production),
+enable the `java21` profile. This profile:
+
+- Switches the compiler to **`--release 21`**.
+- Enforces that the JDK resolved by Maven is **Java 21 or newer** via Maven Enforcer.
+- Activates automatically when Maven is running on JDK 21+ (via `<activation><jdk>[21,)</jdk>`),
+  or can be forced explicitly with `-Pjava21`.
+
+Examples (no toolchain, Maven itself on JDK 21+):
+
+```bash
+# System Maven
+mvn -q -Pjava21 -DskipTests clean package
+
+# Maven Wrapper
+./mvnw -q -Pjava21 -DskipTests clean package
+```
+
+If you are on **JDK 17** but have a separate **JDK 21** installed, you can use Maven Toolchains and
+the `with-toolchain` profile together with `java21`. In this mode Maven may run on JDK 17, but the
+compiler uses a JDK 21 toolchain:
+
+```bash
+# System Maven
+mvn -q -Pwith-toolchain,java21 -DskipTests clean package
+
+# Maven Wrapper
+./mvnw -q -Pwith-toolchain,java21 -DskipTests clean package
+```
+
+If the environment lacks a Java 21 JDK or properly configured toolchain and you force `-Pjava21`,
+you should expect a clear failure such as:
 
 > `Fatal error compiling: error: release version 21 not supported`
 
-it means Maven is running with a JDK that does **not** support `--release 21` (e.g. JDK 17 or 11).
+That is intentional: the `java21` path is **strict** and only meant to succeed when a Java 21
+toolchain or runtime is available.
 
-### Path A (default): Build without Maven toolchains (JAVA_HOME JDK 21)
+### Java 21 toolchains & preflight checks
 
-By default the `pom.xml` does **not** require a Maven toolchain. Maven runs on the JDK pointed to by `JAVA_HOME`, and a Maven Enforcer rule (active when `USE_TOOLCHAIN` is **not** set) ensures that this JDK is Java 21 or newer.
-
-Steps:
-
-1. Point `JAVA_HOME` at a JDK 21 installation and ensure it is on your `PATH`.
-2. Verify versions:
-
-   ```bash
-   java -version
-   ./mvnw -version
-   ```
-   Both should report Java 21.
-
-3. Build the project (no toolchain, only `JAVA_HOME`):
-
-   ```bash
-   ./mvnw -q -DskipTests clean package
-   ```
-
-   This command must succeed when `JAVA_HOME` is a JDK 21 (this is what CI/preview environments typically use).
-
-### Path B: Build with Maven toolchains and an older JAVA_HOME
-
-If your system `JAVA_HOME` points to an older JDK (for example Java 17) but you have a JDK 21 installed elsewhere, you can configure Maven Toolchains and enable the `with-toolchain` profile. In this mode, Maven may run on an older JDK but compilation happens with the JDK 21 defined in your toolchain, and the Java 21 Enforcer rule is disabled (guarded by the `USE_TOOLCHAIN` property).
+To make the `with-toolchain` + `java21` combination work when Maven itself is running on JDK 17,
+set up a Maven toolchain that points to your JDK 21 installation.
 
 1. Create (or update) your **user-level** toolchains file:
 
@@ -169,19 +212,27 @@ If your system `JAVA_HOME` points to an older JDK (for example Java 17) but you 
    </toolchains>
    ```
 
-   You may also keep using a project-local `.mvn/toolchains.xml` if your environment already relies on it; the `maven-toolchains-plugin` will read toolchains from either location.
+   You may also keep using a project-local `.mvn/toolchains.xml` if your environment already relies on it;
+   the `maven-toolchains-plugin` will read toolchains from either location when the `with-toolchain` profile
+   is active.
 
-2. Build with the toolchain-enabled profile (property-activated):
+2. Build with the toolchain-enabled profile (property-activated or explicit profile):
 
    ```bash
-   ./mvnw -q -DskipTests -DUSE_TOOLCHAIN=true clean package
+   # Property-based activation (as used by some environments)
+   ./mvnw -q -DskipTests -DUSE_TOOLCHAIN=true -Pjava21 clean package
+
+   # Or explicitly combine the profiles
+   ./mvnw -q -Pwith-toolchain,java21 -DskipTests clean package
    ```
 
-   The `with-toolchain` Maven profile is automatically activated when `USE_TOOLCHAIN=true` is present; you do **not** need to pass `-Pwith-toolchain` explicitly.
+   The `with-toolchain` Maven profile is automatically activated when `USE_TOOLCHAIN=true` is present;
+   you do **not** need to pass `-Pwith-toolchain` in that case, but it is harmless if you do.
 
 ### 0. Quick Java 21 preflight
 
-Before doing a full build, you can run a small script that checks which JDKs your environment variables and Maven toolchain (if any) point at and fails fast if any are below Java 21:
+Before doing a strict Java 21 build, you can run a small script that checks which JDKs your environment
+variables and Maven toolchain (if any) point at and fails fast if any are below Java 21:
 
 ```bash
 bash scripts/java21-preflight.sh
@@ -194,9 +245,11 @@ The script checks (in order):
 - `JAVA_HOME`
 - and finally `java` from your `PATH`
 
-If any of these point to a Java version lower than 21, the script prints a clear error and exits with a non-zero status so CI or preview systems can stop early.
+If any of these point to a Java version lower than 21, the script prints a clear error and exits with
+a non-zero status so CI or preview systems can stop early **for the Java 21 path**.
 
-> Tip: On some platforms a variable like `JAVA_TOOLCHAIN_JAVA21_HOME` is already defined; you can align it with the project conventions via:
+> Tip: On some platforms a variable like `JAVA_TOOLCHAIN_JAVA21_HOME` is already defined; you can align it
+> with the project conventions via:
 > ```bash
 > export JAVA_21_HOME="$JAVA_TOOLCHAIN_JAVA21_HOME"
 > export JAVA_HOME="$JAVA_21_HOME"
@@ -211,9 +264,14 @@ java -version
 mvn -version
 ```
 
-Both commands should report a **Java 21** runtime/JDK. If Maven shows a different Java home or version, adjust your environment.
+For the **default** build path, both commands should report **Java 17 or newer**.
 
-Example (Linux/macOS):
+For the **Java 21** path (`-Pjava21`), ensure that either:
+
+- Maven itself is running on Java 21+, or
+- a Java 21 toolchain is configured and the `with-toolchain` profile is active.
+
+Example (Linux/macOS) for a Java 21 setup:
 
 ```bash
 # Point to your JDK 21 installation
@@ -254,13 +312,16 @@ It is configured to use a JDK 21 installation via the `JAVA_21_HOME` environment
 </toolchains>
 ```
 
-Make sure `JAVA_21_HOME` points at a real JDK 21 install. Maven’s Toolchains plugin (configured in `pom.xml`) will then pick this JDK for compilation.
+Make sure `JAVA_21_HOME` points at a real JDK 21 install when using the `java21` / `with-toolchain`
+profile combination. Maven’s Toolchains plugin (configured in `pom.xml`) will then pick this JDK for
+compilation.
 
-If your environment does **not** honor project-local toolchains for some reason, you can also configure a global `${user.home}/.m2/toolchains.xml` with equivalent content.
+If your environment does **not** honor project-local toolchains for some reason, you can also configure
+a global `${user.home}/.m2/toolchains.xml` with equivalent content.
 
 ### 3. Useful build commands
 
-Quick compile (no tests):
+Quick compile (no tests, default Java 17 path):
 
 ```bash
 ./mvnw -q -DskipTests clean compile
@@ -273,8 +334,6 @@ Verbose build with debug output (helpful for diagnosing toolchain/JDK issues):
 ```
 
 If you're using system Maven instead of the wrapper, replace `./mvnw` with `mvn`.
-
-> **Note:** As a last resort in environments where Java 21 is not available at all, you could temporarily lower the compiler `<release>` in `pom.xml` (for example to 17). This is **not** recommended for production; the project is intended to run on Java 21.
 
 ### Maven Dependencies
 
