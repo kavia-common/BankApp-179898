@@ -1,18 +1,20 @@
-server.port: 8989
-server.servlet.context-path: /bank-api
+server:
+  port: ${PORT:3001}
+  address: 0.0.0.0
+  servlet:
+    context-path: /
 
-spring.security.user.name: bankapp
-spring.security.user.password: changeit
-
-# Enabling H2 Console (Boot 3)
 spring:
+  security:
+    user:
+      name: bankapp
+      password: changeit
+  # Enabling H2 Console (Boot 3)
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: true
-      # Path defaults to /h2-console in Boot 3; SecurityFilterChain permits "/h2-console/**".
-      # With the configured context-path, the full URL is /bank-api/h2-console.
   # Datasource: using Boot 3 defaults (jdbc:h2:mem:testdb). Uncomment below to customize:
   # datasource:
   #   url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -21,8 +23,8 @@ spring:
   #   password:
 
 # Swagger UI (springdoc)
-# - UI:        /bank-api/swagger-ui.html or /bank-api/swagger-ui/index.html
-# - OpenAPI:   /bank-api/v3/api-docs
-# H2 console:  /bank-api/h2-console (context path applied)
+# - UI:        /swagger-ui.html or /swagger-ui/index.html
+# - OpenAPI:   /v3/api-docs
+# H2 console:  /h2-console
 # SecurityFilterChain permits:
 # - /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**
