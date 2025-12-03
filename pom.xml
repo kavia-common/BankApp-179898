@@ -140,7 +140,7 @@
     </resources>
 
     <plugins>
-      <!-- Java compilation using --release 21 -->
+      <!-- Java compilation configured for Java 21 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
