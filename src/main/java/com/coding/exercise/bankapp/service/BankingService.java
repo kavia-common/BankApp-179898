@@ -21,6 +21,14 @@ public interface BankingService {
     
     public ResponseEntity<Object> deleteCustomer(Long customerNumber) ;
     
+    // PUBLIC_INTERFACE
+    /**
+     * Returns all accounts.
+     *
+     * @return list of all accounts as domain objects
+     */
+    public List<AccountInformation> findAllAccounts();
+    
     public ResponseEntity<Object> findByAccountNumber(Long accountNumber);
     
     public ResponseEntity<Object> addNewAccount(AccountInformation accountInformation, Long customerNumber);

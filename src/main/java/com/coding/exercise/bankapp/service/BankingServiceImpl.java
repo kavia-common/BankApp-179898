@@ -59,6 +59,21 @@ public class BankingServiceImpl implements BankingService {
         
         return allCustomerDetails;
     }
+    
+    // PUBLIC_INTERFACE
+    /**
+     * Returns all accounts as a JSON-serializable list of domain objects.
+     *
+     * @return list of all accounts
+     */
+    public List<AccountInformation> findAllAccounts() {
+        List<AccountInformation> allAccounts = new ArrayList<>();
+        Iterable<Account> accountList = accountRepository.findAll();
+        accountList.forEach(account -> {
+            allAccounts.add(bankingServiceHelper.convertToAccountDomain(account));
+        });
+        return allAccounts;
+    }
 
     /**
      * CREATE Customer
@@ -177,7 +192,7 @@ public class BankingServiceImpl implements BankingService {
 		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(accountNumber);
 
 		if(accountEntityOpt.isPresent()) {
-			return ResponseEntity.status(HttpStatus.FOUND).body(bankingServiceHelper.convertToAccountDomain(accountEntityOpt.get()));
+			return ResponseEntity.status(HttpStatus.OK).body(bankingServiceHelper.convertToAccountDomain(accountEntityOpt.get()));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account Number " + accountNumber + " not found.");
 		}

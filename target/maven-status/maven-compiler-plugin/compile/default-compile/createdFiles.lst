@@ -20,6 +20,7 @@ com/coding/exercise/bankapp/service/helper/BankingServiceHelper.class
 com/coding/exercise/bankapp/model/BankInfo.class
 com/coding/exercise/bankapp/config/ApplicationConfig.class
 com/coding/exercise/bankapp/model/CustomerAccountXRef$CustomerAccountXRefBuilder.class
+com/coding/exercise/bankapp/config/DataInitializer.class
 com/coding/exercise/bankapp/service/BankingServiceImpl.class
 com/coding/exercise/bankapp/model/Contact$ContactBuilder.class
 com/coding/exercise/bankapp/model/Transaction$TransactionBuilder.class
