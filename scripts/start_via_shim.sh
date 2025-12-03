@@ -10,7 +10,7 @@
 set -e
 
 PORT_VALUE="${PORT:-3001}"
-ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0"
+ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
 if [ -x "./mvn" ]; then
   exec ./mvn spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
