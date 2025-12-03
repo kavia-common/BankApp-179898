@@ -1,0 +1,164 @@
+# Architecture Overview – BankApp Backend
+
+## Purpose
+
+This document provides a high-level architectural overview of the BankApp Spring Boot backend, focusing on its Java 21 / Spring Boot 3.2.x runtime, layered structure, and key infrastructure components.
+
+## Files Referenced
+
+- `src/main/java/com/coding/exercise/bankapp/BankingApplication.java`
+- `src/main/java/com/coding/exercise/bankapp/controller/*.java`
+- `src/main/java/com/coding/exercise/bankapp/service/*.java`
+- `src/main/java/com/coding/exercise/bankapp/service/helper/BankingServiceHelper.java`
+- `src/main/java/com/coding/exercise/bankapp/model/*.java`
+- `src/main/java/com/coding/exercise/bankapp/domain/*.java`
+- `src/main/java/com/coding/exercise/bankapp/repository/*.java`
+- `src/main/java/com/coding/exercise/bankapp/config/*.java`
+- `src/main/resources/application.yml`
+- `pom.xml`
+
+## Runtime Platform
+
+- **Java:** 21 (configured via `pom.xml` with `maven-compiler-plugin` release 21).
+- **Spring Boot:** 3.2.10 (via `spring-boot-starter-parent`).
+- **Database:** In-memory H2 with console enabled.
+- **Security:** Spring Security 6 using `SecurityFilterChain`.
+- **Documentation:** OpenAPI 3 via `springdoc-openapi-starter-webmvc-ui`.
+
+## Layered Architecture
+
+### 1. API Layer (Controllers)
+
+Located under:
+
+- `src/main/java/com/coding/exercise/bankapp/controller`
+
+Key controllers:
+
+- `CustomerController` – CRUD operations for customers.
+- `AccountController` – Account and transaction operations (deposits, withdrawals, transfers).
+- `HealthController` – Lightweight health endpoint (`/healthz`).
+
+Controllers:
+
+- Expose RESTful endpoints under the `/bank-api` context path.
+- Use Spring MVC annotations (`@RestController`, `@GetMapping`, `@PostMapping`, etc.).
+- Delegate business logic to `BankingService`.
+
+### 2. Service Layer
+
+Located under:
+
+- `src/main/java/com/coding/exercise/bankapp/service`
+
+Components:
+
+- `BankingService` – Interface defining operations for customers, accounts, and transactions.
+- `BankingServiceImpl` – Implementation coordinating domain logic, repositories, and helper conversions.
+- `BankingServiceHelper` (in `service/helper`) – Maps between domain models (`domain` package) and persistence models (`model` package).
+
+Responsibilities:
+
+- Implement business rules (e.g., internal transfers, balance updates).
+- Encapsulate transactional boundaries where appropriate.
+- Ensure consistency between domain DTOs and entities.
+
+### 3. Persistence Layer
+
+Located under:
+
+- `src/main/java/com/coding/exercise/bankapp/model`
+- `src/main/java/com/coding/exercise/bankapp/repository`
+
+Entities (`model` package) are JPA-mapped with `jakarta.persistence.*` imports, for example:
+
+- `Customer`
+- `Account`
+- `Transaction`
+- `Address`
+- `Contact`
+- `BankInfo`
+- `CustomerAccountXRef`
+
+Repositories (`repository` package) are Spring Data JPA interfaces such as:
+
+- `CustomerRepository`
+- `AccountRepository`
+- `TransactionRepository`
+- `CustomerAccountXRefRepository`
+
+They provide CRUD operations and selected custom queries (e.g., `findByAccountNumber`).
+
+### 4. Domain Models
+
+Located under:
+
+- `src/main/java/com/coding/exercise/bankapp/domain`
+
+These classes (e.g., `CustomerDetails`, `AccountInformation`, `TransactionDetails`, `TransferDetails`, `BankInformation`, `ContactDetails`, `AddressDetails`) serve as:
+
+- API-facing and service-layer DTOs.
+- Abstractions decoupled from JPA specifics.
+- Inputs and outputs for controllers and services.
+
+### 5. Configuration
+
+Located under:
+
+- `src/main/java/com/coding/exercise/bankapp/config`
+
+Key configuration classes:
+
+- `SecurityConfig` – Spring Security 6 configuration using `SecurityFilterChain`:
+  - Permits unauthenticated access to:
+    - `/healthz`
+    - `/actuator/health`
+    - `/v3/api-docs/**`
+    - `/swagger-ui/**`
+    - `/swagger-ui.html`
+    - `/h2-console/**`
+  - Requires HTTP Basic authentication for other endpoints.
+  - Disables CSRF and frame options to support H2 console.
+- `OpenApiConfig` – OpenAPI 3 metadata and server configuration using `@OpenAPIDefinition`:
+  - Sets title, description, version, and license.
+  - Registers `/bank-api` as the server base path.
+
+Additional configuration:
+
+- `application.yml`:
+  - Sets `server.port: 3001` (by default).
+  - Sets `server.servlet.context-path: /bank-api`.
+  - Configures an in-memory H2 console (enabled).
+  - Defines default Spring Security user credentials.
+
+### 6. Application Entry Point
+
+- `BankingApplication` is the `@SpringBootApplication` main class:
+  - Bootstraps Spring Boot 3.2.x.
+  - Scans the above layers and configuration classes.
+
+## Cross-Cutting Concerns
+
+- **Security:** Centralized in `SecurityConfig`, enforced across all HTTP endpoints.
+- **Validation and Error Handling:** Managed by Spring Boot defaults and controller-level validations (when present).
+- **OpenAPI / Documentation:** Automatically generated by springdoc based on controller request mappings and OpenAPI annotations.
+
+## Rollback Considerations
+
+Rolling back to a pre–Java 21 architecture primarily affects:
+
+- `pom.xml` (parent, Java version, dependencies).
+- `SecurityConfig` (if earlier configuration styles are restored).
+- `OpenApiConfig` (if older Swagger tooling is reintroduced).
+
+Always coordinate rollbacks with environment Java versions and dependent infrastructure, as described in `docs/task-07-rollback-and-risk.md`.
+
+## Manual Review Notes
+
+- Ensure that any new modules or microservices introduced later follow the same layered structure for consistency.
+- When adding new endpoints, update:
+  - Controllers (API layer).
+  - Service interfaces and implementations.
+  - Domain and model mappings in `BankingServiceHelper`.
+  - OpenAPI annotations where appropriate.
+- Review security and documentation implications whenever new endpoints are added or existing ones are changed.
