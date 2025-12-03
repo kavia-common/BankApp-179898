@@ -1,5 +1,4 @@
-# profile.d scripts
+This directory may contain platform-specific startup hooks. The application’s canonical startup must not cd into any subfolder.
 
-Some platforms source scripts in `profile.d` on dyno/container start. The `startup.sh` here simply logs a message indicating that the app will be started via the Maven Wrapper.
-
-No action required for most environments.
+Canonical start command (from repository root):
+./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"

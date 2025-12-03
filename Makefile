@@ -28,10 +28,10 @@ run-sh:
 # run-ctx: Run with explicit context-path and port (helpful for verifying quoting of multiple Spring args).
 # Usage: make run-ctx
 run-ctx:
-	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
+	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
 # PUBLIC_INTERFACE
-# build-sh: Same as build, but invokes the wrapper via 'sh' for environments without execute permission.
-# Usage: make build-sh
-build-sh:
-	sh mvnw -q -DskipTests clean package
+# start: Canonical start for previews that call 'make start'
+# Usage: make start
+start:
+	./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments="--server.port=$${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"

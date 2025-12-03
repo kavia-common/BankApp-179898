@@ -2,4 +2,4 @@
 # Ensures the context-path is /bank-api to match routing, and binds to provided %PORT% or platform default.
 # Works when executed from the BankApp-179898 directory; no 'cd' path assumptions needed by the platform.
 # Note: Inner quotes must be escaped for cmd.exe using ^\" ... ^\" to pass as one argument to Maven.
-web: cmd /c "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=^\\\"--server.port=%PORT% --server.address=0.0.0.0 --server.servlet.context-path=/bank-api^\\\""
+web: cmd /c "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0 --server.servlet.context-path=/bank-api^\""

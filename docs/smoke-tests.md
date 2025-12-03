@@ -16,13 +16,13 @@ This document defines a lightweight set of smoke tests to quickly validate that 
 ## Prerequisites
 
 - Application running with:
-  - `server.port=8989`
+  - `server.port=3001`
   - `server.servlet.context-path=/bank-api`
 - For example:
 
   ```bash
   ./mvnw -DskipTests spring-boot:run \
-    -Dspring-boot.run.arguments="--server.port=8989 --server.servlet.context-path=/bank-api"
+    -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
   ```
 
 ## Manual curl Smoke Tests
@@ -31,15 +31,15 @@ From another terminal:
 
 ```bash
 # 1) Health probes
-curl -i http://localhost:8989/bank-api/healthz
-curl -i http://localhost:8989/bank-api/actuator/health
+curl -i http://localhost:3001/bank-api/healthz
+curl -i http://localhost:3001/bank-api/actuator/health
 
 # 2) OpenAPI / Swagger
-curl -i http://localhost:8989/bank-api/v3/api-docs
-curl -i http://localhost:8989/bank-api/swagger-ui/index.html
+curl -i http://localhost:3001/bank-api/v3/api-docs
+curl -i http://localhost:3001/bank-api/swagger-ui/index.html
 
 # 3) H2 console
-curl -i http://localhost:8989/bank-api/h2-console
+curl -i http://localhost:3001/bank-api/h2-console
 ```
 
 ### Expected Output

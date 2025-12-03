@@ -24,13 +24,13 @@ fi
 PORT_VALUE="${PORT:-3001}"
 ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
-if [ "${RUN_MODE}" = "build" ] || [ "${CLEAN_PACKAGE}" = "true" ]; then
+if [ "${RUN_MODE:-run}" = "build" ] || [ "${CLEAN_PACKAGE:-false}" = "true" ]; then
   if [ -x "./mvnw" ]; then
     ./mvnw -q -DskipTests clean package
   else
     sh mvnw -q -DskipTests clean package
   fi
-  [ "${RUN_MODE}" = "build" ] && exit $?
+  [ "${RUN_MODE:-run}" = "build" ] && exit $?
 fi
 
 if [ -x "./mvnw" ]; then

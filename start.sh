@@ -24,7 +24,7 @@ fi
 PORT_VALUE="${PORT:-3001}"
 ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
-if [ "${CLEAN_PACKAGE}" = "true" ]; then
+if [ "${CLEAN_PACKAGE:-false}" = "true" ]; then
   if [ -x "./mvnw" ]; then
     ./mvnw -q -DskipTests clean package
   else
