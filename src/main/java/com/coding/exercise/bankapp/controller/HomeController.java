@@ -19,4 +19,12 @@ public class HomeController {
         // Use redirect (not forward) and avoid including context-path; Spring adds it automatically.
         return "redirect:/swagger-ui/index.html";
     }
+
+    // PUBLIC_INTERFACE
+    /** Legacy Swagger UI entry point for compatibility; redirects to canonical UI path. */
+    @GetMapping("/swagger-ui.html")
+    public String legacySwaggerUiRedirect() {
+        // Spring will apply the servlet context-path automatically to the redirect target.
+        return "redirect:/swagger-ui/index.html";
+    }
 }
