@@ -2,11 +2,31 @@
 <!--
   BankApp - Spring Boot REST API backed by H2.
 
-  Java 21 configuration:
-  This POM is configured for Java 21 with:
-  - maven-compiler-plugin using release 21
-  - maven-surefire-plugin version 3.2.5
-  - Spring Boot parent in the 3.2.x line (3.2.10)
+  Java 21 configuration notes:
+
+  - This POM is configured for Java 21 end-to-end.
+  - maven-compiler-plugin is upgraded to 3.13.0 and uses <release>21</release>.
+    This version includes plexus-compiler-javac with Java 21 support.
+  - maven-surefire-plugin is pinned to 3.2.5 to ensure JUnit 5 tests run correctly on Java 21.
+  - maven-toolchains-plugin is configured to require a JDK 21 toolchain.
+    IMPORTANT: The build agent must provide a ~/.m2/toolchains.xml that declares
+    a JDK with <version>21</version> and any vendor. For example:
+
+    <toolchains>
+      <toolchain>
+        <type>jdk</type>
+        <provides>
+          <version>21</version>
+          <vendor>any</vendor>
+        </provides>
+        <configuration>
+          <jdkHome>/path/to/jdk-21</jdkHome>
+        </configuration>
+      </toolchain>
+    </toolchains>
+
+  - No other plugin, profile, or property in this POM sets source/target to a
+    lower Java version, so there should be no conflicts with Java 21.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -33,6 +53,7 @@
     <java.version>21</java.version>
 
     <!-- Maven compiler properties aligned with Java 21 -->
+    <!-- Kept for clarity; effective compilation is driven by maven-compiler-plugin <release>21</release> -->
     <maven.compiler.release>21</maven.compiler.release>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
@@ -140,15 +161,42 @@
     </resources>
 
     <plugins>
-      <!-- Java compilation configured for Java 21 -->
+      <!-- Java compilation configured for Java 21.
+           This plugin version bundles plexus-compiler-javac with Java 21 support. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
+          <!-- Use Java 21 language level and standard library APIs -->
           <release>21</release>
           <encoding>${project.build.sourceEncoding}</encoding>
           <parameters>${maven.compiler.parameters}</parameters>
+        </configuration>
+      </plugin>
+
+      <!-- Java 21 toolchain selection.
+           The build agent MUST provide a ~/.m2/toolchains.xml with a JDK 21 entry.
+           Vendor is set to "any" so any JDK distribution with version 21 qualifies. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>select-jdk-21</id>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>21</version>
+              <vendor>any</vendor>
+            </jdk>
+          </toolchains>
         </configuration>
       </plugin>
 
@@ -161,7 +209,8 @@
   </build>
 
   <profiles>
-    <!-- Profile to run only the endpoint probe integration test -->
+    <!-- Profile to run only the endpoint probe integration test.
+         This profile does NOT override Java version or compiler settings. -->
     <profile>
       <id>endpoint-checks</id>
       <activation>
