@@ -33,14 +33,15 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Global Java version used across the project -->
+    <!-- Global Java version used across the project.
+         NOTE: The Maven build requires running on a JVM/JDK 21+ runtime;
+         older JDKs (e.g., 17 or below) will fail with "release version 21 not supported". -->
     <java.version>21</java.version>
 
     <!-- Compiler properties aligned with Java 21.
-         Effective behavior is driven by maven-compiler-plugin <release>21</release>. -->
+         Effective behavior is driven by maven-compiler-plugin <release>21</release>.
+         Avoid configuring conflicting <maven.compiler.source>/<maven.compiler.target> when using release. -->
     <maven.compiler.release>21</maven.compiler.release>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
 
     <!-- Keep parameter metadata for reflection / Spring MVC -->
     <maven.compiler.parameters>true</maven.compiler.parameters>
