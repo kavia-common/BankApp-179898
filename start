@@ -4,7 +4,6 @@
 # Summary:
 #   Invokes Maven Wrapper to run the Spring Boot app on $PORT or 3001, bound to 0.0.0.0.
 #   Falls back to "sh mvnw" if execute permission is missing.
-#   If the preview calls "mvn" implicitly, a root-level "mvn" shim proxies to "./mvnw".
 # Usage:
 #   ./start
 #   sh start  # if execute permission is removed by platform

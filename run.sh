@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # PUBLIC_INTERFACE
 # run.sh - Wrapper to run the Spring Boot app using Maven Wrapper.
-# - Uses ./mvnw so no system Maven is required; prefer ./mvnw directly (shim not required).
+# - Uses ./mvnw so no system Maven is required.
 # - Exposes the app on 0.0.0.0:$PORT (default 3001) for preview environments.
 # Usage:
 #   ./run.sh                       -> run with ./mvnw

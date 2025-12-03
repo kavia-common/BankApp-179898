@@ -1,14 +1,14 @@
 # Build and Run Notes
 
-These notes explain startup from both the repository root and from inside the `BankApp-179898` directory, without relying on `cd BankApp-179898` in any preview configuration.
+These notes explain startup from the repository root, avoiding any `cd BankApp-179898` requirements in preview configuration.
 
-- From repository root:
+- From repository root (preferred):
   - Unix/macOS: `./start`
-  - Windows (PowerShell/CMD): `pushd BankApp-179898 && mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
+  - Or directly: `./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
+  - Windows (PowerShell/CMD): `mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
 
-- From inside BankApp-179898 (preferred in previews):
-  - Procfile: `web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
-  - Shell: `./start` or `./start.sh` or `./run.sh`
+- Procfile (for platforms that honor Procfile):
+  - `web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
 
 The app binds to 0.0.0.0 on port 3001 (or $PORT if provided) and uses context path `/bank-api`.
 

@@ -1,9 +1,8 @@
 # Changelog
 
 ## [Unreleased]
-- Add dev-only SecurityFilterChain (profile=dev) that permits all endpoints and disables CSRF/frame options.
-- Scope existing secure chain to non-dev via @Profile("!dev").
-- Add application-dev.yml and README instructions for running with dev profile. – Java 21 / Spring Boot 3.2 Migration
+- Start/preview alignment: Standardize canonical start command to run from repository root without any `cd` logic:
+  `./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
 
 ## Purpose
 
@@ -45,7 +44,7 @@ This changelog records key changes made during the migration of the BankApp back
     - `/swagger-ui/**`
     - `/swagger-ui.html`
     - `/h2-console/**`
-  - HTTP Basic authentication required for business endpoints.
+  - HTTP Basic authentication may be disabled in dev; re-enable for production as necessary.
   - CSRF disabled and frame options turned off for H2 console.
 
 #### OpenAPI
@@ -85,11 +84,11 @@ This changelog records key changes made during the migration of the BankApp back
 - Runtime smoke tests (with app running):
 
   ```bash
-  curl -i http://localhost:8989/bank-api/healthz
-  curl -i http://localhost:8989/bank-api/actuator/health
-  curl -i http://localhost:8989/bank-api/v3/api-docs
-  curl -i http://localhost:8989/bank-api/swagger-ui/index.html
-  curl -i http://localhost:8989/bank-api/h2-console
+  curl -i http://localhost:3001/bank-api/healthz
+  curl -i http://localhost:3001/bank-api/actuator/health
+  curl -i http://localhost:3001/bank-api/v3/api-docs
+  curl -i http://localhost:3001/bank-api/swagger-ui/index.html
+  curl -i http://localhost:3001/bank-api/h2-console
   ```
 
 ### Manual Review Notes

@@ -34,4 +34,4 @@ run-ctx:
 # start: Canonical start for previews that call 'make start'
 # Usage: make start
 start:
-	./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments="--server.port=$${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
+	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=$${PORT:-3001} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"

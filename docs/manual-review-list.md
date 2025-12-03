@@ -55,7 +55,7 @@ Build requires Java 21. Older environments will fail with compilation errors.
 
 **Description:**
 
-Explicit JAXB and springdoc dependencies have been added. While no conflicts are visible in this repository, future changes could introduce duplicate or incompatible versions.
+Explicit JAXB and springdoc dependencies are included. Future changes could introduce duplicate or incompatible versions.
 
 **Review Actions:**
 
@@ -91,7 +91,7 @@ Current codebase does not contain `javax.*` imports. All JPA entities already us
 
 ## Items Requiring No Special Manual Review
 
-- There are no automated `javax`→`jakarta` conversions performed in this migration, so no `// MANUAL REVIEW REQUIRED` markers are present in the codebase for that concern.
+- No automated `javax`→`jakarta` conversions were required in this iteration.
 - No complex refactoring was applied to business logic; changes are localized to configuration and build files.
 
 ## How to Update This Document

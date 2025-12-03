@@ -111,7 +111,7 @@ curl -i http://localhost:3001/bank-api/v3/api-docs
 curl -i http://localhost:3001/bank-api/swagger-ui/index.html
 curl -i http://localhost:3001/bank-api/h2-console
 
-# 4) Verify business endpoints are public (example)
+# 4) Verify business endpoints
 curl -i http://localhost:3001/bank-api/customers
 ```
 
