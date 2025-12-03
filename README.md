@@ -358,6 +358,23 @@ spring-boot-starter-test
 spring-security-test
 ```
 
+## Public Endpoints (no authentication)
+
+With server.servlet.context-path=/bank-api, the following endpoints are accessible without credentials:
+- /bank-api/healthz
+- /bank-api/actuator/health
+- /bank-api/v3/api-docs/**
+- /bank-api/swagger-ui/**
+- /bank-api/swagger-ui.html
+- /bank-api/h2-console/**
+
+Quick verification (no auth expected):
+curl -i http://localhost:3001/bank-api/healthz
+curl -i http://localhost:3001/bank-api/actuator/health
+curl -i http://localhost:3001/bank-api/v3/api-docs
+curl -i http://localhost:3001/bank-api/swagger-ui/index.html
+curl -i http://localhost:3001/bank-api/h2-console
+
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi (Springfox removed). Access via:

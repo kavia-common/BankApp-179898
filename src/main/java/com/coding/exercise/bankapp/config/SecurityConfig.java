@@ -28,7 +28,8 @@ import org.springframework.security.web.SecurityFilterChain;
  * <p>
  * Note: The application servlet context path is configured as {@code /bank-api}, so the
  * externally visible URLs are prefixed accordingly (for example,
- * {@code /bank-api/healthz}, {@code /bank-api/h2-console}).
+ * {@code /bank-api/healthz}, {@code /bank-api/h2-console}). The requestMatchers below are
+ * declared without the context-path; Spring matches them relative to the application context.
  */
 @Configuration
 @EnableWebSecurity
