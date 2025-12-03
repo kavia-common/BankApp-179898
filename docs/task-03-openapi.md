@@ -146,3 +146,39 @@ Be aware that rolling back may affect existing automated checks that rely on `/b
 - Confirm that any external integrations (documentation portals, API gateways, developer portals) that relied on earlier Swagger endpoints are updated to the new `springdoc-openapi` paths.
 - Review API metadata (title, description, version) in `OpenApiConfig` and adjust to match your release naming and versioning strategy.
 - If you need environment-specific server URLs (for example, full hostnames), consider using `springdoc` properties or additional `@Server` entries, but ensure they stay synchronized with reverse proxy configuration.
+
+## Reverse Proxy / Nginx Notes
+
+When running behind a reverse proxy (e.g. nginx) with the external path `/bank-api`:
+
+- The Spring Boot app itself is already configured with:
+  - `server.servlet.context-path=/bank-api`
+  - Swagger UI at: `GET /bank-api/swagger-ui/index.html` (and legacy `GET /bank-api/swagger-ui.html`)
+  - OpenAPI JSON at: `GET /bank-api/v3/api-docs`
+- `SecurityConfig` permits these endpoints without authentication.
+
+If you observe that:
+
+- `GET /bank-api/healthz` -> 200
+- `GET /bank-api/v3/api-docs` -> 200
+- but `GET /bank-api/swagger-ui/index.html` -> **502 Bad Gateway** via nginx
+
+then the backend application is healthy, and the problem is almost certainly a **proxy path/rewrite issue** for `/bank-api/swagger-ui/**`.
+
+To avoid this:
+
+- Ensure that `/bank-api/swagger-ui/` is forwarded to the same upstream application as `/bank-api/healthz` and `/bank-api/v3/api-docs`.
+- Do **not** add an extra rewrite that strips or duplicates `/bank-api` only for swagger paths.
+- Prefer a simple location mapping, for example (illustrative only):
+
+  ```nginx
+  location /bank-api/ {
+      proxy_pass http://bankapp_upstream;
+      # or, if you intentionally strip the prefix, make sure the app runs with context-path "/"
+      # and update application.yml accordingly.
+  }
+  ```
+
+- Avoid separate `location /swagger-ui/` blocks that point somewhere else or rewrite the path differently, as that can cause `/bank-api/swagger-ui/index.html` to fail while `/bank-api/v3/api-docs` still works.
+
+With the current Spring Boot and springdoc configuration in this project, **no additional Java code or Spring configuration is required** for Swagger UI to work. Fixing the nginx location / rewrite rules so that `/bank-api/swagger-ui/**` is treated the same as other `/bank-api/**` paths will resolve the 502 error.
