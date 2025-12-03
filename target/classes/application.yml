@@ -30,8 +30,14 @@ spring:
 
 # Swagger UI (springdoc)
 # - UI (canonical): /bank-api/swagger-ui/index.html
-#   (note: /bank-api/swagger-ui.html redirects to the UI)
-# - OpenAPI:   /bank-api/v3/api-docs
-# H2 console:  /bank-api/h2-console (context path applied)
+# - Shorthand:      /bank-api/swagger-ui  (redirects to /bank-api/swagger-ui/index.html)
+# - OpenAPI JSON:   /bank-api/v3/api-docs
+# H2 console:       /bank-api/h2-console (context path applied)
 # SecurityFilterChain permits:
 # - /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html, /h2-console/**
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    # Ensure /swagger-ui resolves and redirects to /swagger-ui/index.html to avoid 404 "No static resource swagger-ui"
+    path: /swagger-ui

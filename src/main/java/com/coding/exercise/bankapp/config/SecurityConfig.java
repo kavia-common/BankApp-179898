@@ -1,5 +1,6 @@
 package com.coding.exercise.bankapp.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,56 +8,74 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 /**
- * Spring Security configuration to allow anonymous access across the application.
+ * Spring Security configuration for BankApp.
  *
- * Key points:
- * - All endpoints are accessible without authentication (permitAll).
- * - HTTP Basic and form login are explicitly disabled to prevent auth prompts.
- * - CSRF is disabled to allow non-browser/API clients to POST/PUT/DELETE without tokens.
- * - Frame options are disabled to allow the H2 console to render in an iframe.
+ * Summary of policy:
+ * - Permit access to Swagger UI, OpenAPI docs, Actuator health, H2 console, and static resources.
+ * - Disable CSRF (API-centric usage) and frame options (required for H2 console rendering).
+ * - Disable form login and HTTP Basic to avoid login prompts.
  *
- * Swagger/OpenAPI and static resources are explicitly permitted:
- * - /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
- * - /h2-console/** (for H2 console)
- * - Static assets like JS/CSS/images and index.html
+ * Important: Patterns use MVC-based request matching tied to Spring's PathPattern syntax,
+ * avoiding invalid ant-style patterns such as "/**/*.css" or "/**/swagger-ui/**".
+ * We rely on PathRequest for static assets and H2 console matching to ensure correctness.
  *
- * With server.servlet.context-path=/bank-api, routes will be served under /bank-api/**,
- * and this configuration applies to all of them.
+ * Context path:
+ * - The application runs under server.servlet.context-path=/bank-api.
+ * - MVC matchers here are written WITHOUT "/bank-api" since the context-path is applied automatically.
+ *   For example, external "/bank-api/swagger-ui" is matched with mvc.pattern("/swagger-ui").
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     // PUBLIC_INTERFACE
+    /**
+     * Configure the Spring Security filter chain.
+     *
+     * @param http           the HTTP security builder
+     * @param introspector   Spring MVC HandlerMappingIntrospector used by MvcRequestMatcher
+     * @return the configured SecurityFilterChain
+     * @throws Exception on configuration errors
+     */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        // Use MVC matchers so patterns align with Spring MVC PathPattern rules.
+        // Do NOT use ant-style patterns like "/**/*.css" which are invalid with PathPattern.
+        MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
+
         http
-            // Allow frames for H2 console rendering
+            // Allow frames to enable H2 console UI
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            // Disable CSRF (suitable for stateless APIs and for allowing H2 console interaction)
+            // Disable CSRF for API style interactions and H2 console convenience
             .csrf(AbstractHttpConfigurer::disable)
-            // Explicitly permit Swagger UI, OpenAPI, H2 console, actuator, and static resources.
             .authorizeHttpRequests(auth -> auth
+                // Static resources at common locations (e.g., /css/**, /js/**, /images/**)
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                // H2 console under /h2-console/**
+                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                // OpenAPI / Swagger UI (external paths include /bank-api prefix due to context-path)
                 .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/h2-console/**",
-                    "/actuator/**",
-                    "/",
-                    "/index.html",
-                    "/*.css", "/**/*.css",
-                    "/*.js", "/**/*.js",
-                    "/*.png", "/**/*.png",
-                    "/*.svg", "/**/*.svg",
-                    "/*.ico", "/**/*.ico"
+                    mvc.pattern("/v3/api-docs"),
+                    mvc.pattern("/v3/api-docs/**"),
+                    mvc.pattern("/swagger-ui"),
+                    mvc.pattern("/swagger-ui/**"),
+                    mvc.pattern("/swagger-ui.html")
                 ).permitAll()
-                // Current policy: all requests are permitted to simplify development/testing.
+                // Actuator health endpoint (external: /bank-api/actuator/health)
+                .requestMatchers(mvc.pattern("/actuator/health")).permitAll()
+                // Root and index page (if served)
+                .requestMatchers(
+                    mvc.pattern("/"),
+                    mvc.pattern("/index.html")
+                ).permitAll()
+                // Current policy: allow all other requests (aligns with tests and dev convenience)
                 .anyRequest().permitAll()
             )
-            // Explicitly disable basic and form-based authentication to avoid any login prompts
+            // Avoid any auth prompts
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable);
 
