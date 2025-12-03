@@ -108,7 +108,9 @@ sh mvnw -q -DskipTests clean install
 curl -i http://localhost:3001/bank-api/healthz
 curl -i http://localhost:3001/bank-api/actuator/health
 curl -i http://localhost:3001/bank-api/v3/api-docs
-curl -i http://localhost:3001/bank-api/swagger-ui/index.html
+# Either of the following should work for Swagger UI:
+curl -iL http://localhost:3001/bank-api/swagger-ui
+curl -iL http://localhost:3001/bank-api/swagger-ui/index.html
 curl -i http://localhost:3001/bank-api/h2-console
 
 # 4) Verify business endpoints
@@ -125,14 +127,16 @@ curl -i http://localhost:3001/bank-api/customers
 
 ## Swagger (OpenAPI)
 
-The API documentation is provided by springdoc-openapi. Access via:
-- http://localhost:3001/bank-api/ (automatically redirects to the Swagger UI)
-- http://localhost:3001/bank-api/swagger-ui/index.html
+The API documentation is provided by springdoc-openapi (starter-webmvc-ui 2.x). Access via:
+- Swagger UI (preferred): http://localhost:3001/bank-api/swagger-ui
+  - Redirects to: http://localhost:3001/bank-api/swagger-ui/index.html (canonical UI)
+- Legacy entry: http://localhost:3001/bank-api/swagger-ui.html (redirects to the canonical UI)
 - OpenAPI JSON: http://localhost:3001/bank-api/v3/api-docs
 
-Note: http://localhost:3001/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
-A lightweight MVC controller is registered to redirect requests for the servlet context root (`/bank-api` and `/bank-api/`)
-to `/bank-api/swagger-ui/index.html`, preserving the configured `server.servlet.context-path`.
+Note:
+- The application context-path is `/bank-api`, so all endpoints are served under that base.
+- We explicitly configure `springdoc.swagger-ui.path=/swagger-ui` so the shorter `/bank-api/swagger-ui` URL works (no 404).
+- A helper route `/bank-api/home` redirects to `/bank-api/swagger-ui/index.html`.
 
 Current security note: All endpoints, including Swagger UI and the OpenAPI JSON, are public. HTTP Basic is disabled globally for now. CSRF is disabled and frame options are turned off for the H2 console.
 

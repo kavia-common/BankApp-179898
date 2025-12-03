@@ -14,8 +14,9 @@ public class HomeController {
 
     // PUBLIC_INTERFACE
     @GetMapping("/home")
-    /** This helper endpoint forwards to Swagger UI as a convenience. */
+    /** This helper endpoint redirects to Swagger UI as a convenience. */
     public String homeFallback() {
-        return "forward:/bank-api/swagger-ui";
+        // Use redirect (not forward) and avoid including context-path; Spring adds it automatically.
+        return "redirect:/swagger-ui/index.html";
     }
 }
