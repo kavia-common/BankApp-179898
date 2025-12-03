@@ -18,13 +18,10 @@
   <description>Bank App Spring Boot Project</description>
 
   <properties>
-    <!-- Default compilation targets Java 17 (minimum supported by Spring Boot 3.x)
-         so that builds succeed even when a Java 21 JDK is not available.
-         A dedicated 'java21' profile restores release=21 compilation only when
-         explicitly enabled via -Pjava21 (optionally with -Pwith-toolchain). -->
-    <java.version>17</java.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <!-- Compile with Java 21 by default (Spring Boot 3.x supports 17+, project targets 21) -->
+    <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
