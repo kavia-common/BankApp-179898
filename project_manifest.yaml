@@ -8,7 +8,7 @@ overview:
   description: RESTful Spring Boot banking API providing customer, account, and transaction management backed by an in-memory H2 database.
   third_party_services:
     - H2 Database
-    - springfox-swagger (swagger-ui)
+    - springdoc-openapi (swagger-ui)
 
 env:
   TRUST_PROXY: 'true'
@@ -23,16 +23,15 @@ env:
   ALLOWED_HEADERS: Content-Type,Authorization,X-Requested-With
   ALLOWED_METHODS: GET,POST,PUT,DELETE,PATCH,OPTIONS
   CORS_MAX_AGE: '3600'
-  COOKIE_DOMAIN: .vscode-internal-24402-beta.beta01.cloud.kavia.ai
   HOST: 0.0.0.0
   PORT: '3001'
 
 containers:
   - container_name: BankApp-179898
-    description: Spring Boot backend for customers, accounts, transactions, transfers with H2.
+    description: Spring Boot backend for customers, accounts with H2 and OpenAPI UI.
     interfaces:
       - HTTP (REST API)
-      - Swagger UI (springfox)
+      - Swagger UI (springdoc-openapi)
     container_type: backend
     dependent_containers: []
     workspace: BankApp-179898
@@ -48,10 +47,10 @@ containers:
       - /bank-api
       - /bank-api/customers
       - /bank-api/accounts
-      - /bank-api/transactions
-      - /bank-api/transfers
-      - /bank-api/swagger-ui.html
+      - /bank-api/v3/api-docs
+      - /bank-api/swagger-ui/index.html
       - /bank-api/h2-console
+      - /bank-api/healthz
       - /bank-api/actuator/health
     container_details:
       features:
@@ -60,4 +59,4 @@ containers:
         - Internal fund transfers between a customer’s accounts with transactional integrity.
         - In-memory H2 database with web console for easy inspection during development.
         - HTTP Basic authentication using Spring Security compatible with Spring Boot 2.x (Spring Security 5). Swagger and H2 console are whitelisted in security config.
-        - Auto-generated Swagger UI via springfox (swagger-ui.html).
+        - Auto-generated OpenAPI/Swagger UI via springdoc-openapi.
