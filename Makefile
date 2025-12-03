@@ -13,16 +13,16 @@ build-shim:
 	./mvn -q -DskipTests clean package
 
 # PUBLIC_INTERFACE
-# run: Starts the Spring Boot app on port 3001 bound to 0.0.0.0 using the Maven Wrapper.
+# run: Starts the Spring Boot app on port 3001 bound to 0.0.0.0 using the Maven Wrapper, with context path /bank-api.
 # Usage: make run
 run:
-	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+	./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
 # PUBLIC_INTERFACE
 # run-sh: Same as run, but invokes the wrapper via 'sh' for environments without execute permission.
 # Usage: make run-sh
 run-sh:
-	sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+	sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 
 # PUBLIC_INTERFACE
 # run-ctx: Run with explicit context-path and port (helpful for verifying quoting of multiple Spring args).
