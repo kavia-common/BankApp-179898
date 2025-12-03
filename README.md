@@ -392,10 +392,13 @@ curl -i http://localhost:3001/bank-api/customers
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi. Access via:
+- http://localhost:3001/bank-api/ (automatically redirects to the Swagger UI)
 - http://localhost:3001/bank-api/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:3001/bank-api/v3/api-docs
 
 Note: http://localhost:3001/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
+A lightweight MVC controller is registered to redirect requests for the servlet context root (`/bank-api` and `/bank-api/`)
+to `/bank-api/swagger-ui/index.html`, preserving the configured `server.servlet.context-path`.
 
 Current security note: All endpoints, including Swagger UI and the OpenAPI JSON, are public. HTTP Basic is disabled globally for now. CSRF is disabled and frame options are turned off for the H2 console.
 
