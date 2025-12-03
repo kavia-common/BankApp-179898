@@ -36,6 +36,10 @@ https://projectlombok.org/setup/eclipse
 
 4. Build and Run without system Maven
 
+Default runtime:
+- Port: 3001
+- Context path: /bank-api
+
 Build:
 ```
 # Preferred: Maven Wrapper
@@ -86,17 +90,19 @@ On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 
 Verification commands (ensure these succeed from the project root):
 ```
-# 1) Build/install
-mvn clean install
+# 1) Build/install (prefer Maven Wrapper)
+./mvnw -q -DskipTests clean install
+# If execute permission is blocked:
+sh mvnw -q -DskipTests clean install
 
-# 2) Run with defaults from application.yml
-mvn spring-boot:run
+# 2) Run with defaults from application.yml (port 3001, context-path /bank-api)
+./mvnw spring-boot:run
 
 # 3) Run with explicit port and context-path (overrides application.yml)
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
 
 # 4) Run with explicit port, bind address, and context-path
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 ```
 
 5. Default port for the API (and the default container) is 3001, as configured in `src/main/resources/application.yml`
