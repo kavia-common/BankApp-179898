@@ -78,6 +78,24 @@ make run
 web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
 ```
 
+Dev profile (temporary, unauthenticated endpoints for convenience):
+```
+# Run with 'dev' Spring profile to DISABLE authentication on all endpoints.
+# WARNING: DEV ONLY. Do not use in production.
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+
+# Equivalent when running the jar:
+java -jar target/bank-app-*.jar --spring.profiles.active=dev
+```
+
+When running with profile=dev:
+- All endpoints under /bank-api/** are accessible without authentication.
+- CSRF is disabled and frame options are disabled to allow H2 console usage.
+- Swagger UI, OpenAPI docs, H2 console, Actuator health, and business APIs are reachable without auth.
+
+When running without the dev profile:
+- The default security remains in effect (HTTP Basic for protected endpoints; docs/health/H2 are public).
+
 Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the -Dspring-boot.run.arguments value is quoted as a single string. Do not pass unquoted application args directly to Maven. Correct forms:
 ```
 mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"

@@ -1,4 +1,9 @@
-# Changelog – Java 21 / Spring Boot 3.2 Migration
+# Changelog
+
+## [Unreleased]
+- Add dev-only SecurityFilterChain (profile=dev) that permits all endpoints and disables CSRF/frame options.
+- Scope existing secure chain to non-dev via @Profile("!dev").
+- Add application-dev.yml and README instructions for running with dev profile. – Java 21 / Spring Boot 3.2 Migration
 
 ## Purpose
 

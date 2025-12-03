@@ -2,34 +2,22 @@ package com.coding.exercise.bankapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Spring Security 6 configuration using {@link SecurityFilterChain}.
- * <p>
- * Summary:
- * <ul>
- *   <li>Uses {@code authorizeHttpRequests} with {@code requestMatchers} (replaces deprecated antMatchers).</li>
- *   <li>Permits unauthenticated access to:
- *     <ul>
- *       <li>OpenAPI/Swagger endpoints: {@code /v3/api-docs/**}, {@code /swagger-ui/**}
- *           (canonical UI at {@code /swagger-ui/index.html}, with {@code /swagger-ui.html} redirect support)</li>
- *       <li>H2 console: {@code /h2-console/**}</li>
- *       <li>Health endpoints: {@code /healthz}, {@code /actuator/health}</li>
- *     </ul>
- *   </li>
- *   <li>Disables CSRF and frame options (required for H2 console).</li>
- *   <li>Enables HTTP Basic for all other protected endpoints.</li>
- * </ul>
- * <p>
- * Note: The application servlet context path is configured as {@code /bank-api}, so the
- * externally visible URLs are prefixed accordingly (for example,
- * {@code /bank-api/healthz}, {@code /bank-api/h2-console}). The requestMatchers below are
- * declared without the context-path; Spring matches them relative to the application context.
+ *
+ * This class defines two filter chains:
+ * - A DEV-ONLY open chain (active when profile = 'dev') that makes ALL endpoints public.
+ * - A secure chain (active when profile != 'dev') that keeps HTTP Basic for protected APIs
+ *   and allows unauthenticated access only to docs, health, and H2 console.
+ *
+ * Note: Matchers are defined relative to the servlet context path (/bank-api).
  */
 @Configuration
 @EnableWebSecurity
@@ -37,11 +25,38 @@ public class SecurityConfig {
 
     // PUBLIC_INTERFACE
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Profile("dev")
+    public SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
+        /*
+         * DEV ONLY: All endpoints are public
+         * - CSRF disabled for convenience with tools and H2 console
+         * - Frame options disabled to allow H2 console rendering
+         * - Any request is permitted without authentication
+         *
+         * IMPORTANT: This configuration is scoped to the 'dev' profile only.
+         * Do not enable in production environments.
+         */
         http
-            // CSRF is disabled to simplify API interactions and allow H2 console to work with POSTs
             .csrf(csrf -> csrf.disable())
-            // H2 console requires frames
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            // Intentionally do NOT configure httpBasic in dev
+
+        return http.build();
+    }
+
+    // PUBLIC_INTERFACE
+    @Bean
+    @Profile("!dev")
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        /*
+         * Non-dev (default/production-like) security:
+         * - Permit Swagger/OpenAPI, health, and H2 console
+         * - Require authentication for all other endpoints
+         * - Keep HTTP Basic for simplicity
+         */
+        http
+            .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
@@ -57,7 +72,6 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
             )
-            // Keep HTTP Basic for simplicity
             .httpBasic(Customizer.withDefaults());
 
         return http.build();

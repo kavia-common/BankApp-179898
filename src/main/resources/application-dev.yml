@@ -1,0 +1,23 @@
+# Development profile overrides for BankApp
+# DEV ONLY: All endpoints are public when running with `--spring.profiles.active=dev`
+# Usage:
+#   ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+# or:
+#   java -jar target/bank-app-*.jar --spring.profiles.active=dev
+#
+# Notes:
+# - CSRF is disabled and frame options are disabled in the dev SecurityFilterChain.
+# - H2 console is enabled by default via application.yml; available at /bank-api/h2-console.
+# - Context path and port mirror the base configuration for consistency.
+
+server:
+  port: 3001
+  servlet:
+    context-path: /bank-api
+
+spring:
+  # You can set additional dev-only settings here if needed.
+  # Do NOT set spring.profiles.active here to avoid globally forcing 'dev' on all environments.
+  # Activate via CLI flag instead.
+  main:
+    banner-mode: console
