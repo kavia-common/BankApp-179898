@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BankApp API - Landing Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --muted: #94a3b8;
+            --text: #e5e7eb;
+            --link: #60a5fa;
+            --link-hover: #93c5fd;
+            --accent: #34d399;
+            --border: #1f2937;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: radial-gradient(1200px 700px at 80% -20%, #1f2937 0, #0b1222 50%, var(--bg) 100%);
+            color: var(--text);
+            line-height: 1.55;
+        }
+        header {
+            padding: 48px 20px 16px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            letter-spacing: 0.3px;
+        }
+        header p {
+            margin: 0;
+            color: var(--muted);
+        }
+        main {
+            max-width: 960px;
+            margin: 24px auto 64px;
+            padding: 0 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform .12s ease, border-color .12s ease, background .12s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(148, 163, 184, 0.35);
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+        }
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 1.05rem;
+        }
+        .card p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        .links a {
+            display: inline-block;
+            color: var(--link);
+            text-decoration: none;
+            margin-right: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            border-radius: 8px;
+            transition: color .12s ease, border-color .12s ease, background .12s ease;
+        }
+        .links a:hover {
+            color: var(--link-hover);
+            border-color: rgba(148, 163, 184, 0.35);
+            background: rgba(148,163,184,0.06);
+        }
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 24px 16px 40px;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #052e1a;
+            background: linear-gradient(180deg, rgba(52,211,153,0.9), rgba(16,185,129,0.9));
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(16,185,129,0.6);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        code {
+            background: rgba(2,6,23,0.7);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            border-radius: 6px;
+            color: #d1fae5;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>BankApp API <span class="badge">Spring Boot</span></h1>
+    <p>Welcome. Use the links below to explore documentation and REST endpoints.</p>
+</header>
+<main>
+    <section class="grid" aria-label="Quick Links">
+        <div class="card">
+            <h3>API Documentation</h3>
+            <p>Interactive Swagger UI and raw OpenAPI JSON.</p>
+            <div class="links">
+                <a href="/bank-api/swagger-ui" rel="noopener">Swagger UI</a>
+                <a href="/v3/api-docs" rel="noopener">OpenAPI JSON</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Database Console</h3>
+            <p>H2 web console (if enabled). Use configured JDBC URL.</p>
+            <div class="links">
+                <a href="/h2-console" rel="noopener">H2 Console</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Core Endpoints</h3>
+            <p>Primary REST resources for the banking API.</p>
+            <div class="links">
+                <a href="/bank-api/api/customers">/api/customers</a>
+                <a href="/bank-api/api/accounts">/api/accounts</a>
+                <a href="/bank-api/api/transactions">/api/transactions</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Health</h3>
+            <p>Actuator health check for runtime diagnostics.</p>
+            <div class="links">
+                <a href="/bank-api/actuator/health">/actuator/health</a>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-top: 24px;" class="card" aria-label="Usage Notes">
+        <h3>Usage Notes</h3>
+        <p>
+            Base context path: <code>/bank-api</code>. Static landing page is available at <code>/</code>.
+            Depending on security, some endpoints may require authentication (HTTP Basic).
+        </p>
+    </section>
+</main>
+<footer>
+    <span>&copy; 2025 BankApp API. All rights reserved.</span>
+</footer>
+</body>
+</html>
