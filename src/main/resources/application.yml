@@ -19,6 +19,14 @@ spring:
   #   driverClassName: org.h2.Driver
   #   username: sa
   #   password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
 # Swagger UI (springdoc)
 # - UI (canonical): /bank-api/swagger-ui/index.html
