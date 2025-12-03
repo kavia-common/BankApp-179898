@@ -1,6 +1,13 @@
 # Banking Application using Java 17+ (Java 21-ready), Spring Boot 3, Spring Security 6, and H2 DB
 
-RESTful API to simulate simple banking operations. 
+RESTful API to simulate simple banking operations.
+
+IMPORTANT (temporary): Authentication is fully disabled globally
+- All endpoints under /bank-api/** are publicly accessible without credentials.
+- HTTP Basic authentication is disabled.
+- CSRF protection is disabled.
+- Frame options are disabled so the H2 console renders in a browser.
+This is intentional for a temporary period to simplify testing and debugging.
 
 ## Requirements
 
@@ -8,23 +15,22 @@ RESTful API to simulate simple banking operations.
 * Support deposits and withdrawals on accounts.
 * Internal transfer support (i.e. a customer may transfer funds from one account to another).
 
-
 ## Getting Started
 
 1. Checkout the project from GitHub
 
 ```
 git clone https://github.com/sbathina/BankApp
-
 ```
+
 2. Enable Lombok support on your IDE
 
 Refer to the following link for instructions:
 
 ```
 https://projectlombok.org/setup/eclipse
-
 ```
+
 3. Open IDE of your choice and Import as existing maven project in your workspace
 
 ```
@@ -78,24 +84,6 @@ make run
 web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
 ```
 
-Dev profile (temporary, unauthenticated endpoints for convenience):
-```
-# Run with 'dev' Spring profile to DISABLE authentication on all endpoints.
-# WARNING: DEV ONLY. Do not use in production.
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-
-# Equivalent when running the jar:
-java -jar target/bank-app-*.jar --spring.profiles.active=dev
-```
-
-When running with profile=dev:
-- All endpoints under /bank-api/** are accessible without authentication.
-- CSRF is disabled and frame options are disabled to allow H2 console usage.
-- Swagger UI, OpenAPI docs, H2 console, Actuator health, and business APIs are reachable without auth.
-
-When running without the dev profile:
-- The default security remains in effect (HTTP Basic for protected endpoints; docs/health/H2 are public).
-
 Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the -Dspring-boot.run.arguments value is quoted as a single string. Do not pass unquoted application args directly to Maven. Correct forms:
 ```
 mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
@@ -103,10 +91,10 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.add
 ```
 On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 ```
--Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0^\"
+-Dspring-boot.run.arguments=^\\"--server.port=%PORT% --server.address=0.0.0.0^\\"
 ```
 
-Verification commands (ensure these succeed from the project root):
+Verification commands (ensure these succeed from the project root and require NO auth):
 ```
 # 1) Build/install (prefer Maven Wrapper)
 ./mvnw -q -DskipTests clean install
@@ -116,15 +104,18 @@ sh mvnw -q -DskipTests clean install
 # 2) Run with defaults from application.yml (port 3001, context-path /bank-api)
 ./mvnw spring-boot:run
 
-# 3) Run with explicit port and context-path (overrides application.yml)
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.servlet.context-path=/bank-api"
+# 3) Verify public endpoints (all should return 200 without credentials)
+curl -i http://localhost:3001/bank-api/healthz
+curl -i http://localhost:3001/bank-api/actuator/health
+curl -i http://localhost:3001/bank-api/v3/api-docs
+curl -i http://localhost:3001/bank-api/swagger-ui/index.html
+curl -i http://localhost:3001/bank-api/h2-console
 
-# 4) Run with explicit port, bind address, and context-path
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
+# 4) Verify business endpoints are public (example)
+curl -i http://localhost:3001/bank-api/customers
 ```
 
 5. Default port for the API (and the default container) is 3001, as configured in `src/main/resources/application.yml`
-
 
 ### Prerequisites
 
@@ -134,12 +125,12 @@ sh mvnw -q -DskipTests clean install
 
 ## Java versions & build profiles
 
-This project uses Spring Boot 3.x and therefore requires **Java 17 or newer**.
+This project uses Spring Boot 3.x and therefore requires Java 17 or newer.
 
 The `pom.xml` is configured with two main build paths:
 
-1. A **default path** that compiles with Java 17 source/target (works on any JDK ≥ 17).
-2. An optional **strict Java 21 path** that compiles with `--release 21` via the `java21` profile,
+1. A default path that compiles with Java 17 source/target (works on any JDK ≥ 17).
+2. An optional strict Java 21 path that compiles with `--release 21` via the `java21` profile,
    optionally combined with the `with-toolchain` profile when using Maven Toolchains.
 
 ### Path A (default): Build with JDK 17+ (no Java 21 required)
@@ -151,9 +142,9 @@ By default, the Maven Compiler Plugin is configured to:
 
 This means:
 
-- You can build the project with **any JDK ≥ 17** (including JDK 21).
+- You can build the project with any JDK ≥ 17 (including JDK 21).
 - No Maven toolchains configuration is required for the default path.
-- You will **not** see `javac: release version 21 not supported` errors on environments that only have JDK 17.
+- You will not see `javac: release version 21 not supported` errors on environments that only have JDK 17.
 
 Typical default builds:
 
@@ -172,9 +163,9 @@ If you are running on JDK 21, the default build still emits Java 17 bytecode for
 When you want to compile the application specifically as Java 21 bytecode (for example, for production),
 enable the `java21` profile. This profile:
 
-- Switches the compiler to **`--release 21`**.
-- Enforces that the JDK resolved by Maven is **Java 21 or newer** via Maven Enforcer.
-- Is **never activated by default**; you must explicitly enable it with `-Pjava21`
+- Switches the compiler to `--release 21`.
+- Enforces that the JDK resolved by Maven is Java 21 or newer via Maven Enforcer.
+- Is never activated by default; you must explicitly enable it with `-Pjava21`
   (optionally combined with `-Pwith-toolchain` when using Maven Toolchains).
 
 Examples (no toolchain, Maven itself on JDK 21+):
@@ -187,7 +178,7 @@ mvn -q -Pjava21 -DskipTests clean package
 ./mvnw -q -Pjava21 -DskipTests clean package
 ```
 
-If you are on **JDK 17** but have a separate **JDK 21** installed, you can use Maven Toolchains and
+If you are on JDK 17 but have a separate JDK 21 installed, you can use Maven Toolchains and
 the `with-toolchain` profile together with `java21`. In this mode Maven may run on JDK 17, but the
 compiler uses a JDK 21 toolchain:
 
@@ -204,7 +195,7 @@ you should expect a clear failure such as:
 
 > `Fatal error compiling: error: release version 21 not supported`
 
-That is intentional: the `java21` path is **strict** and only meant to succeed when a Java 21
+That is intentional: the `java21` path is strict and only meant to succeed when a Java 21
 toolchain or runtime is available.
 
 ### Java 21 toolchains & preflight checks
@@ -212,7 +203,7 @@ toolchain or runtime is available.
 To make the `with-toolchain` + `java21` combination work when Maven itself is running on JDK 17,
 set up a Maven toolchain that points to your JDK 21 installation.
 
-1. Create (or update) your **user-level** toolchains file:
+1. Create (or update) your user-level toolchains file:
 
    * Path: `${user.home}/.m2/toolchains.xml` (for example `~/.m2/toolchains.xml` on Unix-like systems).
 
@@ -251,7 +242,7 @@ set up a Maven toolchain that points to your JDK 21 installation.
    ```
 
    The `with-toolchain` Maven profile is automatically activated when `USE_TOOLCHAIN=true` is present;
-   you do **not** need to pass `-Pwith-toolchain` in that case, but it is harmless if you do.
+   you do not need to pass `-Pwith-toolchain` in that case, but it is harmless if you do.
 
 ### 0. Quick Java 21 preflight
 
@@ -270,7 +261,7 @@ The script checks (in order):
 - and finally `java` from your `PATH`
 
 If any of these point to a Java version lower than 21, the script prints a clear error and exits with
-a non-zero status so CI or preview systems can stop early **for the Java 21 path**.
+a non-zero status so CI or preview systems can stop early for the Java 21 path.
 
 > Tip: On some platforms a variable like `JAVA_TOOLCHAIN_JAVA21_HOME` is already defined; you can align it
 > with the project conventions via:
@@ -288,9 +279,9 @@ java -version
 mvn -version
 ```
 
-For the **default** build path, both commands should report **Java 17 or newer**.
+For the default build path, both commands should report Java 17 or newer.
 
-For the **Java 21** path (`-Pjava21`), ensure that either:
+For the Java 21 path (`-Pjava21`), ensure that either:
 
 - Maven itself is running on Java 21+, or
 - a Java 21 toolchain is configured and the `with-toolchain` profile is active.
@@ -340,7 +331,7 @@ Make sure `JAVA_21_HOME` points at a real JDK 21 install when using the `java21`
 profile combination. Maven’s Toolchains plugin (configured in `pom.xml`) will then pick this JDK for
 compilation.
 
-If your environment does **not** honor project-local toolchains for some reason, you can also configure
+If your environment does not honor project-local toolchains for some reason, you can also configure
 a global `${user.home}/.m2/toolchains.xml` with equivalent content.
 
 ### 3. Useful build commands
@@ -376,40 +367,37 @@ spring-boot-starter-test
 spring-security-test
 ```
 
-## Public Endpoints (no authentication)
+## Endpoint Accessibility (no authentication required)
 
-With server.servlet.context-path=/bank-api, the following endpoints are accessible without credentials:
+With `server.servlet.context-path=/bank-api`, ALL endpoints are accessible without credentials while authentication is disabled:
+
 - /bank-api/healthz
 - /bank-api/actuator/health
 - /bank-api/v3/api-docs/**
 - /bank-api/swagger-ui/**
 - /bank-api/swagger-ui.html
 - /bank-api/h2-console/**
+- Business APIs (e.g., /bank-api/customers, /bank-api/accounts, etc.)
 
 Quick verification (no auth expected):
+```
 curl -i http://localhost:3001/bank-api/healthz
 curl -i http://localhost:3001/bank-api/actuator/health
 curl -i http://localhost:3001/bank-api/v3/api-docs
 curl -i http://localhost:3001/bank-api/swagger-ui/index.html
 curl -i http://localhost:3001/bank-api/h2-console
+curl -i http://localhost:3001/bank-api/customers
+```
 
 ## Swagger (OpenAPI)
 
-The API documentation is provided by springdoc-openapi (Springfox removed). Access via:
+The API documentation is provided by springdoc-openapi. Access via:
 - http://localhost:3001/bank-api/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:3001/bank-api/v3/api-docs
 
 Note: http://localhost:3001/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
 
-Security configuration (Spring Security 6) permits these paths without authentication and uses HTTP Basic for protected endpoints. CSRF is disabled and frame options are turned off for the H2 console.
-
-Allowed without authentication (Boot 3/Security 6):
-- /bank-api/healthz (lightweight JSON health probe)
-- /bank-api/actuator/health (Spring Boot Actuator health endpoint)
-- /bank-api/v3/api-docs/**
-- /bank-api/swagger-ui/** (canonical UI at /bank-api/swagger-ui/index.html)
-- /bank-api/h2-console/**
-Note: Security config uses requestMatchers for these paths (plus `/swagger-ui.html` redirect support) and enables HTTP Basic for other business APIs.
+Current security note: All endpoints, including Swagger UI and the OpenAPI JSON, are public. HTTP Basic is disabled globally for now. CSRF is disabled and frame options are turned off for the H2 console.
 
 ## H2 In-Memory Database
 
@@ -434,7 +422,7 @@ spring:
 
 Notes on migration:
 - javax.* packages migrated to jakarta.* (JPA).
-- Spring Security migrated to SecurityFilterChain + requestMatchers.
+- Spring Security migrated to SecurityFilterChain + requestMatchers (now globally open).
 - Springfox removed; springdoc-openapi-starter-webmvc-ui added.
 
 ## Endpoint Verification
@@ -464,16 +452,15 @@ Both options perform HTTP GET requests (no authentication headers) and verify:
 
 - `/healthz` responds with HTTP 200 and `{"status":"ok"}`.
 - `/actuator/health` responds with HTTP 200 and a JSON `status` field (typically `UP`).
-- `/v3/api-docs` responds with HTTP 200 and an `openapi` field when using springdoc-openapi (or is skipped gracefully if only Swagger 2.x is present).
+- `/v3/api-docs` responds with HTTP 200 and an `openapi` field when using springdoc-openapi.
 - `/swagger-ui.html` serves the Swagger UI (following redirects to `/swagger-ui/index.html` if necessary).
 - `/h2-console` is reachable (HTTP 200 after following redirects, and contains `H2 Console` in the HTML).
 
 ## Testing the Bank APP Rest Api
 
-1. Please use the Swagger url to perform CRUD operations. 
+1. Please use the Swagger url to perform CRUD operations.
 
 2. Browse to <project-root>/src/test/resources to find sample requests to add customer and accounts.
-
 
 ## Authors
 
