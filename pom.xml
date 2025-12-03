@@ -2,11 +2,11 @@
 <!--
   BankApp - Spring Boot REST API backed by H2.
 
-  Java 21 configuration notes:
-  * This POM is configured to compile and run on Java 21.
-  * The maven-compiler-plugin is configured with release 21.
-  * Surefire is pinned to a Java 21 compatible version (3.2.5).
-  * Spring Boot parent remains in the 3.2.x line (3.2.10).
+  Java 21 configuration:
+  This POM is configured for Java 21 with:
+  - maven-compiler-plugin using release 21
+  - maven-surefire-plugin version 3.2.5
+  - Spring Boot parent in the 3.2.x line (3.2.10)
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
