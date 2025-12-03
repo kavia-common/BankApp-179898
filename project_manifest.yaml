@@ -52,6 +52,13 @@ containers:
       - /bank-api/h2-console
       - /bank-api/healthz
       - /bank-api/actuator/health
+    routes_detailed:
+      - path: /bank-api/healthz
+        endpoint: Liveness/health endpoint (HealthController)
+      - path: /bank-api/actuator/health
+        endpoint: Spring Boot Actuator health endpoint
+      - path: /bank-api/swagger-ui/index.html
+        endpoint: Swagger UI
     container_details:
       features:
         - CRUD operations for customers including personal and contact details management.
