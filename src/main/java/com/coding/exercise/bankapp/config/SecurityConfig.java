@@ -20,7 +20,8 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
  * - Disable form login and HTTP Basic to avoid login prompts.
  *
  * Important: Patterns use MVC-based request matching tied to Spring's PathPattern syntax,
- * avoiding invalid ant-style patterns such as "/**/*.css" or "/**/swagger-ui/**".
+ * avoiding invalid ant-style patterns such as "/**&#47;*.css" or "/**&#47;swagger-ui/**".
+ * (Note: encoded '/' as '&#47;' to avoid prematurely closing this block comment.)
  * We rely on PathRequest for static assets and H2 console matching to ensure correctness.
  *
  * Context path:
