@@ -82,6 +82,54 @@ do_request() {
   CURL_STATUS="$status"
 }
 
+# Verifies: GET /customers returns 200 and a non-empty JSON array.
+check_customers() {
+  local url="${BASE_URL}/customers"
+  do_request "$url" "application/json" "false"
+
+  if [[ "$CURL_STATUS" != "200" ]]; then
+    log_fail "GET $url -> HTTP $CURL_STATUS (expected 200)"
+    rm -f "$CURL_BODY_FILE"
+    return
+  fi
+
+  # Check for JSON array format.
+  if ! grep -q "\[" "$CURL_BODY_FILE" || ! grep -q "\]" "$CURL_BODY_FILE"; then
+    log_fail "GET $url -> 200 but response did not look like a JSON array"
+    rm -f "$CURL_BODY_FILE"
+    return
+  fi
+
+  # Fail if it's an empty array: []
+  if grep -Eq '^[[:space:]]*\[[[:space:]]*\][[:space:]]*$' "$CURL_BODY_FILE"; then
+    log_fail "GET $url -> 200 but returned an empty JSON array (expected non-empty)"
+  else
+    log_pass "GET $url -> 200 and returned a non-empty JSON array"
+  fi
+
+  rm -f "$CURL_BODY_FILE"
+}
+
+# Verifies: GET /accounts returns 200 and a JSON array (may be empty).
+check_accounts() {
+  local url="${BASE_URL}/accounts"
+  do_request "$url" "application/json" "false"
+
+  if [[ "$CURL_STATUS" != "200" ]]; then
+    log_fail "GET $url -> HTTP $CURL_STATUS (expected 200)"
+    rm -f "$CURL_BODY_FILE"
+    return
+  fi
+
+  if grep -q "\[" "$CURL_BODY_FILE" && grep -q "\]" "$CURL_BODY_FILE"; then
+    log_pass "GET $url -> 200 and JSON array returned"
+  else
+    log_fail "GET $url -> 200 but response did not look like a JSON array"
+  fi
+
+  rm -f "$CURL_BODY_FILE"
+}
+
 check_healthz() {
   local url="${BASE_URL}/healthz"
   do_request "$url" "application/json" "false"
@@ -180,6 +228,8 @@ echo "=== BankApp endpoint checks ==="
 echo "BASE_URL=${BASE_URL}"
 echo
 
+check_customers
+check_accounts
 check_healthz
 check_actuator_health
 check_openapi_docs
