@@ -2,14 +2,14 @@
 <!--
   BankApp - Spring Boot REST API backed by H2.
 
-  Java 21 configuration notes:
+  Java 17 configuration notes:
 
-  - This POM is configured for Java 21 end-to-end.
-  - maven-compiler-plugin is upgraded to 3.13.0 and uses the <release>21</release>
-    setting so the build targets Java 21 language level and standard library APIs.
+  - This POM is configured for Java 17 end-to-end to match environments where only JDK 17 is available.
+  - maven-compiler-plugin is upgraded to 3.13.0 and uses the <release>17</release>
+    setting so the build targets Java 17 language level and standard library APIs.
   - maven-surefire-plugin (3.2.5) is configured in build/plugins (not only in
-    pluginManagement) so its Java 21–compatible engine is actually used for tests.
-  - No plugin, profile, or property in this POM forces Java 17 or an older
+    pluginManagement) so its Java 17+ compatible engine is actually used for tests.
+  - No plugin, profile, or property in this POM forces Java 21 or a higher
     release, and no plugin injects an outdated plexus-compiler.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -36,12 +36,12 @@
     <!-- Global Java version used across the project.
          NOTE: The Maven build requires running on a JVM/JDK 21+ runtime;
          older JDKs (e.g., 17 or below) will fail with "release version 21 not supported". -->
-    <java.version>21</java.version>
+    <java.version>17</java.version>
 
     <!-- Compiler properties aligned with Java 21.
          Effective behavior is driven by maven-compiler-plugin <release>21</release>.
          Avoid configuring conflicting <maven.compiler.source>/<maven.compiler.target> when using release. -->
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
 
     <!-- Keep parameter metadata for reflection / Spring MVC -->
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -149,7 +149,7 @@
         <version>3.13.0</version>
         <configuration>
           <!-- Use Java 21 language level and standard library APIs -->
-          <release>21</release>
+          <release>17</release>
           <encoding>${project.build.sourceEncoding}</encoding>
           <parameters>${maven.compiler.parameters}</parameters>
         </configuration>
@@ -200,11 +200,11 @@
   <!--
     Commit message (summary of changes):
 
-    chore: simplify Java 21 Maven configuration and remove toolchains requirement
+    chore: align Maven configuration to Java 17 and remove toolchains requirement
 
-    - Ensure maven-compiler-plugin 3.13.0 uses <release>21</release> for all builds.
+    - Ensure maven-compiler-plugin 3.13.0 uses <release>17</release> for all builds to support JDK 17 environments.
     - Keep maven-surefire-plugin 3.2.5 in build/plugins (not only in pluginManagement)
-      so Java 21–compatible test execution is active by default.
+      so Java 17+ compatible test execution is active by default.
     - Remove maven-toolchains-plugin so builds no longer require ~/.m2/toolchains.xml.
     - Preserve Spring Boot parent 3.2.x, spring-boot-maven-plugin, springdoc-openapi,
       and jaxb-runtime dependencies.
