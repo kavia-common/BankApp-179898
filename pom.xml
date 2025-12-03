@@ -4,7 +4,7 @@
 
   Java 21 configuration notes:
   * This POM is configured to compile and run on Java 21.
-  * The maven-compiler-plugin uses <release>21</release>.
+  * The maven-compiler-plugin is configured with release 21.
   * Surefire is pinned to a Java 21 compatible version (3.2.5).
   * Spring Boot parent remains in the 3.2.x line (3.2.10).
 -->
