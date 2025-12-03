@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  BankApp - Spring Boot REST API backed by H2.
+
+  Java 21 configuration notes
+  ---------------------------
+  - This POM is configured to compile and run on Java 21.
+  - The maven-compiler-plugin uses <release>21</release>.
+  - The maven-toolchains-plugin requires a JDK 21 toolchain ([21,) range).
+  - Surefire is pinned to >= 3.2.5 for Java 21 compatibility.
+  - Spring Boot parent remains at 3.2.x (3.2.10) as previously configured.
+
+  IMPORTANT: Maven Toolchains
+  ---------------------------
+  To avoid the classic "release version 21 not supported" error, Maven must
+  be able to locate a Java 21 JDK via its toolchains configuration.
+
+  Ensure you have a JDK 21 installed and a toolchains.xml similar to:
+
+    ~/.m2/toolchains.xml  (user-level)
+    or
+    .mvn/toolchains.xml   (project-level)
+
+  Example snippet:
+
+    <toolchains>
+      <toolchain>
+        <type>jdk</type>
+        <provides>
+          <version>21</version>
+          <vendor>any</vendor>
+        </provides>
+        <configuration>
+          <jdkHome>/path/to/jdk-21</jdkHome>
+        </configuration>
+      </toolchain>
+    </toolchains>
+
+  This POM does NOT add toolchains.xml to the repo; it must be provided
+  on the build machine.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -7,6 +47,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
+    <!-- Keep Spring Boot parent within the 3.2.x line as required -->
     <version>3.2.10</version>
     <relativePath/>
   </parent>
@@ -19,14 +60,29 @@
 
   <properties>
     <!--
-      Compile against Java 21. Spring Boot 3.2.x supports Java 17+, but this project
-      is explicitly targeting Java 21 for compilation and runtime.
+      Global Java version for the project.
+
+      Spring Boot 3.2.x supports Java 17+, but this project explicitly targets
+      Java 21 for both compilation and runtime.
     -->
     <java.version>21</java.version>
 
-    <!-- Keep parameter metadata for reflection and Spring (e.g., @PathVariable names). -->
+    <!--
+      Maven compiler properties set to Java 21.
+
+      NOTE:
+      - The maven-compiler-plugin is also configured with <release>21</release>.
+      - These properties remain to keep the effective POM self-documenting and
+        to ensure any other plugins that read them are aligned to Java 21.
+    -->
+    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+
+    <!-- Keep parameter metadata for reflection, Spring MVC, etc. -->
     <maven.compiler.parameters>true</maven.compiler.parameters>
 
+    <!-- Build encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -49,7 +105,7 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Devtools -->
+    <!-- Devtools (runtime-only) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
@@ -104,11 +160,12 @@
 
   <build>
     <!--
-      Plugin management overrides:
+      Plugin management overrides.
 
-      - Pin maven-surefire-plugin to 3.2.5, which is known to work correctly on Java 21.
-        The version here applies to the default test execution and any profile-specific
-        Surefire configurations (such as the endpoint-checks profile below).
+      - maven-surefire-plugin:
+          * Pinned to 3.2.5 (Java 21–compatible).
+          * This version applies to the default test phase and any profiles
+            that reference Surefire without an explicit version.
     -->
     <pluginManagement>
       <plugins>
@@ -121,8 +178,11 @@
       </plugins>
     </pluginManagement>
 
-    <!-- Explicit resources configuration: disable filtering to avoid atomic moves that
-         can fail on some container filesystems. -->
+    <!--
+      Explicit resources configuration:
+      - Disable filtering to avoid atomic moves that can fail on some container filesystems.
+      - Ensure all resource files are included as-is.
+    -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -135,22 +195,24 @@
 
     <plugins>
       <!--
-        Java compilation: use the --release flag so that both the language level
-        and the standard library APIs are aligned with Java 21.
+        Java compilation: use the --release flag so that both the language
+        level and the standard library APIs are aligned with Java 21.
 
-        Note:
-        - When <release> is used, do NOT also configure <source>/<target>; the compiler
-          plugin will ignore them and may emit warnings. This configuration intentionally
-          uses only <release> to avoid "release version 21 not supported" surprises when
-          combined with misconfigured source/target settings.
+        Important:
+        - Version 3.13.0 of maven-compiler-plugin fully supports release=21.
+        - When <release> is used, <source>/<target> are not strictly required
+          and may be ignored by the plugin, but we keep the properties above
+          for clarity and for other plugins that might read them.
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <!-- Updated to a Java 21–capable version -->
+        <version>3.13.0</version>
         <configuration>
           <!-- Compile with Java release 21; requires a JDK 21 toolchain to be available. -->
           <release>21</release>
+          <encoding>${project.build.sourceEncoding}</encoding>
           <parameters>${maven.compiler.parameters}</parameters>
         </configuration>
       </plugin>
@@ -158,16 +220,16 @@
       <!--
         Maven Toolchains: request a JDK 21 toolchain for compilation.
 
-        This allows the build to succeed even if the default JAVA_HOME (or the JVM
-        running Maven) is older than Java 21, as long as a matching JDK 21 is
-        declared in the Maven toolchains configuration.
+        This allows the build to succeed even if the default JAVA_HOME (or the
+        JVM running Maven) is older than Java 21, as long as a matching JDK 21
+        is declared in the Maven toolchains configuration.
 
         IMPORTANT:
-        - If no JDK 21 is installed or no matching toolchain is defined, Maven will
-          still fail with "release version 21 not supported".
-        - To fix that, install a Java 21 JDK and configure it in a toolchains file,
-          for example at ~/.m2/toolchains.xml (or .mvn/toolchains.xml within the
-          project). Map the JDK with version 21 so it matches the [21,) range below.
+        - If no JDK 21 is installed or no matching toolchain is defined,
+          Maven will still fail with "release version 21 not supported".
+        - To fix that, install a Java 21 JDK and configure it in a toolchains
+          file (e.g. ~/.m2/toolchains.xml), mapping the JDK with version 21
+          so it matches the [21,) requirement below.
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -191,7 +253,10 @@
         </configuration>
       </plugin>
 
-      <!-- Pin resources plugin and ensure YAML files are not filtered -->
+      <!--
+        Resources plugin:
+        - Ensures YAML/properties files are treated as non-filtered by default.
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -209,13 +274,18 @@
       </plugin>
 
       <!--
-        Global Java version check: enforce Java 17+ as the minimum runtime for building.
+        Global Java version check via Maven Enforcer:
 
-        Spring Boot 3.x baseline is Java 17. The compiler is configured to use
-        Java release 21, which in practice requires a JDK 21 toolchain (see the
-        maven-toolchains-plugin configuration above). If you encounter
-        "release version 21 not supported", install a JDK 21 and configure it
-        as a Maven toolchain.
+        - Previously this may have enforced Java 17 exactly; that would conflict
+          with a Java 21 upgrade.
+        - The rule is now relaxed to [21,) to explicitly require Java 21+
+          for the JVM running Maven, which matches the compiler/toolchain config.
+
+        NOTE:
+        - If the build environment needs to run Maven on Java 17 while using
+          a Java 21 toolchain, you could remove this rule entirely or loosen
+          it to [17,). For now we align it with the Java 21 target to keep the
+          effective POM consistent with the requested runtime.
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -223,33 +293,42 @@
         <version>3.4.1</version>
         <executions>
           <execution>
-            <id>java-version-minimum-17</id>
+            <id>require-java-21-or-newer</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[17,)</version>
+                  <!-- Enforce Java 21 or newer for the JVM running Maven. -->
+                  <version>[21,)</version>
                   <message>
-                    The BankApp project requires Java 17 or newer to build and run
-                    (Spring Boot 3.x baseline). The JVM running Maven is lower than 17.
+                    The BankApp project is configured for Java 21.
 
-                    The Maven compiler is configured with &quot;--release 21&quot;, so a JDK 21
-                    must be available via JAVA_HOME or Maven Toolchains. If you see
-                    &quot;release version 21 not supported&quot;, please install a JDK 21 and map
-                    it in ~/.m2/toolchains.xml (or .mvn/toolchains.xml).
+                    - Please run Maven with Java 21 or newer.
+                    - Ensure a JDK 21 toolchain is configured in your
+                      ~/.m2/toolchains.xml (or .mvn/toolchains.xml) so that
+                      the maven-compiler-plugin can use --release 21 without
+                      triggering "release version 21 not supported" errors.
                   </message>
                 </requireJavaVersion>
               </rules>
-              <!-- Warn (do not fail) on unsupported Java runtimes &lt; 17 in the default build. -->
-              <fail>false</fail>
+              <!--
+                Keep this as a hard requirement so builds clearly fail on
+                unsupported Java runtimes.
+              -->
+              <fail>true</fail>
             </configuration>
           </execution>
         </executions>
       </plugin>
 
-      <!-- Keep the Spring Boot Maven plugin so that repackage, run, etc. work as expected. -->
+      <!--
+        Keep the Spring Boot Maven plugin so that goals like:
+          - mvn spring-boot:run
+          - mvn package (repackage into executable jar)
+        continue to work as expected.
+      -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -263,7 +342,7 @@
 
       When activated (e.g. -Pendpoint-checks), the Surefire plugin is configured
       to execute only EndpointChecksIT.java. The plugin version remains managed
-      globally (3.2.5) via &lt;pluginManagement&gt; above for Java 21 compatibility.
+      globally (3.2.5) via <pluginManagement> above for Java 21 compatibility.
     -->
     <profile>
       <id>endpoint-checks</id>
