@@ -9,30 +9,8 @@
     setting so the build targets Java 21 language level and standard library APIs.
   - maven-surefire-plugin (3.2.5) is configured in build/plugins (not only in
     pluginManagement) so its Java 21–compatible engine is actually used for tests.
-  - maven-toolchains-plugin is configured to prefer a JDK 21 toolchain when a
-    matching toolchain is declared in ~/.m2/toolchains.xml. If no toolchain is
-    available, Maven will fall back to the JDK on the PATH, so builds can still
-    run in environments without toolchains configured.
   - No plugin, profile, or property in this POM forces Java 17 or an older
     release, and no plugin injects an outdated plexus-compiler.
-
-  Toolchains configuration requirements:
-
-  - For strict toolchain-based builds, ensure ~/.m2/toolchains.xml contains a
-    JDK 21 entry similar to:
-
-      <toolchains>
-        <toolchain>
-          <type>jdk</type>
-          <provides>
-            <version>21</version>
-            <vendor>any</vendor>
-          </provides>
-          <configuration>
-            <jdkHome>/path/to/jdk-21</jdkHome>
-          </configuration>
-        </toolchain>
-      </toolchains>
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -144,10 +122,9 @@
   </dependencies>
 
   <build>
-    <!-- Plugin management reserved for shared defaults; does not override Java 21 config -->
+    <!-- Plugin management reserved for shared defaults; intentionally left minimal. -->
     <pluginManagement>
       <plugins>
-        <!-- Intentionally left minimal; no older compiler or surefire versions here -->
       </plugins>
     </pluginManagement>
 
@@ -174,31 +151,6 @@
           <release>21</release>
           <encoding>${project.build.sourceEncoding}</encoding>
           <parameters>${maven.compiler.parameters}</parameters>
-        </configuration>
-      </plugin>
-
-      <!-- Java 21 toolchain selection.
-           The build prefers a JDK 21 toolchain when declared in ~/.m2/toolchains.xml,
-           but will fall back to the default JDK if no matching toolchain exists. -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <id>select-jdk-21</id>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>21</version>
-              <vendor>any</vendor>
-            </jdk>
-          </toolchains>
         </configuration>
       </plugin>
 
@@ -247,17 +199,16 @@
   <!--
     Commit message (summary of changes):
 
-    chore: finalize Java 21 Maven configuration
+    chore: simplify Java 21 Maven configuration and remove toolchains requirement
 
     - Ensure maven-compiler-plugin 3.13.0 uses <release>21</release> for all builds.
-    - Add maven-surefire-plugin 3.2.5 in build/plugins (not only in pluginManagement)
+    - Keep maven-surefire-plugin 3.2.5 in build/plugins (not only in pluginManagement)
       so Java 21–compatible test execution is active by default.
-    - Configure maven-toolchains-plugin to prefer a JDK 21 toolchain with clear notes
-      about required ~/.m2/toolchains.xml and natural fallback to the default JDK.
-    - Remove any redundant or conflicting compiler/surefire/enforcer rules that
-      forced Java 17/older or injected outdated plexus-compiler versions.
-    - Clean up XML comments to avoid non-parseable constructs, while keeping
-      spring-boot-maven-plugin and required dependencies (springdoc, jaxb-runtime).
+    - Remove maven-toolchains-plugin so builds no longer require ~/.m2/toolchains.xml.
+    - Preserve Spring Boot parent 3.2.x, spring-boot-maven-plugin, springdoc-openapi,
+      and jaxb-runtime dependencies.
+    - Clean up XML comments to avoid non-parseable constructs while documenting
+      Java 21 and testing configuration.
   -->
 
 </project>
