@@ -17,6 +17,7 @@ com/coding/exercise/bankapp/domain/TransactionDetails.class
 com/coding/exercise/bankapp/domain/AccountInformation$AccountInformationBuilder.class
 com/coding/exercise/bankapp/repository/CustomerAccountXRefRepository.class
 com/coding/exercise/bankapp/service/helper/BankingServiceHelper.class
+com/coding/exercise/bankapp/controller/HomeController.class
 com/coding/exercise/bankapp/model/BankInfo.class
 com/coding/exercise/bankapp/config/ApplicationConfig.class
 com/coding/exercise/bankapp/model/CustomerAccountXRef$CustomerAccountXRefBuilder.class
