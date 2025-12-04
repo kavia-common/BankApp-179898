@@ -2,6 +2,7 @@ package com.coding.exercise.bankapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,8 +32,8 @@ public class SecurityConfig {
         http
             // Allow frames for H2 console rendering
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            // Enable CORS with the CorsConfigurationSource bean
-            .cors(AbstractHttpConfigurer::withDefaults)
+            // Enable CORS with the CorsConfigurationSource bean (Spring Security 6+)
+            .cors(Customizer.withDefaults())
             // Disable CSRF (suitable for stateless APIs and for allowing H2 console interaction)
             .csrf(AbstractHttpConfigurer::disable)
             // Permit all requests without authentication

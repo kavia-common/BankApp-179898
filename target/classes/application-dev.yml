@@ -11,7 +11,7 @@
 # - Context path and port mirror the base configuration for consistency.
 
 server:
-  port: 3001
+  port: 3002
   servlet:
     context-path: /bank-api
 
