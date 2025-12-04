@@ -162,6 +162,12 @@
         <version>3.2.5</version>
         <configuration>
           <!-- Rely on JUnit 5 provided by spring-boot-starter-test; no legacy providers. -->
+          <!-- Prevent hanging tests from running indefinitely in CI -->
+          <forkedProcessExitTimeoutInSeconds>30</forkedProcessExitTimeoutInSeconds>
+          <systemProperties>
+            <!-- Ensure tests don't accidentally start a full web server if not needed -->
+            <spring.main.web-application-type>none</spring.main.web-application-type>
+          </systemProperties>
         </configuration>
       </plugin>
 

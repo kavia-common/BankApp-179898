@@ -24,12 +24,13 @@ spring:
         web-allow-others: true
       # Path defaults to /h2-console in Boot 3; SecurityFilterChain permits "/h2-console/**".
       # With the configured context-path, the full URL is /bank-api/h2-console.
-  # Datasource: using Boot 3 defaults (jdbc:h2:mem:testdb). Uncomment below to customize:
-  # datasource:
-  #   url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-  #   driverClassName: org.h2.Driver
-  #   username: sa
-  #   password:
+  # Datasource: use explicit H2 URL to ensure stable in-memory DB across context refreshes
+  # and to avoid shutdown race conditions in CI (DB_CLOSE_ON_EXIT=FALSE).
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
   jpa:
     hibernate:
       ddl-auto: create-drop

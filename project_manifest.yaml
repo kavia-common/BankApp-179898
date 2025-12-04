@@ -39,10 +39,10 @@ containers:
     port: '3001'
     framework: springboot
     type: backend
-    buildCommand: ./mvnw -q -DskipTests clean package || sh mvnw -q -DskipTests clean package
+    buildCommand: ./mvnw -B -q -DskipTests clean package || sh mvnw -B -q -DskipTests clean package
     startCommand: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT} --server.address=${HOST} --server.servlet.context-path=/bank-api" || sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT} --server.address=${HOST} --server.servlet.context-path=/bank-api"
-    testCommand: ./mvnw -q test || sh mvnw -q test
-    installCommand: ./mvnw -q -DskipTests install || sh mvnw -q -DskipTests install
+    testCommand: ./mvnw -B -q -Dspring.main.web-application-type=none test || sh mvnw -B -q -Dspring.main.web-application-type=none test
+    installCommand: ./mvnw -B -q -DskipTests install || sh mvnw -B -q -DskipTests install
     routes:
       - /bank-api
       - /bank-api/customers
