@@ -28,9 +28,14 @@ spring:
     init:
       mode: always
 
+springdoc:
+  # Place Swagger UI under /bank-api/swagger-ui (context path + this setting)
+  swagger-ui:
+    path: /swagger-ui
+
 # Swagger UI (springdoc)
 # - UI (canonical): /bank-api/swagger-ui/index.html
-#   (note: /bank-api/swagger-ui.html redirects to the UI)
+#   (note: /bank-api/swagger-ui also forwards/redirects to the UI)
 # - OpenAPI:   /bank-api/v3/api-docs
 # H2 console:  /bank-api/h2-console (context path applied)
 # SecurityFilterChain permits:
