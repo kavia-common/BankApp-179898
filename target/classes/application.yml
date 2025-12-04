@@ -1,7 +1,7 @@
 server:
   port: 3002
   address: 0.0.0.0
-
+  forward-headers-strategy: framework
 springdoc:
   api-docs:
     enabled: true

@@ -51,7 +51,7 @@ make build
 sh mvnw -q -DskipTests clean package
 ```
 
-Run on port 8989 bound to 0.0.0.0:
+Run on port 8989 (HTTP) bound to 0.0.0.0:
 ```
 # Preferred: Maven Wrapper
 ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0"
@@ -81,15 +81,14 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.add
 ```
 On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 ```
--Dspring-boot.run.arguments=^"--server.port=%PORT% --server.address=0.0.0.0^"
-```
+-Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0^\"\n```
 
 Verification commands (ensure these succeed from the project root):
 ```
 # 1) Build/install
 mvn clean install
 
-# 2) Run with defaults from application.yml
+# 2) Run with defaults from application.yml (HTTP on 8989)
 mvn spring-boot:run
 
 # 3) Run with explicit port and context-path (overrides application.yml)
@@ -99,8 +98,16 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.ser
 mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8989 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
 ```
 
-5. Default port for the api is 8989
+5. Default port for the API is 8989 (HTTP)
 
+Troubleshooting: If you encounter "The plain HTTP request was sent to HTTPS port":
+- Ensure you are using http:// (not https://) when accessing the preview.
+- application.yml explicitly sets server.ssl.enabled=false so the app serves HTTP only.
+- If running behind a reverse proxy that sets X-Forwarded-Proto=https, keep server.forward-headers-strategy=framework (already set). Do not enable any SSL connectors in Spring Boot unless you intend to serve HTTPS directly.
+- Correct URLs:
+  - Swagger UI:        http://localhost:8989/bank-api/swagger-ui.html (or /swagger-ui/index.html)
+  - OpenAPI JSON:      http://localhost:8989/bank-api/v3/api-docs
+  - H2 Console:        http://localhost:8989/bank-api/h2-console/
 
 ### Prerequisites
 
@@ -175,4 +182,3 @@ Notes on migration:
 ## Authors
 
 * **Shyam Bathina**
-
