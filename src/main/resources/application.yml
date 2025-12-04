@@ -1,8 +1,19 @@
-server.port: 3001
-server.servlet.context-path: /bank-api
+server:
+  port: 3002
+  address: 0.0.0.0
+  servlet:
+    context-path: /bank-api
 
+# Default in-memory user (not used while auth is disabled but kept for future)
 spring.security.user.name: bankapp
 spring.security.user.password: changeit
+
+# CORS configuration
+# If ALLOWED_ORIGINS env var is set, it overrides the list below (comma-separated).
+# Default includes vscode internal hosts on 3002 and local dev ports.
+app:
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:https://vscode-internal-20390-qa.qa01.cloud.kavia.ai:3002,http://localhost:3002,http://localhost:3000,http://localhost:4000,https://vscode-internal-20390-qa.qa01.cloud.kavia.ai:3000}
 
 # Enabling H2 Console (Boot 3)
 spring:

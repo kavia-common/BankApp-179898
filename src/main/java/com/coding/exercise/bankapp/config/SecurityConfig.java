@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * - HTTP Basic and form login are explicitly disabled to prevent auth prompts.
  * - CSRF is disabled to allow non-browser/API clients to POST/PUT/DELETE without tokens.
  * - Frame options are disabled to allow the H2 console to render in an iframe.
+ * - CORS is enabled and driven by the CorsConfigurationSource bean (see CorsConfig).
  *
  * With server.servlet.context-path=/bank-api, routes will be served under /bank-api/**,
  * and this configuration applies to all of them.
@@ -30,6 +31,8 @@ public class SecurityConfig {
         http
             // Allow frames for H2 console rendering
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            // Enable CORS with the CorsConfigurationSource bean
+            .cors(AbstractHttpConfigurer::withDefaults)
             // Disable CSRF (suitable for stateless APIs and for allowing H2 console interaction)
             .csrf(AbstractHttpConfigurer::disable)
             // Permit all requests without authentication

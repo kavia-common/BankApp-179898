@@ -48,7 +48,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 )
 class EndpointChecksIT {
 
-    private static final String DEFAULT_BASE_URL = "http://localhost:3001/bank-api";
+    // Default remained as 3001 historically; override via BASE_URL if app runs on a different port (e.g., 3002).
+    private static final String DEFAULT_BASE_URL = "http://localhost:3002/bank-api";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

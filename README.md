@@ -43,7 +43,7 @@ https://projectlombok.org/setup/eclipse
 4. Build and Run without system Maven
 
 Default runtime:
-- Port: 3001
+- Port: 3002
 - Context path: /bank-api
 
 Build:
@@ -61,13 +61,13 @@ make build
 sh mvnw -q -DskipTests clean package
 ```
 
-Run on port 3001 bound to 0.0.0.0:
+Run on port 3002 bound to 0.0.0.0:
 ```
 # Preferred: Maven Wrapper
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3002 --server.address=0.0.0.0"
 
 # Or via mvn shim (still uses wrapper):
-./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3002 --server.address=0.0.0.0"
 
 # Makefile helper:
 make run
@@ -105,11 +105,11 @@ sh mvnw -q -DskipTests clean install
 ./mvnw spring-boot:run
 
 # 3) Verify public endpoints (all should return 200 without credentials)
-curl -i http://localhost:3001/bank-api/healthz
-curl -i http://localhost:3001/bank-api/actuator/health
-curl -i http://localhost:3001/bank-api/v3/api-docs
-curl -i http://localhost:3001/bank-api/swagger-ui/index.html
-curl -i http://localhost:3001/bank-api/h2-console
+curl -i http://localhost:3002/bank-api/healthz
+curl -i http://localhost:3002/bank-api/actuator/health
+curl -i http://localhost:3002/bank-api/v3/api-docs
+curl -i http://localhost:3002/bank-api/swagger-ui/index.html
+curl -i http://localhost:3002/bank-api/h2-console
 
 # 4) Verify business endpoints are public (example)
 curl -i http://localhost:3001/bank-api/customers
@@ -392,9 +392,9 @@ curl -i http://localhost:3001/bank-api/customers
 ## Swagger (OpenAPI)
 
 The API documentation is provided by springdoc-openapi. Access via:
-- http://localhost:3001/bank-api/ (automatically redirects to the Swagger UI)
-- http://localhost:3001/bank-api/swagger-ui/index.html
-- OpenAPI JSON: http://localhost:3001/bank-api/v3/api-docs
+- http://localhost:3002/bank-api/ (automatically redirects to the Swagger UI)
+- http://localhost:3002/bank-api/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:3002/bank-api/v3/api-docs
 
 Note: http://localhost:3001/bank-api/swagger-ui.html also redirects to the Swagger UI, but `/swagger-ui/index.html` is the canonical path.
 A lightweight MVC controller is registered to redirect requests for the servlet context root (`/bank-api` and `/bank-api/`)
