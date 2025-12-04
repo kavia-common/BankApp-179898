@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coding.exercise.bankapp.domain.CustomerDetails;
 import com.coding.exercise.bankapp.service.BankingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * REST controller for customer management operations.
  * <p>
@@ -31,6 +34,7 @@ import com.coding.exercise.bankapp.service.BankingService;
  */
 @RestController
 @RequestMapping("/customers")
+@Tag(name = "Customers", description = "Operations related to customer management")
 public class CustomerController {
 
     @Autowired
@@ -43,6 +47,7 @@ public class CustomerController {
      *
      * @return list of all customers
      */
+    @Operation(summary = "List all customers", description = "Returns the complete list of customers.")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CustomerDetails> getCustomers() {
         return bankingService.findAll();
@@ -54,6 +59,7 @@ public class CustomerController {
      *
      * @return list of all customers
      */
+    @Operation(summary = "List all customers (legacy)", description = "Backward compatible endpoint to list customers.")
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CustomerDetails> getAllCustomers() {
         return bankingService.findAll();
@@ -66,6 +72,7 @@ public class CustomerController {
      * @param customer customer payload
      * @return 201 Created on success
      */
+    @Operation(summary = "Create customer", description = "Creates a new customer record.")
     @PostMapping(path = "/add")
     public ResponseEntity<Object> addCustomer(@RequestBody CustomerDetails customer) {
         return bankingService.addCustomer(customer);
@@ -78,6 +85,7 @@ public class CustomerController {
      * @param customerNumber customer number
      * @return customer details, or null if not found
      */
+    @Operation(summary = "Get customer by number", description = "Retrieves customer details for the given customer number.")
     @GetMapping(path = "/{customerNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CustomerDetails getCustomer(@PathVariable Long customerNumber) {
         return bankingService.findByCustomerNumber(customerNumber);
@@ -91,6 +99,7 @@ public class CustomerController {
      * @param customerNumber customer number
      * @return 200 OK on success, 404 if customer not found
      */
+    @Operation(summary = "Update customer", description = "Updates customer details for the given customer number.")
     @PutMapping(path = "/{customerNumber}")
     public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDetails customerDetails,
                                                  @PathVariable Long customerNumber) {
@@ -104,6 +113,7 @@ public class CustomerController {
      * @param customerNumber customer number
      * @return 200 OK on success, 400 if the customer does not exist
      */
+    @Operation(summary = "Delete customer", description = "Deletes the customer with the given customer number.")
     @DeleteMapping(path = "/{customerNumber}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerNumber) {
         return bankingService.deleteCustomer(customerNumber);
