@@ -1,4 +1,12 @@
-server.port: 8989
+server:
+  port: 3002
+  address: 0.0.0.0
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 server.servlet.context-path: /bank-api
 
 spring.security.user.name: bankapp
