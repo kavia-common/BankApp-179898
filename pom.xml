@@ -85,7 +85,7 @@
   </dependencies>
 
   <build>
-    <!-- Explicit resources configuration: disable filtering to avoid atomic moves that can fail on some container filesystems -->
+    <!-- Explicit resources configuration: disable filtering to avoid atomic moves that can fail on some filesystems -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -93,6 +93,11 @@
         <includes>
           <include>**/*</include>
         </includes>
+        <!-- Safety: never attempt to copy from target or any nested build output -->
+        <excludes>
+          <exclude>target/**</exclude>
+          <exclude>**/target/**</exclude>
+        </excludes>
       </resource>
     </resources>
 
@@ -108,7 +113,8 @@
         </configuration>
       </plugin>
 
-      <!-- Pin resources plugin and ensure YAML files are not filtered -->
+      <!-- Pin resources plugin and ensure YAML files are not filtered.
+           Additional flags prevent overwriting locked files on some CI/container filesystems. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -121,8 +127,36 @@
             <nonFilteredFileExtension>yaml</nonFilteredFileExtension>
             <nonFilteredFileExtension>properties</nonFilteredFileExtension>
           </nonFilteredFileExtensions>
-          <overwrite>true</overwrite>
+          <!-- Avoid attempts to modify existing files in target/classes if they become immutable/locked -->
+          <overwrite>false</overwrite>
+          <skipEmptyFiles>false</skipEmptyFiles>
+          <skipIfEmpty>true</skipIfEmpty>
+          <addDefaultExcludes>true</addDefaultExcludes>
         </configuration>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>**/*</include>
+                  </includes>
+                  <excludes>
+                    <exclude>target/**</exclude>
+                    <exclude>**/target/**</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

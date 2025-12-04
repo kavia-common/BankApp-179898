@@ -1,7 +1,9 @@
 server:
-  port: 3002
+  port: 8989
   address: 0.0.0.0
   forward-headers-strategy: framework
+  ssl:
+    enabled: false
 springdoc:
   api-docs:
     enabled: true
