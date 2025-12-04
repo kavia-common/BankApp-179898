@@ -16,7 +16,7 @@ For local development, you can simply rely on the existing defaults, or override
   - `./start` or `./start.sh` will bind to `0.0.0.0:${PORT:-3001}`. If you do not set `PORT`, the application will run on `3001` with context path `/bank-api`.
   - To be explicit, run: `PORT=3001 ./start`.
 - Run directly via Maven Wrapper:
-  - `./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"`
+  - `./mvnw spring-boot:run`
 
 For the preview manifest, the default is configured to use port `3001`. If you change the preview to run on a different port, you should:
 
@@ -32,8 +32,8 @@ Because the manifest drives how the platform wires routing and health checks, ch
 The manifest `startCommand` is defined as:
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api" \
-  || sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=<port> --server.address=<host> --server.servlet.context-path=/bank-api"
+./mvnw spring-boot:run \
+  || sh mvnw spring-boot:run
 ```
 
 The `<port>` and `<host>` placeholders are resolved by the runtime platform using the `PORT` and `HOST` environment variables defined in the top‑level `env` section of `project_manifest.yaml`. You generally should not edit these placeholders in the command. Instead, you control the runtime binding by changing the environment:

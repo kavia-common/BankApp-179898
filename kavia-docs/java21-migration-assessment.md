@@ -239,7 +239,7 @@ class BankingApplicationTests {
 
 9) Build and run with Java 21
 - ./mvnw -q -DskipTests clean package
-- ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+- ./mvnw spring-boot:run
 
 10) Optional improvements
 - Consider replacing java.util.Date with java.time.Instant/LocalDateTime in domain and entity classes for modern Java idioms and better timezone handling.

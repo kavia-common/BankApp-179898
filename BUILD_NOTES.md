@@ -40,13 +40,13 @@ make build
 Run (port 3001, bind 0.0.0.0):
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+./mvnw spring-boot:run
 # or if execution permission is blocked:
-sh mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+sh mvnw spring-boot:run
 # or using Makefile:
 make run
 # or using Procfile (platform-dependent):
-web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
+web: ./mvnw spring-boot:run
 # or start entry recognized by some preview systems (supports CLEAN_PACKAGE=true):
 ./start
 # or:
@@ -297,5 +297,5 @@ With these settings, the following should succeed on any machine with a properly
 
 ```bash
 ./mvnw -q -DskipTests clean package
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+./mvnw -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0" spring-boot:run
 ```

@@ -1,4 +1,4 @@
 # Uses Maven Wrapper on Windows environments
 # Ensures the context-path is /bank-api to match routing, and binds to provided %PORT% or platform default.
-# Note: Inner quotes must be escaped for cmd.exe using ^\" ... ^\" to pass as one argument to Maven.
-web: cmd /c "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=^\\"--server.port=%PORT% --server.address=0.0.0.0 --server.servlet.context-path=/bank-api^\\""
+# Prefer relying on application.yml for server.port and server.address to avoid quoting pitfalls.
+web: cmd /c "mvnw.cmd spring-boot:run"

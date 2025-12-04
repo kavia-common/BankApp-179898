@@ -21,9 +21,6 @@ if [ -n "${JAVA_21_CANDIDATE}" ]; then
   export JAVA_HOME="${JAVA_21_CANDIDATE}"
 fi
 
-PORT_VALUE="${PORT:-3001}"
-ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
-
 if [ "${CLEAN_PACKAGE}" = "true" ]; then
   if [ -x "./mvnw" ]; then
     ./mvnw -q -DskipTests clean package
@@ -33,7 +30,7 @@ if [ "${CLEAN_PACKAGE}" = "true" ]; then
 fi
 
 if [ -x "./mvnw" ]; then
-  exec ./mvnw spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+  exec ./mvnw spring-boot:run
 else
-  exec sh mvnw spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+  exec sh mvnw spring-boot:run
 fi

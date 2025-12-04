@@ -114,7 +114,7 @@ Sources:
 - Build
   - ./mvnw -q -DskipTests clean package succeeds.
 - Start (preview-aligned)
-  - Run with: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
+  - Run with: ./mvnw spring-boot:run
 - Health
   - GET http://localhost:3001/bank-api/actuator/health returns 200 with status UP.
   - GET http://localhost:3001/bank-api/healthz returns 200 with {"status":"ok"}.

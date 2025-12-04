@@ -61,13 +61,13 @@ make build
 sh mvnw -q -DskipTests clean package
 ```
 
-Run on port 3002 bound to 0.0.0.0:
+Run with defaults from application.yml (recommended):
 ```
 # Preferred: Maven Wrapper
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3002 --server.address=0.0.0.0"
+./mvnw spring-boot:run
 
 # Or via mvn shim (still uses wrapper):
-./mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3002 --server.address=0.0.0.0"
+./mvn spring-boot:run
 
 # Makefile helper:
 make run
@@ -75,23 +75,26 @@ make run
 # Generic run script:
 ./run.sh
 
-# Definitive preview entrypoint (supports CLEAN_PACKAGE=true to build first):
+# Preview entrypoint (supports CLEAN_PACKAGE=true to build first):
 ./start
 # or:
 ./start.sh
 
 # Platforms supporting Procfile (for reference):
-web: ./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=${PORT:-3001} --server.address=0.0.0.0"
+web: ./mvnw spring-boot:run
 ```
 
-Tip: If you see Maven printing only usage/help and exiting with code 1 when starting, ensure the -Dspring-boot.run.arguments value is quoted as a single string. Do not pass unquoted application args directly to Maven. Correct forms:
+Tip: Prefer configuring port/address in application.yml to avoid CLI quoting pitfalls. If you must override via CLI, use one of these Maven-supported forms:
 ```
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=3001 --server.address=0.0.0.0"
+# Place properties before the goal:
+./mvnw -Dspring-boot.run.arguments="--server.port=3002 --server.address=0.0.0.0" spring-boot:run
+
+# Or pass JVM arguments:
+./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Dserver.port=3002 -Dserver.address=0.0.0.0"
 ```
 On Windows `cmd` (e.g., Procfile.windows), escape inner quotes as:
 ```
--Dspring-boot.run.arguments=^\\"--server.port=%PORT% --server.address=0.0.0.0^\\"
+-Dspring-boot.run.arguments=^\"--server.port=%PORT% --server.address=0.0.0.0^\"
 ```
 
 Verification commands (ensure these succeed from the project root and require NO auth):
@@ -101,7 +104,7 @@ Verification commands (ensure these succeed from the project root and require NO
 # If execute permission is blocked:
 sh mvnw -q -DskipTests clean install
 
-# 2) Run with defaults from application.yml (port 3001, context-path /bank-api)
+# 2) Run with defaults from application.yml (port 3002, context-path /bank-api)
 ./mvnw spring-boot:run
 
 # 3) Verify public endpoints (all should return 200 without credentials)

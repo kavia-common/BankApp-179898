@@ -21,11 +21,8 @@ if [ -n "${JAVA_21_CANDIDATE}" ]; then
   export JAVA_HOME="${JAVA_21_CANDIDATE}"
 fi
 
-PORT_VALUE="${PORT:-3001}"
-ARGS="--server.port=${PORT_VALUE} --server.address=0.0.0.0 --server.servlet.context-path=/bank-api"
-
 if [ -x "./mvn" ]; then
-  exec ./mvn spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+  exec ./mvn spring-boot:run
 else
-  exec sh mvn spring-boot:run -Dspring-boot.run.arguments="${ARGS}"
+  exec sh mvn spring-boot:run
 fi
