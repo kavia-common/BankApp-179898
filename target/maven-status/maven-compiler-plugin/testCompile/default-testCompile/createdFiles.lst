@@ -1,5 +1,5 @@
 com/coding/exercise/bankapp/openapi/OpenApiDocsAccessibilityTest.class
 com/coding/exercise/bankapp/endpoint/EndpointChecksIT.class
 com/coding/exercise/bankapp/controller/HealthControllerTest.class
-com/coding/exercise/bankapp/controller/CustomerControllerTest.class
 com/coding/exercise/bankapp/BankingApplicationTests.class
+com/coding/exercise/bankapp/controller/CustomerControllerTest.class
